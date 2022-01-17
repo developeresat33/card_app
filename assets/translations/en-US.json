@@ -1,0 +1,60 @@
+{
+  "home": {
+    "hi": "Hi",
+    "cards":"Cards",
+    "add_card":"Add Card",
+    "limit":"Limit",
+    "op":"Operators",
+    "point":"Points",
+    "shop":"Shopping",
+    "ticket":"Tickets",
+    "budget":"Budgets",
+    "transc":"Transactions",
+    "tod":"Today"
+  },
+  "login":
+  {
+         "log_in":"Log In",
+         "id":"ID",
+         "pw":"Password",
+         "forgot":"Forgot Password?",
+         "login":"Continue",
+         "register":"Register"
+         
+  },
+  "statistics":{
+    "sta":"Statistics",
+    "inc":"Income",
+    "sp":"Spent",
+    "rw":"Rewards",
+    "all":"All",
+    "mon":"Monthly",
+    "year":"Yearly",
+    "dy":"Daily",
+    "wk":"Weekly",
+    "mn":"Mon",
+    "ts":"Tue",
+    "ws":"Wed",
+    "trs":"Thu",
+    "fr":"Fri",
+    "str":"Sat",
+    "sun":"Sun",
+    "cat":"Categories",
+    "cat_titles":{
+      "clt":"Clothes",
+      "shp":"Shopping"
+
+
+
+
+    }
+
+
+
+
+
+
+
+
+  }
+}

@@ -1,0 +1,60 @@
+{
+    "home": {
+      "hi": "Merhaba",
+      "cards":"Kartlar",
+      "add_card":"Kart Ekle",
+      "limit":"Limit",
+      "op":"Operatörler",
+      "point":"Puanlar",
+      "shop":"Alışveriş",
+      "ticket":"Biletler",
+      "budget":"Bütçeler",
+      "transc":"İşlemler",
+      "tod":"Bugün"
+    },
+    "login":
+    {
+           "log_in":"Giriş",
+           "id":"Kullanıcı Adı",
+           "pw":"Şifre",
+           "forgot":"Şifremi unuttum?",
+           "login":"Giriş Yap",
+           "register":"Kayıt Ol"
+           
+    },
+    "statistics":{
+      "sta":"İstatistkiler",
+      "inc":"Gelir",
+      "sp":"Harcanan",
+      "rw":"Genel Bakış",
+      "all":"Hepsi",
+      "mon":"Aylık",
+      "year":"Yıllık",
+      "dy":"Günlük",
+      "wk":"Haftalık",
+      "mn":"Pzt",
+      "ts":"Sal",
+      "ws":"Çar",
+      "trs":"Per",
+      "fr":"Cum",
+      "str":"Cmt",
+      "sun":"Pzr",
+      "cat":"Kategoriler",
+      "cat_titles":{
+        "clt":"Giyim",
+        "shp":"Market"
+  
+  
+  
+  
+      }
+  
+  
+  
+  
+  
+  
+  
+  
+    }
+}

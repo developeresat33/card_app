@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -266,5 +267,15 @@ extension StringExtension on String {
     }
 
     return caseSearchList;
+  }
+
+  String safe({String placeholder = ''}) {
+    // ignore: unnecessary_this
+    if (this != null && this.isNotEmpty && this.trim() != '') return this;
+    return placeholder;
+  }
+
+  String translate() {
+    return this.tr();
   }
 }
