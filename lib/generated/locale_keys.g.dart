@@ -41,5 +41,10 @@ abstract class  LocaleKeys {
   static const statistics_cat_titles_shp = 'statistics.cat_titles.shp';
   static const statistics_cat_titles = 'statistics.cat_titles';
   static const statistics = 'statistics';
+  static const maindrawer_p_name = 'maindrawer.p_name';
+  static const maindrawer_p_page = 'maindrawer.p_page';
+  static const maindrawer_p_set = 'maindrawer.p_set';
+  static const maindrawer_log_out = 'maindrawer.log_out';
+  static const maindrawer = 'maindrawer';
 
 }

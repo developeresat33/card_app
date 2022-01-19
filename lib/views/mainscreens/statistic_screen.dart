@@ -9,6 +9,7 @@ import 'package:card_application/utils/box_constraints.dart';
 import 'package:card_application/widgets/data_generator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
+import 'package:card_application/extensions/string_extension.dart';
 
 class WAStatisticScreen extends StatefulWidget {
   static String tag = '/WAStatisticScreen';
@@ -42,7 +43,7 @@ class WAStatisticScreenState extends State<WAStatisticScreen> {
         extendBodyBehindAppBar: true,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
-          title: Text('statistics.sta'.tr,
+          title: Text('statistics.sta'.translate(),
               style: TextStyle(color: Colors.black, fontSize: 20)),
           centerTitle: true,
           automaticallyImplyLeading: false,
@@ -64,7 +65,8 @@ class WAStatisticScreenState extends State<WAStatisticScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('statistics.rw'.tr, style: TextStyle(fontSize: 20)),
+                    Text('statistics.rw'.translate(),
+                        style: TextStyle(fontSize: 20)),
                     16.height,
                     Container(
                       width: 100,
@@ -92,7 +94,8 @@ class WAStatisticScreenState extends State<WAStatisticScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('statistics.cat'.tr, style: TextStyle(fontSize: 20)),
+                    Text('statistics.cat'.translate(),
+                        style: TextStyle(fontSize: 20)),
                     Icon(Icons.play_arrow, color: Colors.grey),
                   ],
                 ).paddingOnly(left: 16, right: 16),

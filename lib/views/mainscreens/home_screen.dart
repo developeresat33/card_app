@@ -8,9 +8,12 @@ import 'package:card_application/extensions/content_extensions.dart';
 import 'package:card_application/extensions/int_extensions.dart';
 import 'package:card_application/extensions/widget_extension.dart';
 import 'package:card_application/model/app_model.dart';
+import 'package:card_application/utils/colors.dart';
 import 'package:card_application/utils/functions.dart';
 import 'package:card_application/utils/localization_manager.dart';
 import 'package:card_application/widgets/data_generator.dart';
+import 'package:card_application/widgets/tools/somesheets.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
@@ -63,8 +66,28 @@ class WAHomeScreenState extends State<WAHomeScreen> {
                 Get.rootController.restartApp();
               }
             },
-            child: CircleAvatar(
-              backgroundImage: AssetImage("assets/tr_flag.png"),
+            child: Stack(
+              children: [
+                Align(
+                  alignment: Alignment.center,
+                  child: CircleAvatar(
+                    backgroundImage: AssetImage("assets/tr_flag.png"),
+                  ),
+                ),
+                if (context.locale == LocalizationManager.instance.trLocale)
+                  Positioned(
+                    top: -5,
+                    right: -5,
+                    child: CircleAvatar(
+                      radius: 12,
+                      backgroundColor: Colors.white,
+                      child: Icon(
+                        Icons.check,
+                        color: WAPrimaryColor,
+                      ),
+                    ),
+                  ),
+              ],
             ),
           ),
         ),
@@ -85,8 +108,28 @@ class WAHomeScreenState extends State<WAHomeScreen> {
                 Get.rootController.restartApp();
               }
             },
-            child: CircleAvatar(
-              backgroundImage: AssetImage("assets/us_flag.png"),
+            child: Stack(
+              children: [
+                Align(
+                  alignment: Alignment.center,
+                  child: CircleAvatar(
+                    backgroundImage: AssetImage("assets/us_flag.png"),
+                  ),
+                ),
+                if (context.locale == LocalizationManager.instance.enLocale)
+                  Positioned(
+                    top: -5,
+                    right: -5,
+                    child: CircleAvatar(
+                      radius: 12,
+                      backgroundColor: Colors.white,
+                      child: Icon(
+                        Icons.check,
+                        color: WAPrimaryColor,
+                      ),
+                    ),
+                  ),
+              ],
             ),
           ),
         ),
@@ -96,10 +139,8 @@ class WAHomeScreenState extends State<WAHomeScreen> {
         builder: (context, value, child) => SafeArea(
               child: Scaffold(
                 floatingActionButton: UnicornDialer(
-                    backgroundColor: Colors.black38,
                     animationDuration: 150,
-                    parentButtonBackground: Color(0xFF26C884),
-                    orientation: UnicornOrientation.VERTICAL,
+                    parentButtonBackground: WAPrimaryColor,
                     parentButton: Icon(Icons.translate),
                     childButtons: value.subLanguage),
                 body: Container(
@@ -134,7 +175,10 @@ class WAHomeScreenState extends State<WAHomeScreen> {
                                     border: Border.all(
                                         color: Colors.grey.withOpacity(0.2)),
                                   ),
-                                  child: Icon(Icons.person),
+                                  child: Icon(
+                                    Icons.person,
+                                    color: Colors.black54,
+                                  ),
                                 ),
                               ),
                             ],
@@ -174,12 +218,13 @@ class WAHomeScreenState extends State<WAHomeScreen> {
                               Icon(Icons.play_arrow, color: Colors.grey),
                             ],
                           ).paddingOnly(left: 16, right: 16),
+                          5.height,
                           SizedBox(
-                            height: size.height * 0.24,
+                            height: size.height * 0.17,
                             child: Row(
                               children: [
                                 SizedBox(
-                                  width: size.width * 0.23,
+                                  width: size.width * 0.20,
                                   child: Container(
                                     padding: EdgeInsets.only(
                                         left: 16,
@@ -188,9 +233,11 @@ class WAHomeScreenState extends State<WAHomeScreen> {
                                         top: 8),
                                     child: FittedBox(
                                       child: InkWell(
-                                        onTap: () {},
+                                        onTap: () {
+                                          SomeSheets.addCard();
+                                        },
                                         child: CircleAvatar(
-                                          backgroundColor: Colors.black38,
+                                          backgroundColor: Colors.black26,
                                           radius: size.height * 0.050,
                                           child: Column(
                                             mainAxisAlignment:
@@ -215,15 +262,17 @@ class WAHomeScreenState extends State<WAHomeScreen> {
                                       top: 16, bottom: 16, right: 5, left: 5),
                                 ),
                                 Expanded(
-                                  child: ListView(
-                                    physics: BouncingScrollPhysics(),
-                                    scrollDirection: Axis.horizontal,
-                                    children: cardList.map((cardItem) {
+                                  child: CarouselSlider(
+                                    options: CarouselOptions(
+                                        autoPlay: true,
+                                        enlargeCenterPage: true,
+                                        autoPlayAnimationDuration:
+                                            Duration(milliseconds: 450)),
+                                    items: cardList.map((cardItem) {
                                       return WACardComponent(
-                                              cardModel: cardItem)
-                                          .paddingOnly(right: 10);
+                                          cardModel: cardItem);
                                     }).toList(),
-                                  ).paddingOnly(top: 16, bottom: 16, right: 16),
+                                  ),
                                 ),
                               ],
                             ),

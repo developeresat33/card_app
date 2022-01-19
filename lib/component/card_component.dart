@@ -33,11 +33,14 @@ class WACardComponentState extends State<WACardComponent> {
   Widget build(BuildContext context) {
     return Container(
       width: 300,
-      padding: EdgeInsets.only(left: 16, right: 16, bottom: 30, top: 8),
+      padding: EdgeInsets.only(
+        left: 10,
+        right: 10,
+      ),
       decoration: boxDecorationRoundedWithShadow(
-        30,
+        15,
         backgroundColor: widget.cardModel.color,
-        blurRadius: 10.0,
+        blurRadius: 5.0,
         spreadRadius: 4.0,
         shadowColor: widget.cardModel.color.withAlpha(50),
       ),
@@ -54,20 +57,17 @@ class WACardComponentState extends State<WACardComponent> {
               color: Colors.white,
             ),
           ),
+          Text(widget.cardModel.cardName,
+              style: TextStyle(
+                  color: Colors.white70,
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold)),
+          8.height,
           Text('Limit', style: TextStyle(color: Colors.white70, fontSize: 15)),
           8.height,
-          Text('${widget.cardModel.balance}',
+          Text('${widget.cardModel.limit} ₺',
               style: TextStyle(color: Colors.white70, fontSize: 18)),
           30.height,
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('${widget.cardModel.cardNumber}',
-                  style: TextStyle(color: Colors.white70, fontSize: 15)),
-              Text('${widget.cardModel.date}',
-                  style: TextStyle(color: Colors.white70, fontSize: 15)),
-            ],
-          ),
         ],
       ),
     );

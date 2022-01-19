@@ -18,19 +18,34 @@ class WARecentPayeesModel {
 
 class WACardModel {
   String image;
-  String balance;
-  String cardNumber;
-  String date;
+  String limit;
+  String cardName;
   Color color;
   int selectType;
+  int point;
+  DateTime cutOfDate;
+  String cashAdvanceLimit;
+  DateTime paymentDate;
 
   WACardModel(
       {this.image,
-      this.balance,
-      this.cardNumber,
-      this.date,
+      this.limit,
       this.selectType,
-      this.color});
+      this.cardName,
+      this.color,
+      this.paymentDate,
+      this.cutOfDate,
+      this.cashAdvanceLimit,
+      this.point});
+}
+
+class CircleModel {
+  Color color;
+  double radius;
+  Color secondColor;
+  double secondRadius;
+
+  CircleModel({this.color, this.radius});
 }
 
 class WAOperationsModel {

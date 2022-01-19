@@ -56,5 +56,17 @@
   
   
   
+    },
+    "maindrawer":{
+      "p_name":"Profil Adı",
+      "p_page":"Profil Sayfası",
+      "p_set":"Ayarlar",
+      "log_out":"Çıkış Yap"
+
+
+
+
+
+
     }
 }

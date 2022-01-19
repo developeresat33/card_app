@@ -48,6 +48,7 @@
 
 
     }
+    
 
 
 
@@ -55,6 +56,12 @@
 
 
 
+
+  },"maindrawer":{
+    "p_name":"Profile Name",
+    "p_page":"Profile Page",
+    "p_set":"Settings",
+    "log_out":"Log Out"
 
   }
 }

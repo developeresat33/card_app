@@ -58,6 +58,12 @@ class CodegenLoader extends AssetLoader{
       "clt": "Clothes",
       "shp": "Shopping"
     }
+  },
+  "maindrawer": {
+    "p_name": "Profile Name",
+    "p_page": "Profile Page",
+    "p_set": "Settings",
+    "log_out": "Log Out"
   }
 };
 static const Map<String,dynamic> tr_TR = {
@@ -104,6 +110,12 @@ static const Map<String,dynamic> tr_TR = {
       "clt": "Giyim",
       "shp": "Market"
     }
+  },
+  "maindrawer": {
+    "p_name": "Profil Adı",
+    "p_page": "Profil Sayfası",
+    "p_set": "Ayarlar",
+    "log_out": "Çıkış Yap"
   }
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"en_US": en_US, "tr_TR": tr_TR};

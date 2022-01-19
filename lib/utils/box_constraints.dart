@@ -110,14 +110,14 @@ InputDecoration waInputDecoration(
     EdgeInsets padding}) {
   return InputDecoration(
     contentPadding:
-        padding ?? EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+        padding ?? EdgeInsets.symmetric(vertical: 16, horizontal: 5),
     counter: Offstage(),
     focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(10),
         borderSide: BorderSide(color: borderColor ?? WAPrimaryColor)),
     enabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.all(Radius.circular(16)),
-      borderSide: BorderSide(color: Colors.grey.withOpacity(0.2)),
+      borderRadius: BorderRadius.all(Radius.circular(10)),
+      borderSide: BorderSide(color: Colors.grey.withOpacity(0.8)),
     ),
     fillColor: bgColor ?? WAPrimaryColor.withOpacity(0.04),
     hintText: hint,

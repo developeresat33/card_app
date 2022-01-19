@@ -1,18 +1,28 @@
-import 'package:card_application/mainscreens/login_page.dart';
+import 'package:card_application/states/card_transactions.dart';
 import 'package:card_application/states/dashboard_provider.dart';
 import 'package:card_application/utils/colors.dart';
 import 'package:card_application/utils/localization_manager.dart';
+import 'package:card_application/views/mainscreens/login_page.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    systemNavigationBarColor: Colors.black87, // navigation bar color
+    statusBarColor: Colors.black, // status bar color
+  ));
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   runApp(MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => DashProvider()),
+        ChangeNotifierProvider(create: (_) => CardTransactionsProvider()),
       ],
       child: EasyLocalization(
           supportedLocales: LocalizationManager.instance.supportedLocales,
@@ -21,16 +31,22 @@ void main() async {
           child: const MyApp())));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key key}) : super(key: key);
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    var myprovider = Provider.of<DashProvider>(context, listen: true);
     return GetMaterialApp(
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
-      locale: context.locale,
+      locale: myprovider.locale,
       title: 'Card_App_Demo',
       theme: ThemeData(
           primarySwatch: Colors.red,

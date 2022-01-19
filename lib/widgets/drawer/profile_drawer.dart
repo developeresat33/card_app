@@ -1,7 +1,6 @@
-import 'dart:ui';
-
-import 'package:card_application/mainscreens/login_page.dart';
+import 'package:card_application/extensions/string_extension.dart';
 import 'package:card_application/utils/functions.dart';
+import 'package:card_application/views/mainscreens/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -37,7 +36,7 @@ class _MainDrawerState extends State<MainDrawer> {
                     SizedBox(
                       width: 20.0,
                     ),
-                    Text("Profil Adı")
+                    Text('maindrawer.p_name'.translate())
                   ],
                 ),
               ),
@@ -50,7 +49,7 @@ class _MainDrawerState extends State<MainDrawer> {
                         Icons.person,
                         color: Colors.black,
                       ),
-                      title: Text("Profil Sayfası"),
+                      title: Text('maindrawer.p_page'.translate()),
                     ),
                     ListTile(
                       onTap: () {},
@@ -58,7 +57,7 @@ class _MainDrawerState extends State<MainDrawer> {
                         Icons.settings,
                         color: Colors.black,
                       ),
-                      title: Text("Ayarlar"),
+                      title: Text('maindrawer.p_set'.translate()),
                     ),
                   ],
                 ),
@@ -71,7 +70,7 @@ class _MainDrawerState extends State<MainDrawer> {
                   Icons.logout,
                   color: Colors.black,
                 ),
-                title: Text("Çıkış Yap"),
+                title: Text('maindrawer.log_out'.translate()),
               )
             ],
           ),
