@@ -51,10 +51,14 @@ class WACardComponentState extends State<WACardComponent> {
             alignment: Alignment.topRight,
             child: ImageIcon(
               widget.cardModel.selectType == 0
-                  ? AssetImage('assets/wa_visa.png')
+                  ? AssetImage(
+                      'assets/wa_visa.png',
+                    )
                   : AssetImage('assets/wa_master.png'),
               size: 50,
-              color: Colors.white,
+              color: widget.cardModel.color == Color.fromRGBO(214, 214, 214, 1)
+                  ? Colors.black87
+                  : Colors.white,
             ),
           ),
           Text(widget.cardModel.cardName,
@@ -63,10 +67,21 @@ class WACardComponentState extends State<WACardComponent> {
                   fontSize: 15,
                   fontWeight: FontWeight.bold)),
           8.height,
-          Text('Limit', style: TextStyle(color: Colors.white70, fontSize: 15)),
+          Text('Limit',
+              style: TextStyle(
+                  color:
+                      widget.cardModel.color == Color.fromRGBO(214, 214, 214, 1)
+                          ? Colors.black87
+                          : Colors.white70,
+                  fontSize: 15)),
           8.height,
           Text('${widget.cardModel.limit} ₺',
-              style: TextStyle(color: Colors.white70, fontSize: 18)),
+              style: TextStyle(
+                  color:
+                      widget.cardModel.color == Color.fromRGBO(214, 214, 214, 1)
+                          ? Colors.black87
+                          : Colors.white70,
+                  fontSize: 18)),
           30.height,
         ],
       ),

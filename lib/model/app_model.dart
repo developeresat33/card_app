@@ -45,7 +45,7 @@ class CircleModel {
   Color secondColor;
   double secondRadius;
 
-  CircleModel({this.color, this.radius});
+  CircleModel({this.color, this.radius, this.secondColor, this.secondRadius});
 }
 
 class WAOperationsModel {

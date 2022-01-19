@@ -1,3 +1,4 @@
+import 'package:card_application/states/card_transactions.dart';
 import 'package:card_application/states/dashboard_provider.dart';
 import 'package:card_application/states/provider_header.dart';
 import 'package:card_application/utils/box_constraints.dart';
@@ -28,7 +29,6 @@ class WAHomeScreen extends StatefulWidget {
 }
 
 class WAHomeScreenState extends State<WAHomeScreen> {
-  List<WACardModel> cardList = waCardList();
   List<WAOperationsModel> operationsList = waOperationList();
   List<WATransactionModel> transactionList = waTransactionList();
 
@@ -49,6 +49,7 @@ class WAHomeScreenState extends State<WAHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var ct = Provider.of<CardTransactionsProvider>(Get.context, listen: false);
     ProviderHeader.dshprovider.subLanguage = [
       UnicornButton(
         labelText: "Türkçe",
@@ -215,7 +216,10 @@ class WAHomeScreenState extends State<WAHomeScreen> {
                                   style: TextStyle(
                                       fontSize: 20,
                                       fontStyle: FontStyle.normal)),
-                              Icon(Icons.play_arrow, color: Colors.grey),
+                              InkWell(
+                                  onTap: () async {},
+                                  child: Icon(Icons.play_arrow,
+                                      color: Colors.grey)),
                             ],
                           ).paddingOnly(left: 16, right: 16),
                           5.height,
@@ -262,18 +266,24 @@ class WAHomeScreenState extends State<WAHomeScreen> {
                                       top: 16, bottom: 16, right: 5, left: 5),
                                 ),
                                 Expanded(
-                                  child: CarouselSlider(
-                                    options: CarouselOptions(
-                                        autoPlay: true,
-                                        enlargeCenterPage: true,
-                                        autoPlayAnimationDuration:
-                                            Duration(milliseconds: 450)),
-                                    items: cardList.map((cardItem) {
-                                      return WACardComponent(
-                                          cardModel: cardItem);
-                                    }).toList(),
-                                  ),
-                                ),
+                                    child: ct.isAddCard
+                                        ? CarouselSlider(
+                                            options: CarouselOptions(
+                                                autoPlay: true,
+                                                enlargeCenterPage: true,
+                                                autoPlayAnimationDuration:
+                                                    Duration(
+                                                        milliseconds: 450)),
+                                            items: cardList.map((cardItem) {
+                                              return WACardComponent(
+                                                  cardModel: cardItem);
+                                            }).toList(),
+                                          )
+                                        : Center(
+                                            child: CircularProgressIndicator(
+                                              color: WAPrimaryColor,
+                                            ),
+                                          ))
                               ],
                             ),
                           ),
