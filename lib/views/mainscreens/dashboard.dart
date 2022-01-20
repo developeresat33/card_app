@@ -1,4 +1,5 @@
 import 'package:card_application/states/dashboard_provider.dart';
+import 'package:card_application/states/provider_header.dart';
 import 'package:card_application/utils/colors.dart';
 import 'package:card_application/views/mainscreens/home_screen.dart';
 import 'package:card_application/views/mainscreens/statistic_screen.dart';
@@ -23,6 +24,7 @@ class WADashboardScreenState extends State<WADashboardScreen> {
 
   @override
   void initState() {
+    ProviderHeader.dshprovider.getOverViewList();
     super.initState();
     init();
   }

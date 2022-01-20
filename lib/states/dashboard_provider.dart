@@ -1,4 +1,8 @@
+import 'dart:ffi';
+
+import 'package:card_application/extensions/string_extension.dart';
 import 'package:card_application/views/mainscreens/dashboard.dart';
+import 'package:card_application/widgets/data_generator.dart';
 import 'package:card_application/widgets/logo_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -24,5 +28,15 @@ class DashProvider extends ChangeNotifier {
   void setLocale(Locale value) {
     locale = value;
     notifyListeners();
+  }
+
+  void getOverViewList() {
+    overViewList = [
+      "statistics.all".translate(),
+      "statistics.mon".translate(),
+      "statistics.year".translate(),
+      "statistics.dy".translate(),
+      "statistics.wk".translate()
+    ];
   }
 }

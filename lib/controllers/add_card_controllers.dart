@@ -7,6 +7,14 @@ class AddCControllers {
   TextEditingController pointCtrl = TextEditingController();
   TextEditingController advanceCtrl = TextEditingController();
   TextEditingController paymentCtrl = TextEditingController();
+  TextEditingController lastNumbers = TextEditingController();
 
-  AddCControllers({this.cardNameCtrl, this.limitCtrl, this.cutOfCtrl});
+  AddCControllers(
+      {this.cardNameCtrl,
+      this.limitCtrl,
+      this.cutOfCtrl,
+      this.pointCtrl,
+      this.advanceCtrl,
+      this.paymentCtrl,
+      this.lastNumbers});
 }

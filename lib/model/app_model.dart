@@ -26,6 +26,7 @@ class WACardModel {
   DateTime cutOfDate;
   String cashAdvanceLimit;
   DateTime paymentDate;
+  String lastNumbers;
 
   WACardModel(
       {this.image,
@@ -44,8 +45,14 @@ class CircleModel {
   double radius;
   Color secondColor;
   double secondRadius;
+  bool isSelected;
 
-  CircleModel({this.color, this.radius, this.secondColor, this.secondRadius});
+  CircleModel(
+      {this.color,
+      this.radius,
+      this.secondColor,
+      this.secondRadius,
+      this.isSelected = false});
 }
 
 class WAOperationsModel {

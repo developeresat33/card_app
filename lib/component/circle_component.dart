@@ -8,14 +8,30 @@ class ColorComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CircleAvatar(
-      //border
-      radius: circleModel.radius,
-      backgroundColor: circleModel.color,
-      child: CircleAvatar(
-        radius: circleModel.secondRadius,
-        backgroundColor: circleModel.secondColor,
-      ),
+    return Stack(
+      children: [
+        Align(
+          alignment: Alignment.center,
+          child: CircleAvatar(
+            //border
+            radius: circleModel.radius,
+            backgroundColor: circleModel.color,
+            child: CircleAvatar(
+              radius: circleModel.secondRadius,
+              backgroundColor: circleModel.secondColor,
+            ),
+          ),
+        ),
+        if (circleModel.isSelected)
+          Positioned(
+            top: 0,
+            right: 0,
+            child: Icon(
+              Icons.check,
+              color: Colors.green,
+            ),
+          ),
+      ],
     );
   }
 }

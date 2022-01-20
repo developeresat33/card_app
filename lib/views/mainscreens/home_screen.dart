@@ -266,24 +266,24 @@ class WAHomeScreenState extends State<WAHomeScreen> {
                                       top: 16, bottom: 16, right: 5, left: 5),
                                 ),
                                 Expanded(
-                                    child: ct.isAddCard
-                                        ? CarouselSlider(
-                                            options: CarouselOptions(
-                                                autoPlay: true,
-                                                enlargeCenterPage: true,
-                                                autoPlayAnimationDuration:
-                                                    Duration(
-                                                        milliseconds: 450)),
-                                            items: cardList.map((cardItem) {
-                                              return WACardComponent(
-                                                  cardModel: cardItem);
-                                            }).toList(),
-                                          )
-                                        : Center(
-                                            child: CircularProgressIndicator(
-                                              color: WAPrimaryColor,
-                                            ),
-                                          ))
+                                    child: ValueListenableBuilder<
+                                        List<WACardModel>>(
+                                  valueListenable: ct.wreckerServiceState,
+                                  builder: (context, value, _) {
+                                    return CarouselSlider(
+                                      options: CarouselOptions(
+                                          autoPlay: true,
+                                          enlargeCenterPage: true,
+                                          autoPlayAnimationDuration:
+                                              Duration(milliseconds: 450)),
+                                      items: ct.wreckerServiceState.value
+                                          .map((cardItem) {
+                                        return WACardComponent(
+                                            cardModel: cardItem);
+                                      }).toList(),
+                                    );
+                                  },
+                                ))
                               ],
                             ),
                           ),

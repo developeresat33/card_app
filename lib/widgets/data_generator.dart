@@ -30,36 +30,6 @@ List<WAOperationsModel> waOperationList() {
   return operationModel;
 }
 
-List<WACardModel> cardList = [
-  WACardModel(
-      limit: '12,00,000',
-      cashAdvanceLimit: "3,00,000",
-      cardName: "Ak Bank",
-      paymentDate: DateTime.now(),
-      cutOfDate: DateTime.now(),
-      point: 0,
-      selectType: 0,
-      color: Color(0xFF6C56F9)),
-  WACardModel(
-      limit: '12,23,000',
-      cashAdvanceLimit: "3,00,000",
-      cardName: "Deniz Bank",
-      paymentDate: DateTime.now(),
-      cutOfDate: DateTime.now(),
-      point: 0,
-      selectType: 1,
-      color: Color(0xFFFF7426)),
-  WACardModel(
-      limit: '23,00,000',
-      cardName: "Vakıf Bank",
-      selectType: 0,
-      cashAdvanceLimit: "3,00,000",
-      paymentDate: DateTime.now(),
-      cutOfDate: DateTime.now(),
-      point: 200,
-      color: Color(0xFF26C884))
-];
-
 List<WATransactionModel> waTransactionList() {
   List<WATransactionModel> transactionList = [];
   transactionList.add(WATransactionModel(
@@ -81,13 +51,7 @@ List<WATransactionModel> waTransactionList() {
   return transactionList;
 }
 
-List<String> overViewList = [
-  "statistics.all".translate(),
-  "statistics.mon".translate(),
-  "statistics.year".translate(),
-  "statistics.dy".translate(),
-  "statistics.wk".translate()
-];
+List<String> overViewList = [];
 List<Color> selectColors = [
   Color.fromRGBO(24, 116, 205, 1),
   Color.fromRGBO(188, 0, 0, 1),

@@ -1,4 +1,5 @@
 import 'package:card_application/component/card_component.dart';
+import 'package:card_application/controllers/add_card_controllers.dart';
 import 'package:card_application/extensions/int_extensions.dart';
 import 'package:card_application/extensions/string_extension.dart';
 import 'package:card_application/model/app_model.dart';
@@ -6,7 +7,6 @@ import 'package:card_application/states/card_transactions.dart';
 import 'package:card_application/utils/box_constraints.dart';
 import 'package:card_application/utils/colors.dart';
 import 'package:card_application/utils/functions.dart';
-import 'package:card_application/views/mainscreens/home_screen.dart';
 import 'package:card_application/widgets/custom_textformfield.dart';
 import 'package:card_application/widgets/data_generator.dart';
 import 'package:card_application/widgets/dialogs/toasy_msg.dart';
@@ -29,6 +29,7 @@ class SomeSheets {
     var ct = Provider.of<CardTransactionsProvider>(Get.context, listen: false);
     ct.colorList = [];
     ct.getColors();
+    ct.addCardState = AddCControllers();
     ct.addCardModel = WACardModel();
     var _formkey = GlobalKey<FormState>();
     showModalBottomSheet(
@@ -43,7 +44,7 @@ class SomeSheets {
                       (BuildContext context,
                           void Function(void Function()) setState) {
                     return Container(
-                      height: size.height * 0.85,
+                      height: size.height * 0.9750,
                       child: Form(
                         key: _formkey,
                         child: Column(
@@ -63,7 +64,19 @@ class SomeSheets {
                                 SizedBox(
                                   width: size.width * 0.020,
                                 ),
-                                Text('home.add_card'.translate())
+                                Text('home.add_card'.translate()),
+                                Spacer(),
+                                IconButton(
+                                    onPressed: () {
+                                      Get.back();
+                                    },
+                                    icon: Icon(
+                                      Icons.close,
+                                      color: Colors.black54,
+                                    )),
+                                SizedBox(
+                                  width: size.width * 0.030,
+                                ),
                               ],
                             ),
                             Row(
@@ -78,7 +91,7 @@ class SomeSheets {
                               ],
                             ),
                             Container(
-                              height: size.height * 0.17,
+                              height: size.height * 0.23,
                               width: size.width * 0.8,
                               child: WACardComponent(
                                 cardModel: cardModel,
@@ -106,7 +119,7 @@ class SomeSheets {
                                                 InkWell(
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                            15),
+                                                            40),
                                                     onTap: () {
                                                       setState(() {
                                                         cardModel.color = ct
@@ -173,7 +186,7 @@ class SomeSheets {
                                               );
                                             }).toList(),
                                             onChanged: (val) {
-                                              if (value == "Visa") {
+                                              if (val == "Visa") {
                                                 setState(() {
                                                   cardModel.selectType = 0;
                                                   value.addCardModel
@@ -342,11 +355,37 @@ class SomeSheets {
                                             child: CustomTextFormField(
                                           controller:
                                               value.addCardState.pointCtrl,
-                                          placeholder: "Puan(Opsiyonel)",
+                                          placeholder: "Puan (Opsiyonel)",
                                           hintText: "100",
                                           onChanged: (val) {
                                             value.addCardModel.point =
                                                 int.parse(val);
+                                          },
+                                        )),
+                                        SizedBox(
+                                          width: size.width * 0.1,
+                                        )
+                                      ],
+                                    ),
+                                    7.height,
+                                    Row(
+                                      children: [
+                                        SizedBox(
+                                          width: size.width * 0.1,
+                                        ),
+                                        Expanded(
+                                            child: CustomTextFormField(
+                                          controller:
+                                              value.addCardState.cardNameCtrl,
+                                          placeholder: "Son 4 Hane (Opsiyonel)",
+                                          hintText: "0966",
+                                          onChanged: (val) {
+                                            value.addCardModel.cardName = val;
+                                            value.addCardModel.lastNumbers =
+                                                val;
+                                            setState(() {
+                                              cardModel.lastNumbers = val;
+                                            });
                                           },
                                         )),
                                         SizedBox(
@@ -400,6 +439,9 @@ class SomeSheets {
                                         ),
                                       ],
                                     ),
+                                    SizedBox(
+                                      height: size.height * 0.030,
+                                    )
                                   ],
                                 ),
                               ),
