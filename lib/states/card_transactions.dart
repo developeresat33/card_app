@@ -1,6 +1,7 @@
 import 'package:card_application/component/circle_component.dart';
 import 'package:card_application/controllers/add_card_controllers.dart';
 import 'package:card_application/model/app_model.dart';
+import 'package:card_application/model/wa_card_model.dart';
 import 'package:card_application/widgets/data_generator.dart';
 import 'package:flutter/material.dart';
 

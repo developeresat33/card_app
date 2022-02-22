@@ -11,14 +11,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:card_application/extensions/string_extension.dart';
 
-class WAStatisticScreen extends StatefulWidget {
-  static String tag = '/WAStatisticScreen';
+class StatisticScreen extends StatefulWidget {
+  static String tag = '/StatisticScreen';
 
   @override
-  WAStatisticScreenState createState() => WAStatisticScreenState();
+  StatisticScreenState createState() => StatisticScreenState();
 }
 
-class WAStatisticScreenState extends State<WAStatisticScreen> {
+class StatisticScreenState extends State<StatisticScreen> {
   List<WATransactionModel> categoriesList = waCategoriesList();
 
   @override

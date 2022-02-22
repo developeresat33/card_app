@@ -1,7 +1,6 @@
+import 'package:card_application/model/wa_card_model.dart';
 import 'package:card_application/utils/box_constraints.dart';
 import 'package:card_application/extensions/int_extensions.dart';
-import 'package:card_application/model/app_model.dart';
-import 'package:card_application/utils/functions.dart';
 import 'package:flutter/material.dart';
 
 class WACardComponent extends StatefulWidget {

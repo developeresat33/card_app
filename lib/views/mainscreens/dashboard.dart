@@ -18,8 +18,8 @@ class WADashboardScreen extends StatefulWidget {
 class WADashboardScreenState extends State<WADashboardScreen> {
   int _selectedIndex = 0;
   var _pages = <Widget>[
-    WAHomeScreen(),
-    WAStatisticScreen(),
+    HomeScreen(),
+    StatisticScreen(),
   ];
 
   @override

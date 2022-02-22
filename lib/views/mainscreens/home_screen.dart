@@ -1,3 +1,5 @@
+import 'package:card_application/database/db_helper.dart';
+import 'package:card_application/model/wa_card_model.dart';
 import 'package:card_application/states/card_transactions.dart';
 import 'package:card_application/states/dashboard_provider.dart';
 import 'package:card_application/states/provider_header.dart';
@@ -14,26 +16,29 @@ import 'package:card_application/utils/functions.dart';
 import 'package:card_application/utils/localization_manager.dart';
 import 'package:card_application/widgets/data_generator.dart';
 import 'package:card_application/widgets/tools/somesheets.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:unicorndial/unicorndial.dart';
 
-class WAHomeScreen extends StatefulWidget {
-  static String tag = '/WAHomeScreen';
+class HomeScreen extends StatefulWidget {
+  static String tag = '/HomeScreen';
 
   @override
-  WAHomeScreenState createState() => WAHomeScreenState();
+  HomeScreenState createState() => HomeScreenState();
 }
 
-class WAHomeScreenState extends State<WAHomeScreen> {
+class HomeScreenState extends State<HomeScreen> {
   List<WAOperationsModel> operationsList = waOperationList();
   List<WATransactionModel> transactionList = waTransactionList();
 
+  List<WACardModel> cards;
+  DbHelper _dbHelper;
+
   @override
   void initState() {
+    _dbHelper = DbHelper();
     super.initState();
     init();
   }
@@ -267,23 +272,38 @@ class WAHomeScreenState extends State<WAHomeScreen> {
                                 ),
                                 Expanded(
                                     child: ValueListenableBuilder<
-                                        List<WACardModel>>(
-                                  valueListenable: ct.wreckerServiceState,
-                                  builder: (context, value, _) {
-                                    return CarouselSlider(
-                                      options: CarouselOptions(
-                                          autoPlay: true,
-                                          enlargeCenterPage: true,
-                                          autoPlayAnimationDuration:
-                                              Duration(milliseconds: 450)),
-                                      items: ct.wreckerServiceState.value
-                                          .map((cardItem) {
-                                        return WACardComponent(
-                                            cardModel: cardItem);
-                                      }).toList(),
-                                    );
-                                  },
-                                ))
+                                            List<WACardModel>>(
+                                        valueListenable: ct.wreckerServiceState,
+                                        builder: (context, value, _) {
+                                          return FutureBuilder(
+                                              future: _dbHelper.getCards(),
+                                              builder: (BuildContext context,
+                                                  AsyncSnapshot<
+                                                          List<WACardModel>>
+                                                      snapshot) {
+                                                if (!snapshot.hasData)
+                                                  return Center(
+                                                      child:
+                                                          CircularProgressIndicator());
+                                                if (snapshot.data.isEmpty)
+                                                  return Center(
+                                                    child: Text(
+                                                        "Your card list empty"),
+                                                  );
+                                                return ListView.builder(
+                                                  itemCount:
+                                                      snapshot.data.length,
+                                                  itemBuilder:
+                                                      (BuildContext context,
+                                                          int index) {
+                                                    return WACardComponent(
+                                                      cardModel:
+                                                          snapshot.data[index],
+                                                    );
+                                                  },
+                                                );
+                                              });
+                                        }))
                               ],
                             ),
                           ),
