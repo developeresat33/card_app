@@ -1,4 +1,5 @@
 import 'package:card_application/database/db_helper.dart';
+import 'package:card_application/database/db_models/shopping_model.dart';
 import 'package:card_application/model/wa_card_model.dart';
 import 'package:card_application/states/card_transactions.dart';
 import 'package:card_application/states/dashboard_provider.dart';
@@ -271,53 +272,60 @@ class HomeScreenState extends State<HomeScreen> {
                                       top: 16, bottom: 16, right: 5, left: 5),
                                 ),
                                 Expanded(
-                                    child: ValueListenableBuilder<
-                                            List<WACardModel>>(
-                                        valueListenable: ct.wreckerServiceState,
-                                        builder: (context, value, _) {
-                                          return FutureBuilder(
-                                              future: _dbHelper.getCards(),
-                                              builder: (BuildContext context,
-                                                  AsyncSnapshot<
-                                                          List<WACardModel>>
-                                                      snapshot) {
-                                                if (!snapshot.hasData)
-                                                  return Center(
-                                                      child:
-                                                          CircularProgressIndicator());
-                                                if (snapshot.data.isEmpty)
-                                                  return Center(
-                                                    child: Text(
-                                                        "Your card list empty"),
-                                                  );
-                                                return ListView.builder(
-                                                  itemCount:
-                                                      snapshot.data.length,
-                                                  itemBuilder:
-                                                      (BuildContext context,
-                                                          int index) {
-                                                    return WACardComponent(
-                                                      cardModel:
-                                                          snapshot.data[index],
-                                                    );
-                                                  },
-                                                );
-                                              });
+                                    child: FutureBuilder(
+                                        future: _dbHelper.getCards(),
+                                        builder: (BuildContext context,
+                                            AsyncSnapshot<List<WACardModel>>
+                                                snapshot) {
+                                          if (!snapshot.hasData)
+                                            return Center(
+                                                child:
+                                                    CircularProgressIndicator());
+                                          if (snapshot.data.isEmpty)
+                                            return Center(
+                                              child:
+                                                  Text("Your card list empty."),
+                                            );
+                                          return ListView.builder(
+                                            scrollDirection: Axis.horizontal,
+                                            itemCount: snapshot.data.length,
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              return WACardComponent(
+                                                cardModel: snapshot.data[index],
+                                              ).paddingOnly(right: 10);
+                                            },
+                                          );
                                         }))
                               ],
                             ),
                           ),
                           16.height,
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('home.op'.tr(),
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontStyle: FontStyle.normal)),
-                              Icon(Icons.play_arrow, color: Colors.grey),
-                            ],
-                          ).paddingOnly(left: 16, right: 16),
+                          InkWell(
+                            onTap: () {
+                              _dbHelper.insertShopping(ShoppingModel(
+                                  id: 1,
+                                  cardID: 1,
+                                  dateTime: "21.02.2022",
+                                  companyName: "Alda",
+                                  comment: "sdsds",
+                                  amount: 200,
+                                  installments: 1,
+                                  pointsEarned: 20,
+                                  pointsSpent: 10,
+                                  picture: ""));
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('home.op'.tr(),
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontStyle: FontStyle.normal)),
+                                Icon(Icons.play_arrow, color: Colors.grey),
+                              ],
+                            ).paddingOnly(left: 16, right: 16),
+                          ),
                           SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             child: Wrap(
@@ -343,8 +351,30 @@ class HomeScreenState extends State<HomeScreen> {
                           16.height,
                           Column(
                             children: transactionList.map((transactionItem) {
-                              return WATransactionComponent(
-                                  transactionModel: transactionItem);
+                              return FutureBuilder(
+                                  future: _dbHelper.getShopping(),
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<List<ShoppingModel>>
+                                          snapshot) {
+                                    if (!snapshot.hasData)
+                                      return Center(
+                                          child: CircularProgressIndicator());
+                                    if (snapshot.data.isEmpty)
+                                      return Center(
+                                        child: Text("Your shop list empty."),
+                                      );
+                                    return ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: snapshot.data.length,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        return WATransactionComponent(
+                                          transactionModel:
+                                              snapshot.data[index],
+                                        ).paddingOnly(right: 10);
+                                      },
+                                    );
+                                  });
                             }).toList(),
                           ),
                         ],

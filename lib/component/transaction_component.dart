@@ -1,12 +1,12 @@
+import 'package:card_application/database/db_models/shopping_model.dart';
 import 'package:card_application/utils/box_constraints.dart';
-import 'package:card_application/model/app_model.dart';
 import 'package:card_application/widgets/rich_text_widget.dart';
 import 'package:flutter/material.dart';
 
 class WATransactionComponent extends StatefulWidget {
   static String tag = '/WATransactionComponent';
 
-  final WATransactionModel transactionModel;
+  final ShoppingModel transactionModel;
 
   WATransactionComponent({this.transactionModel});
 
@@ -47,28 +47,24 @@ class WATransactionComponentState extends State<WATransactionComponent> {
           alignment: Alignment.center,
           decoration: boxDecorationWithRoundedCorners(
             boxShape: BoxShape.circle,
-            backgroundColor: widget.transactionModel.color.withOpacity(0.1),
+            backgroundColor: Colors.blue.withOpacity(0.1),
           ),
-          child: ImageIcon(
-            AssetImage('${widget.transactionModel.image}'),
-            size: 24,
-            color: widget.transactionModel.color,
-          ),
+          child: Icon(Icons.shop),
         ),
         title: RichTextWidget(
           list: [
             TextSpan(
-              text: '${widget.transactionModel.title}',
+              /*      text: '${widget.transactionModel.}', */
               style: TextStyle(color: Colors.black54, fontSize: 14),
             ),
             TextSpan(
-              text: '\t${widget.transactionModel.name}',
+              text: '\t${widget.transactionModel.companyName}',
               style: TextStyle(color: Colors.black54, fontSize: 14),
             ),
           ],
           maxLines: 1,
         ),
-        subtitle: Text('${widget.transactionModel.time}',
+        subtitle: Text('${widget.transactionModel.dateTime}',
             style: TextStyle(color: Colors.black54, fontSize: 14)),
         trailing: Container(
           width: 80,
@@ -76,10 +72,10 @@ class WATransactionComponentState extends State<WATransactionComponent> {
           alignment: Alignment.center,
           decoration: boxDecorationWithRoundedCorners(
             borderRadius: BorderRadius.circular(30),
-            backgroundColor: widget.transactionModel.color.withOpacity(0.1),
+            backgroundColor: Colors.blue,
           ),
           child: Text(
-            '${widget.transactionModel.balance}',
+            '${widget.transactionModel.amount}',
             maxLines: 1,
             style: TextStyle(color: Colors.black54, fontSize: 12),
           ),

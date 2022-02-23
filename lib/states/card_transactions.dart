@@ -13,33 +13,33 @@ class CardTransactionsProvider extends ChangeNotifier {
 
   final ValueNotifier<List<WACardModel>> wreckerServiceState =
       ValueNotifier<List<WACardModel>>([
-    WACardModel(
-        limit: '12,00,000',
+/*     WACardModel(
+        boundary: '12,00,000',
         cashAdvanceLimit: "3,00,000",
         cardName: "Ak Bank",
-        paymentDate: DateTime.now(),
-        cutOfDate: DateTime.now(),
+        paymentDate: "",
+        cutOfDate: "",
         point: 0,
         selectType: 0,
         color: Color(0xFF6C56F9)),
     WACardModel(
-        limit: '12,23,000',
+        boundary: '12,23,000',
         cashAdvanceLimit: "3,00,000",
         cardName: "Deniz Bank",
-        paymentDate: DateTime.now(),
-        cutOfDate: DateTime.now(),
+        paymentDate: "",
+        cutOfDate: "",
         point: 0,
         selectType: 1,
         color: Color(0xFFFF7426)),
     WACardModel(
-        limit: '23,00,000',
+        boundary: '23,00,000',
         cardName: "Vakıf Bank",
         selectType: 0,
         cashAdvanceLimit: "3,00,000",
-        paymentDate: DateTime.now(),
-        cutOfDate: DateTime.now(),
+        paymentDate: "",
+        cutOfDate: "",
         point: 200,
-        color: Color(0xFF26C884))
+        color: Color(0xFF26C884)) */
   ]);
 
   void getColors() {

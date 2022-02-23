@@ -20,13 +20,13 @@ class SomeSheets {
     var cardModel = WACardModel(
         selectType: 0,
         cardName: "",
-        limit: "0",
+        boundary: "0",
         image: "",
         cashAdvanceLimit: "0",
         point: 0,
-        paymentDate: DateTime.now(),
-        cutOfDate: DateTime.now(),
-        color: WAPrimaryColor);
+        paymentDate: "",
+        cutOfDate: "",
+        color: WAPrimaryColor.value.toString());
     var ct = Provider.of<CardTransactionsProvider>(Get.context, listen: false);
     ct.colorList = [];
     ct.getColors();
@@ -138,14 +138,18 @@ class SomeSheets {
                                                                   .colorList[
                                                                       index]
                                                                   .circleModel
-                                                                  .secondColor;
+                                                                  .secondColor
+                                                                  .value
+                                                                  .toString();
                                                               value.addCardModel
                                                                       .color =
                                                                   ct
                                                                       .colorList[
                                                                           index]
                                                                       .circleModel
-                                                                      .secondColor;
+                                                                      .secondColor
+                                                                      .value
+                                                                      .toString();
                                                             });
                                                           },
                                                           child: ct.colorList[
@@ -269,10 +273,10 @@ class SomeSheets {
                                                 placeholder: "Kart Limiti",
                                                 hintText: "1.000 ₺",
                                                 onChanged: (val) {
-                                                  value.addCardModel.limit =
+                                                  value.addCardModel.boundary =
                                                       val;
                                                   setState(() {
-                                                    cardModel.limit = val;
+                                                    cardModel.boundary = val;
                                                   });
                                                 },
                                                 validator: (val) {
@@ -329,7 +333,7 @@ class SomeSheets {
                                                 hintText: "21.05.2022",
                                                 onChanged: (val) {
                                                   value.addCardModel.cutOfDate =
-                                                      DateTime.now();
+                                                      val;
                                                 },
                                                 validator: (val) {
                                                   if (val.length == 0) {
@@ -355,8 +359,8 @@ class SomeSheets {
                                                 placeholder: "Ödeme Tarihi",
                                                 hintText: "21.05.2022",
                                                 onChanged: (val) {
-                                                  value.addCardModel.cutOfDate =
-                                                      DateTime.now();
+                                                  value.addCardModel
+                                                      .paymentDate = val;
                                                 },
                                                 validator: (val) {
                                                   if (val.length == 0) {
@@ -400,13 +404,13 @@ class SomeSheets {
                                               Expanded(
                                                   child: CustomTextFormField(
                                                 controller: value
-                                                    .addCardState.cardNameCtrl,
+                                                    .addCardState.lastNumbers,
                                                 placeholder:
                                                     "Son 4 Hane (Opsiyonel)",
                                                 hintText: "0966",
                                                 onChanged: (val) {
-                                                  value.addCardModel.cardName =
-                                                      val;
+                                                  value.addCardModel
+                                                      .lastNumbers = val;
                                                   value.addCardModel
                                                       .lastNumbers = val;
                                                   setState(() {
@@ -435,8 +439,8 @@ class SomeSheets {
                                                       await Get.back();
 
                                                       await _dbHelper
-                                                          .insertCard(
-                                                              cardModel);
+                                                          .insertCard(value
+                                                              .addCardModel);
                                                     } else {
                                                       setMessage(
                                                           "Boş veya geçersiz değer");

@@ -39,10 +39,10 @@ class WACardComponentState extends State<WACardComponent> {
       ),
       decoration: boxDecorationRoundedWithShadow(
         15,
-        backgroundColor: widget.cardModel.color,
+        backgroundColor: Color(int.parse(widget.cardModel.color)),
         blurRadius: 5.0,
         spreadRadius: 4.0,
-        shadowColor: widget.cardModel.color.withAlpha(50),
+        shadowColor: Color(int.parse(widget.cardModel.color)).withAlpha(50),
       ),
       child: SingleChildScrollView(
         child: Column(
@@ -96,7 +96,7 @@ class WACardComponentState extends State<WACardComponent> {
                         : Colors.white70,
                     fontSize: 15)),
             8.height,
-            Text('${widget.cardModel.limit} ₺',
+            Text('${widget.cardModel.boundary} ₺',
                 style: TextStyle(
                     color: widget.cardModel.color ==
                             Color.fromRGBO(214, 214, 214, 1)

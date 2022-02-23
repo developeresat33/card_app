@@ -3,33 +3,34 @@ import 'package:flutter/material.dart';
 class WACardModel {
   int id;
   String image;
-  String limit;
+  String boundary;
   String cardName;
-  Color color;
+  String color;
   int selectType;
   int point;
-  DateTime cutOfDate;
+  String cutOfDate;
   String cashAdvanceLimit;
-  DateTime paymentDate;
+  String paymentDate;
   String lastNumbers;
 
   WACardModel(
-      {this.image,
-      this.limit,
-      this.id,
+      {this.id,
+      this.image,
+      this.boundary,
       this.selectType,
       this.cardName,
       this.color,
       this.paymentDate,
       this.cutOfDate,
       this.cashAdvanceLimit,
-      this.point});
+      this.point,
+      this.lastNumbers});
 
   Map<String, dynamic> toMap() {
     var map = Map<String, dynamic>();
     map['id'] = id;
     map['image'] = image;
-    map['limit'] = limit;
+    map['boundary'] = boundary;
     map['select_type'] = selectType;
     map['card_name'] = cardName;
     map['color'] = color;
@@ -37,6 +38,7 @@ class WACardModel {
     map['cut_of_date'] = cutOfDate;
     map['cash_advance_limit'] = cashAdvanceLimit;
     map['point'] = point;
+    map['last_numbers'] = lastNumbers;
 
     return map;
   }
@@ -44,7 +46,7 @@ class WACardModel {
   WACardModel.fromMap(Map<String, dynamic> map) {
     id = map['id'];
     image = map['image'];
-    limit = map['limit'];
+    boundary = map['boundary'];
     selectType = map['select_type'];
     cardName = map['card_name'];
     color = map['color'];
@@ -52,5 +54,6 @@ class WACardModel {
     cutOfDate = map['cut_of_date'];
     cashAdvanceLimit = map['cash_advance_limit'];
     point = map['point'];
+    lastNumbers = map['last_numbers'];
   }
 }
