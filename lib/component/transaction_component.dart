@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:card_application/database/db_models/shopping_model.dart';
+import 'package:card_application/database/shop_data.dart';
 import 'package:card_application/utils/box_constraints.dart';
 import 'package:card_application/widgets/rich_text_widget.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +9,7 @@ import 'package:flutter/material.dart';
 class WATransactionComponent extends StatefulWidget {
   static String tag = '/WATransactionComponent';
 
-  final ShoppingModel transactionModel;
+  final ShopData transactionModel;
 
   WATransactionComponent({this.transactionModel});
 
@@ -41,16 +44,7 @@ class WATransactionComponentState extends State<WATransactionComponent> {
         tileColor: Colors.red,
         enabled: true,
         contentPadding: EdgeInsets.zero,
-        leading: Container(
-          height: 50,
-          width: 50,
-          alignment: Alignment.center,
-          decoration: boxDecorationWithRoundedCorners(
-            boxShape: BoxShape.circle,
-            backgroundColor: Colors.blue.withOpacity(0.1),
-          ),
-          child: Icon(Icons.shop),
-        ),
+        leading: Icon(Icons.shop_2),
         title: RichTextWidget(
           list: [
             TextSpan(
@@ -58,29 +52,43 @@ class WATransactionComponentState extends State<WATransactionComponent> {
               style: TextStyle(color: Colors.black54, fontSize: 14),
             ),
             TextSpan(
-              text: '\t${widget.transactionModel.companyName}',
+              text: '${widget.transactionModel.companyName}',
               style: TextStyle(color: Colors.black54, fontSize: 14),
             ),
           ],
           maxLines: 1,
         ),
-        subtitle: Text('${widget.transactionModel.dateTime}',
-            style: TextStyle(color: Colors.black54, fontSize: 14)),
+        /*   subtitle: Text('${widget.transactionModel.dateTime}',
+            style: TextStyle(color: Colors.black54, fontSize: 14)), */
         trailing: Container(
           width: 80,
           height: 35,
           alignment: Alignment.center,
           decoration: boxDecorationWithRoundedCorners(
-            borderRadius: BorderRadius.circular(30),
-            backgroundColor: Colors.blue,
-          ),
+              borderRadius: BorderRadius.circular(30),
+              backgroundColor: colorGenerator()),
           child: Text(
-            '${widget.transactionModel.amount}',
+            '${widget.transactionModel.amount}' + " ₺",
             maxLines: 1,
             style: TextStyle(color: Colors.black54, fontSize: 12),
           ),
         ),
+        subtitle: Text(
+          '${widget.transactionModel.cardName}',
+          maxLines: 1,
+          style: TextStyle(color: Colors.black54, fontSize: 12),
+        ),
       ),
     );
   }
+}
+
+Color colorGenerator() {
+  List<String> clors = ["0", "1", "2", "3", "4", "A", "B", "C"];
+  String generateColor = "0X";
+  for (int i = 0; i < 8; i++) {
+    int a = Random().nextInt(clors.length - 1);
+    generateColor += clors[a];
+  }
+  return Color(int.parse(generateColor));
 }

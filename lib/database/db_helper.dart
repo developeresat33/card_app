@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:card_application/database/db_models/shopping_model.dart';
+import 'package:card_application/database/shop_data.dart';
 import 'package:card_application/model/wa_card_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -51,12 +52,12 @@ class DbHelper {
     return await dbClient.delete("Cards", where: "id=?", whereArgs: [id]);
   }
 
-  Future<List<ShoppingModel>> getShopping() async {
+  Future<List<ShopData>> getShopping() async {
     var dbClient = await db;
     var result = await dbClient.rawQuery(
         'SELECT company_name,comment,amount,card_name FROM Shopping JOIN Cards ON Cards.id=Shopping.card_id');
     print(result);
-    return result.map((data) => ShoppingModel.fromMap(data)).toList();
+    return result.map((data) => ShopData.fromMap(data)).toList();
   }
 
   Future<int> insertShopping(ShoppingModel shop) async {

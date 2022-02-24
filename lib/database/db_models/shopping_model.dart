@@ -1,5 +1,4 @@
 class ShoppingModel {
-  int id;
   int cardID;
   String dateTime;
   String companyName;
@@ -11,7 +10,6 @@ class ShoppingModel {
   String picture;
 
   ShoppingModel({
-    this.id,
     this.cardID,
     this.dateTime,
     this.companyName,
@@ -25,7 +23,7 @@ class ShoppingModel {
 
   Map<String, dynamic> toMap() {
     var map = Map<String, dynamic>();
-    map['id'] = id;
+
     map['card_id'] = cardID;
     map['date_time'] = dateTime;
     map['company_name'] = companyName;
@@ -40,7 +38,6 @@ class ShoppingModel {
   }
 
   ShoppingModel.fromMap(Map<String, dynamic> map) {
-    id = map['id'];
     cardID = map['card_id'];
     dateTime = map['date_time'];
     companyName = map['company_name'];
