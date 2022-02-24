@@ -41,6 +41,7 @@ class HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     _dbHelper = DbHelper();
+
     super.initState();
     init();
   }
@@ -56,7 +57,7 @@ class HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var ct = Provider.of<CardTransactionsProvider>(Get.context, listen: false);
+    /*  var ct = Provider.of<CardTransactionsProvider>(Get.context, listen: false); */
     ProviderHeader.dshprovider.subLanguage = [
       UnicornButton(
         labelText: "Türkçe",
@@ -301,17 +302,6 @@ class HomeScreenState extends State<HomeScreen> {
                         InkWell(
                           onTap: () {
                             print("hi dude");
-                            _dbHelper.insertShopping(ShoppingModel(
-                                /*   id: 1, */
-                                cardID: 3,
-                                dateTime: "21.02.2022",
-                                companyName: "Groseri",
-                                comment: "sdsds",
-                                amount: 500,
-                                installments: 1,
-                                pointsEarned: 20,
-                                pointsSpent: 10,
-                                picture: ""));
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,

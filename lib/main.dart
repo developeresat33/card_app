@@ -1,3 +1,4 @@
+import 'package:card_application/database/db_helper.dart';
 import 'package:card_application/states/card_transactions.dart';
 import 'package:card_application/states/dashboard_provider.dart';
 import 'package:card_application/utils/colors.dart';
@@ -22,7 +23,12 @@ void main() async {
   runApp(MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => DashProvider()),
-        ChangeNotifierProvider(create: (_) => CardTransactionsProvider()),
+        ChangeNotifierProvider(
+          create: (_) => CardTransactionsProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => DbHelper(),
+        ),
       ],
       child: EasyLocalization(
           supportedLocales: LocalizationManager.instance.supportedLocales,

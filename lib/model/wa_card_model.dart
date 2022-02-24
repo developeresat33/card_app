@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class WACardModel {
   int id;
   String image;

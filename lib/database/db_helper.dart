@@ -3,10 +3,11 @@ import 'dart:async';
 import 'package:card_application/database/db_models/shopping_model.dart';
 import 'package:card_application/database/shop_data.dart';
 import 'package:card_application/model/wa_card_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
-class DbHelper {
+class DbHelper extends ChangeNotifier {
   static Database _db;
 
   Future<Database> get db async {
@@ -38,6 +39,7 @@ class DbHelper {
   Future<int> insertCard(WACardModel card) async {
     print("sdsds");
     var dbClient = await db;
+
     return await dbClient.insert("Cards", card.toMap());
   }
 

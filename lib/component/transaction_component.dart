@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:card_application/database/db_models/shopping_model.dart';
 import 'package:card_application/database/shop_data.dart';
 import 'package:card_application/utils/box_constraints.dart';
 import 'package:card_application/widgets/rich_text_widget.dart';
@@ -44,7 +43,14 @@ class WATransactionComponentState extends State<WATransactionComponent> {
         tileColor: Colors.red,
         enabled: true,
         contentPadding: EdgeInsets.zero,
-        leading: Icon(Icons.shop_2),
+        leading: Container(
+            height: 50,
+            width: 50,
+            alignment: Alignment.center,
+            decoration: boxDecorationWithRoundedCorners(
+                boxShape: BoxShape.circle,
+                backgroundColor: colorGenerator().withOpacity(0.1)),
+            child: Icon(Icons.shopping_cart)),
         title: RichTextWidget(
           list: [
             TextSpan(
@@ -66,7 +72,7 @@ class WATransactionComponentState extends State<WATransactionComponent> {
           alignment: Alignment.center,
           decoration: boxDecorationWithRoundedCorners(
               borderRadius: BorderRadius.circular(30),
-              backgroundColor: colorGenerator()),
+              backgroundColor: colorGenerator().withOpacity(0.1)),
           child: Text(
             '${widget.transactionModel.amount}' + " ₺",
             maxLines: 1,

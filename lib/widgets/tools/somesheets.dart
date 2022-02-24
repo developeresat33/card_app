@@ -438,9 +438,8 @@ class SomeSheets {
                                                         .validate()) {
                                                       await Get.back();
 
-                                                      await _dbHelper
-                                                          .insertCard(value
-                                                              .addCardModel);
+                                                      _dbHelper.insertCard(
+                                                          value.addCardModel);
                                                     } else {
                                                       setMessage(
                                                           "Boş veya geçersiz değer");
