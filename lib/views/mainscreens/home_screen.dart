@@ -1,5 +1,4 @@
 import 'package:card_application/database/db_helper.dart';
-import 'package:card_application/database/db_models/shopping_model.dart';
 import 'package:card_application/database/shop_data.dart';
 import 'package:card_application/model/wa_card_model.dart';
 import 'package:card_application/states/card_transactions.dart';
@@ -20,6 +19,7 @@ import 'package:card_application/widgets/data_generator.dart';
 import 'package:card_application/widgets/tools/somesheets.dart';
 import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_boom_menu/flutter_boom_menu.dart';
 import 'package:get/route_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:unicorndial/unicorndial.dart';
@@ -57,6 +57,8 @@ class HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var crdprovider =
+        Provider.of<CardTransactionsProvider>(Get.context, listen: true);
     /*  var ct = Provider.of<CardTransactionsProvider>(Get.context, listen: false); */
     ProviderHeader.dshprovider.subLanguage = [
       UnicornButton(
@@ -147,11 +149,46 @@ class HomeScreenState extends State<HomeScreen> {
     return Consumer<DashProvider>(
         builder: (context, value, child) => SafeArea(
               child: Scaffold(
-                floatingActionButton: UnicornDialer(
-                    animationDuration: 150,
-                    parentButtonBackground: WAPrimaryColor,
-                    parentButton: Icon(Icons.translate),
-                    childButtons: value.subLanguage),
+                floatingActionButton: Stack(
+                  children: [
+                    UnicornDialer(
+                            animationDuration: 150,
+                            backgroundColor: Colors.transparent,
+                            parentButtonBackground: WAPrimaryColor,
+                            parentButton: Icon(Icons.translate),
+                            childButtons: value.subLanguage)
+                        .paddingOnly(left: 30),
+                    BoomMenu(
+                        animatedIcon: AnimatedIcons.menu_arrow,
+                        animatedIconTheme: IconThemeData(size: 22.0),
+                        //child: Icon(Icons.add),
+                        onOpen: () => print('OPENING DIAL'),
+                        onClose: () => print('DIAL CLOSED'),
+                        scrollVisible: true,
+                        overlayColor: Colors.black,
+                        overlayOpacity: 0.7,
+                        children: [
+                          MenuItem(
+                            child: Icon(Icons.add, color: Colors.black),
+                            title: "Kart Ekle",
+                            titleColor: Colors.white,
+                            subtitle: "Kart bilgilerinizi giriniz",
+                            subTitleColor: Colors.white,
+                            backgroundColor: Colors.greenAccent,
+                            onTap: () => print('FIRST CHILD'),
+                          ),
+                          MenuItem(
+                            child: Icon(Icons.adjust, color: Colors.black),
+                            title: "İşlem Ekle",
+                            titleColor: Colors.white,
+                            subtitle: "Mevcut kartınıza işlem ekleyiniz",
+                            subTitleColor: Colors.white,
+                            backgroundColor: Colors.blueAccent,
+                            onTap: () => print('FIRST CHILD'),
+                          ),
+                        ]),
+                  ],
+                ),
                 body: Container(
                   height: context.height(),
                   width: context.width(),
@@ -268,33 +305,40 @@ class HomeScreenState extends State<HomeScreen> {
                                 ).paddingOnly(
                                     top: 16, bottom: 16, right: 5, left: 5),
                               ),
-                              Expanded(
-                                  child: FutureBuilder(
-                                      future: _dbHelper.getCards(),
-                                      builder: (BuildContext context,
-                                          AsyncSnapshot<List<WACardModel>>
-                                              snapshot) {
-                                        if (!snapshot.hasData)
-                                          return Center(
-                                              child:
-                                                  CircularProgressIndicator());
-                                        if (snapshot.data.isEmpty)
-                                          return Center(
-                                            child:
-                                                Text("Your card list empty."),
-                                          );
-                                        return ListView.builder(
-                                          physics: BouncingScrollPhysics(),
-                                          scrollDirection: Axis.horizontal,
-                                          itemCount: snapshot.data.length,
-                                          itemBuilder: (BuildContext context,
-                                              int index) {
-                                            return WACardComponent(
-                                              cardModel: snapshot.data[index],
-                                            ).paddingOnly(right: 10);
-                                          },
-                                        );
-                                      }))
+                              crdprovider.isAddCard
+                                  ? Expanded(
+                                      child: FutureBuilder(
+                                          future: _dbHelper.getCards(),
+                                          builder: (BuildContext context,
+                                              AsyncSnapshot<List<WACardModel>>
+                                                  snapshot) {
+                                            if (!snapshot.hasData)
+                                              return Center(
+                                                  child:
+                                                      CircularProgressIndicator());
+                                            if (snapshot.data.isEmpty)
+                                              return Center(
+                                                child: Text(
+                                                    "Your card list empty."),
+                                              );
+                                            return ListView.builder(
+                                              physics: BouncingScrollPhysics(),
+                                              scrollDirection: Axis.horizontal,
+                                              itemCount: snapshot.data.length,
+                                              itemBuilder:
+                                                  (BuildContext context,
+                                                      int index) {
+                                                return WACardComponent(
+                                                  cardModel:
+                                                      snapshot.data[index],
+                                                ).paddingOnly(right: 10);
+                                              },
+                                            );
+                                          }))
+                                  : Expanded(
+                                      child: Center(
+                                      child: CircularProgressIndicator(),
+                                    ))
                             ],
                           ),
                         ),
@@ -346,7 +390,7 @@ class HomeScreenState extends State<HomeScreen> {
                                         child: CircularProgressIndicator());
                                   if (snapshot.data.isEmpty)
                                     return Center(
-                                      child: Text("Your card list empty."),
+                                      child: Text("Your process list empty."),
                                     );
                                   return ListView.builder(
                                     physics: BouncingScrollPhysics(),

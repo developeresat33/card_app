@@ -1,5 +1,4 @@
 import 'package:card_application/component/card_component.dart';
-import 'package:card_application/controllers/add_card_controllers.dart';
 import 'package:card_application/database/db_helper.dart';
 import 'package:card_application/extensions/int_extensions.dart';
 import 'package:card_application/extensions/string_extension.dart';
@@ -12,6 +11,7 @@ import 'package:card_application/widgets/custom_textformfield.dart';
 import 'package:card_application/widgets/data_generator.dart';
 import 'package:card_application/widgets/dialogs/toasy_msg.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
@@ -30,7 +30,7 @@ class SomeSheets {
     var ct = Provider.of<CardTransactionsProvider>(Get.context, listen: false);
     ct.colorList = [];
     ct.getColors();
-    ct.addCardState = AddCControllers();
+    ct.addCardState.init();
     ct.addCardModel = WACardModel();
     var _formkey = GlobalKey<FormState>();
 
@@ -271,6 +271,7 @@ class SomeSheets {
                                                 controller: value
                                                     .addCardState.limitCtrl,
                                                 placeholder: "Kart Limiti",
+                                                inputFormatters: [],
                                                 hintText: "1.000 ₺",
                                                 onChanged: (val) {
                                                   value.addCardModel.boundary =
@@ -328,6 +329,7 @@ class SomeSheets {
                                                   child: CustomTextFormField(
                                                 controller: value
                                                     .addCardState.cutOfCtrl,
+                                                readOnly: true,
                                                 placeholder:
                                                     "Hesap Kesim Tarihi",
                                                 hintText: "21.05.2022",
@@ -339,6 +341,10 @@ class SomeSheets {
                                                   if (val.length == 0) {
                                                     return "Zorunlu Alan * Hesap Kesim Tarihi";
                                                   }
+                                                },
+                                                onTap: () {
+                                                  value.selectDate(value
+                                                      .addCardState.cutOfCtrl);
                                                 },
                                               )),
                                               SizedBox(
@@ -356,11 +362,17 @@ class SomeSheets {
                                                   child: CustomTextFormField(
                                                 controller: value
                                                     .addCardState.paymentCtrl,
+                                                readOnly: true,
                                                 placeholder: "Ödeme Tarihi",
                                                 hintText: "21.05.2022",
                                                 onChanged: (val) {
                                                   value.addCardModel
                                                       .paymentDate = val;
+                                                },
+                                                onTap: () {
+                                                  value.selectDate(value
+                                                      .addCardState
+                                                      .paymentCtrl);
                                                 },
                                                 validator: (val) {
                                                   if (val.length == 0) {
@@ -383,11 +395,22 @@ class SomeSheets {
                                                   child: CustomTextFormField(
                                                 controller: value
                                                     .addCardState.pointCtrl,
+                                                textInputType:
+                                                    TextInputType.number,
                                                 placeholder: "Puan (Opsiyonel)",
+                                                inputFormatters: [
+                                                  FilteringTextInputFormatter
+                                                      .digitsOnly
+                                                ],
                                                 hintText: "100",
                                                 onChanged: (val) {
-                                                  value.addCardModel.point =
-                                                      int.parse(val);
+                                                  try {
+                                                    value.addCardModel.point =
+                                                        int.parse(val);
+                                                  } on Exception catch (e) {
+                                                    print(e);
+                                                    // TODO
+                                                  }
                                                 },
                                               )),
                                               SizedBox(
@@ -407,6 +430,13 @@ class SomeSheets {
                                                     .addCardState.lastNumbers,
                                                 placeholder:
                                                     "Son 4 Hane (Opsiyonel)",
+                                                textInputType:
+                                                    TextInputType.number,
+                                                maxLength: 4,
+                                                inputFormatters: [
+                                                  FilteringTextInputFormatter
+                                                      .digitsOnly
+                                                ],
                                                 hintText: "0966",
                                                 onChanged: (val) {
                                                   value.addCardModel
@@ -438,8 +468,11 @@ class SomeSheets {
                                                         .validate()) {
                                                       await Get.back();
 
-                                                      _dbHelper.insertCard(
-                                                          value.addCardModel);
+                                                      await _dbHelper
+                                                          .insertCard(value
+                                                              .addCardModel);
+
+                                                      await value.refresh();
                                                     } else {
                                                       setMessage(
                                                           "Boş veya geçersiz değer");
