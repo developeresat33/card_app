@@ -15,6 +15,8 @@ import 'package:card_application/model/app_model.dart';
 import 'package:card_application/utils/colors.dart';
 import 'package:card_application/utils/functions.dart';
 import 'package:card_application/utils/localization_manager.dart';
+import 'package:card_application/views/mainscreens/add_card.dart';
+import 'package:card_application/views/mainscreens/add_process.dart';
 import 'package:card_application/widgets/data_generator.dart';
 import 'package:card_application/widgets/tools/somesheets.dart';
 import 'package:easy_localization/src/public_ext.dart';
@@ -57,8 +59,6 @@ class HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var crdprovider =
-        Provider.of<CardTransactionsProvider>(Get.context, listen: true);
     /*  var ct = Provider.of<CardTransactionsProvider>(Get.context, listen: false); */
     ProviderHeader.dshprovider.subLanguage = [
       UnicornButton(
@@ -160,6 +160,7 @@ class HomeScreenState extends State<HomeScreen> {
                         .paddingOnly(left: 30),
                     BoomMenu(
                         animatedIcon: AnimatedIcons.menu_arrow,
+                        backgroundColor: WAPrimaryColor,
                         animatedIconTheme: IconThemeData(size: 22.0),
                         //child: Icon(Icons.add),
                         onOpen: () => print('OPENING DIAL'),
@@ -175,7 +176,7 @@ class HomeScreenState extends State<HomeScreen> {
                             subtitle: "Kart bilgilerinizi giriniz",
                             subTitleColor: Colors.white,
                             backgroundColor: Colors.greenAccent,
-                            onTap: () => print('FIRST CHILD'),
+                            onTap: () => Get.to(AddCardPage()),
                           ),
                           MenuItem(
                             child: Icon(Icons.adjust, color: Colors.black),
@@ -184,7 +185,7 @@ class HomeScreenState extends State<HomeScreen> {
                             subtitle: "Mevcut kartınıza işlem ekleyiniz",
                             subTitleColor: Colors.white,
                             backgroundColor: Colors.blueAccent,
-                            onTap: () => print('FIRST CHILD'),
+                            onTap: () => Get.to(AddProcessPage()),
                           ),
                         ]),
                   ],
@@ -278,7 +279,7 @@ class HomeScreenState extends State<HomeScreen> {
                                   child: FittedBox(
                                     child: InkWell(
                                       onTap: () {
-                                        SomeSheets.addCard();
+                                        Get.to(AddCardPage());
                                       },
                                       child: CircleAvatar(
                                         backgroundColor: Colors.black26,
@@ -305,40 +306,46 @@ class HomeScreenState extends State<HomeScreen> {
                                 ).paddingOnly(
                                     top: 16, bottom: 16, right: 5, left: 5),
                               ),
-                              crdprovider.isAddCard
-                                  ? Expanded(
-                                      child: FutureBuilder(
-                                          future: _dbHelper.getCards(),
-                                          builder: (BuildContext context,
-                                              AsyncSnapshot<List<WACardModel>>
-                                                  snapshot) {
-                                            if (!snapshot.hasData)
-                                              return Center(
-                                                  child:
-                                                      CircularProgressIndicator());
-                                            if (snapshot.data.isEmpty)
-                                              return Center(
-                                                child: Text(
-                                                    "Your card list empty."),
-                                              );
-                                            return ListView.builder(
-                                              physics: BouncingScrollPhysics(),
-                                              scrollDirection: Axis.horizontal,
-                                              itemCount: snapshot.data.length,
-                                              itemBuilder:
-                                                  (BuildContext context,
-                                                      int index) {
-                                                return WACardComponent(
-                                                  cardModel:
-                                                      snapshot.data[index],
-                                                ).paddingOnly(right: 10);
-                                              },
-                                            );
-                                          }))
-                                  : Expanded(
-                                      child: Center(
-                                      child: CircularProgressIndicator(),
-                                    ))
+                              Consumer<CardTransactionsProvider>(
+                                  builder: (context, value, child) => value
+                                          .isAddCard
+                                      ? Expanded(
+                                          child: FutureBuilder(
+                                              future: _dbHelper.getCards(),
+                                              builder: (BuildContext context,
+                                                  AsyncSnapshot<
+                                                          List<WACardModel>>
+                                                      snapshot) {
+                                                if (!snapshot.hasData)
+                                                  return Center(
+                                                      child:
+                                                          CircularProgressIndicator());
+                                                if (snapshot.data.isEmpty)
+                                                  return Center(
+                                                    child: Text(
+                                                        "Your card list empty."),
+                                                  );
+                                                return ListView.builder(
+                                                  physics:
+                                                      BouncingScrollPhysics(),
+                                                  scrollDirection:
+                                                      Axis.horizontal,
+                                                  itemCount:
+                                                      snapshot.data.length,
+                                                  itemBuilder:
+                                                      (BuildContext context,
+                                                          int index) {
+                                                    return WACardComponent(
+                                                      cardModel:
+                                                          snapshot.data[index],
+                                                    ).paddingOnly(right: 10);
+                                                  },
+                                                );
+                                              }))
+                                      : Expanded(
+                                          child: Center(
+                                          child: CircularProgressIndicator(),
+                                        )))
                             ],
                           ),
                         ),
@@ -380,34 +387,44 @@ class HomeScreenState extends State<HomeScreen> {
                           ],
                         ).paddingOnly(left: 16, right: 16),
                         16.height,
-                        Expanded(
-                            child: FutureBuilder(
-                                future: _dbHelper.getShopping(),
-                                builder: (BuildContext context,
-                                    AsyncSnapshot<List<ShopData>> snapshot) {
-                                  if (!snapshot.hasData)
-                                    return Center(
-                                        child: CircularProgressIndicator());
-                                  if (snapshot.data.isEmpty)
-                                    return Center(
-                                      child: Text("Your process list empty."),
-                                    );
-                                  return ListView.builder(
-                                    physics: BouncingScrollPhysics(),
-                                    scrollDirection: Axis.vertical,
-                                    itemCount: snapshot.data.length,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return Container(
-                                        width: size.width * 0.1,
-                                        child: WATransactionComponent(
-                                          transactionModel:
-                                              snapshot.data[index],
-                                        ).paddingOnly(right: 10),
-                                      );
-                                    },
-                                  );
-                                })),
+                        Consumer<CardTransactionsProvider>(
+                            builder: (context, value, child) => value
+                                    .isAddProcess
+                                ? Expanded(
+                                    child: FutureBuilder(
+                                        future: _dbHelper.getShopping(),
+                                        builder: (BuildContext context,
+                                            AsyncSnapshot<List<ShopData>>
+                                                snapshot) {
+                                          if (!snapshot.hasData)
+                                            return Center(
+                                                child:
+                                                    CircularProgressIndicator());
+                                          if (snapshot.data.isEmpty)
+                                            return Center(
+                                              child: Text(
+                                                  "Your process list empty."),
+                                            );
+                                          return ListView.builder(
+                                            physics: BouncingScrollPhysics(),
+                                            scrollDirection: Axis.vertical,
+                                            itemCount: snapshot.data.length,
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              return Container(
+                                                width: size.width * 0.1,
+                                                child: WATransactionComponent(
+                                                  transactionModel:
+                                                      snapshot.data[index],
+                                                ).paddingOnly(right: 10),
+                                              );
+                                            },
+                                          );
+                                        }))
+                                : Expanded(
+                                    child: Center(
+                                    child: CircularProgressIndicator(),
+                                  ))),
                         SizedBox(
                           height: size.height * 0.090,
                         )

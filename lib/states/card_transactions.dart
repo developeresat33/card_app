@@ -1,6 +1,5 @@
 import 'package:card_application/component/circle_component.dart';
 import 'package:card_application/controllers/add_card_controllers.dart';
-import 'package:card_application/database/db_helper.dart';
 import 'package:card_application/model/app_model.dart';
 import 'package:card_application/model/wa_card_model.dart';
 import 'package:card_application/widgets/data_generator.dart';
@@ -13,10 +12,10 @@ class CardTransactionsProvider extends ChangeNotifier {
   WACardModel addCardModel;
   List<ColorComponent> colorList = [];
   bool isAddCard = true;
+  bool isAddProcess = true;
   DateTime selectedDate;
   ValueNotifier<List<WACardModel>> wreckerServiceState;
   final DateFormat formatter = DateFormat('dd.MM.yyyy');
-  DbHelper _db = DbHelper();
 
   void getColors() {
     for (var i = 0; i < 6; i++) {
@@ -41,14 +40,24 @@ class CardTransactionsProvider extends ChangeNotifier {
     }
   }
 
-  void refresh() async {
-    isAddCard = false;
-    notifyListeners();
+  void refresh({bool isProcessAdd = false}) async {
+    if (!isProcessAdd) {
+      isAddCard = false;
+      notifyListeners();
+    } else {
+      isAddProcess = false;
+      notifyListeners();
+    }
 
-    await _db.getCards();
+    await Future.delayed(Duration(seconds: 1));
 
-    isAddCard = true;
-    notifyListeners();
+    if (!isProcessAdd) {
+      isAddCard = true;
+      notifyListeners();
+    } else {
+      isAddProcess = true;
+      notifyListeners();
+    }
   }
 
   Future<void> selectDate(

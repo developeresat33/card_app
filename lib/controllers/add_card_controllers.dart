@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 
 class AddCControllers {
-  TextEditingController cardNameCtrl = TextEditingController();
-  TextEditingController limitCtrl = TextEditingController();
-  TextEditingController cutOfCtrl = TextEditingController();
-  TextEditingController pointCtrl = TextEditingController();
-  TextEditingController advanceCtrl = TextEditingController();
-  TextEditingController paymentCtrl = TextEditingController();
-  TextEditingController lastNumbers = TextEditingController();
+  TextEditingController cardNameCtrl;
+  TextEditingController limitCtrl;
+  TextEditingController cutOfCtrl;
+  TextEditingController pointCtrl;
+  TextEditingController advanceCtrl;
+  TextEditingController paymentCtrl;
+  TextEditingController lastNumbers;
 
   init() {
     cardNameCtrl = TextEditingController();

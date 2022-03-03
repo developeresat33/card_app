@@ -36,10 +36,13 @@ class DbHelper extends ChangeNotifier {
     return result.map((data) => WACardModel.fromMap(data)).toList();
   }
 
-  Future<int> insertCard(WACardModel card) async {
+  Future<int> insertCard(
+    WACardModel card,
+  ) async {
     print("sdsds");
     var dbClient = await db;
 
+    notifyListeners();
     return await dbClient.insert("Cards", card.toMap());
   }
 
