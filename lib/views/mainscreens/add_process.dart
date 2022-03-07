@@ -1,6 +1,6 @@
 import 'package:card_application/controllers/add_process_controllers.dart';
 import 'package:card_application/database/db_helper.dart';
-import 'package:card_application/database/db_models/shopping_model.dart';
+import 'package:card_application/database/db_models/process_model.dart';
 import 'package:card_application/extensions/int_extensions.dart';
 import 'package:card_application/model/wa_card_model.dart';
 import 'package:card_application/states/card_transactions.dart';
@@ -15,7 +15,8 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 class AddProcessPage extends StatefulWidget {
-  const AddProcessPage({Key key}) : super(key: key);
+  const AddProcessPage({Key key, this.processType}) : super(key: key);
+  final int processType;
 
   @override
   State<AddProcessPage> createState() => _AddProcessPageState();
@@ -24,7 +25,7 @@ class AddProcessPage extends StatefulWidget {
 class _AddProcessPageState extends State<AddProcessPage> {
   var _dbHelper = DbHelper();
   AddPControllers processController = AddPControllers();
-  ShoppingModel addProcessModel;
+  ProcessModel addProcessModel;
   List<String> installments;
   var selectedDropDownValue = "Taksit Seçiniz";
   var _formkey = GlobalKey<FormState>();
@@ -32,21 +33,27 @@ class _AddProcessPageState extends State<AddProcessPage> {
   @override
   void initState() {
     installments = [];
-    addProcessModel = ShoppingModel();
+    addProcessModel = ProcessModel();
     processController.init();
 
     for (int i = 1; i < 13; i++) {
       installments.add("$i");
     }
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    addProcessModel.cardID = 1;
+    addProcessModel.processType = widget.processType;
+
     return Consumer<CardTransactionsProvider>(
         builder: (context, value, child) => Scaffold(
             appBar: AppBar(
-              title: Text("İşlem Ekle"),
+              title: Text(widget.processType == 1
+                  ? "Alışveriş Ekle"
+                  : "Nakit Avans Ekle"),
             ),
             body: SingleChildScrollView(
               child: Column(children: [
@@ -122,8 +129,9 @@ class _AddProcessPageState extends State<AddProcessPage> {
                         Expanded(
                             child: CustomTextFormField(
                           controller: processController.dateTime,
-                          textInputType: TextInputType.number,
-                          placeholder: "İşlem Tarihi",
+                          placeholder: widget.processType == 1
+                              ? "Alışveriş Tarihi"
+                              : "Nakit Avans Tarihi",
                           readOnly: true,
                           maxLength: 2,
                           inputFormatters: [
@@ -138,7 +146,9 @@ class _AddProcessPageState extends State<AddProcessPage> {
                           },
                           validator: (val) {
                             if (val.length == 0) {
-                              return "Zorunlu Alan * İşlem Tarihi";
+                              return widget.processType == 1
+                                  ? "Zorunlu Alan * Alışveriş Tarihi"
+                                  : " Zorunlu Alan * Nakit Avans Tarihi";
                             }
                           },
                           onTap: () {
@@ -149,33 +159,37 @@ class _AddProcessPageState extends State<AddProcessPage> {
                           width: size.width * 0.050,
                         )
                       ]),
-                      7.height,
-                      Row(children: [
-                        SizedBox(
-                          width: size.width * 0.050,
+                      if (widget.processType == 1)
+                        Column(
+                          children: [
+                            7.height,
+                            Row(children: [
+                              SizedBox(
+                                width: size.width * 0.050,
+                              ),
+                              Expanded(
+                                  child: CustomTextFormField(
+                                controller: processController.companyCtrl,
+                                placeholder: "Alışveriş Yeri",
+                                validator: (val) {
+                                  if (val.length == 0) {
+                                    return "Zorunlu Alan * Alışveriş Yeri";
+                                  }
+                                },
+                                onChanged: (val) {
+                                  try {
+                                    addProcessModel.companyName = val;
+                                  } on Exception catch (e) {
+                                    print(e);
+                                  }
+                                },
+                              )),
+                              SizedBox(
+                                width: size.width * 0.050,
+                              )
+                            ]),
+                          ],
                         ),
-                        Expanded(
-                            child: CustomTextFormField(
-                          controller: processController.companyCtrl,
-                          textInputType: TextInputType.number,
-                          placeholder: "İşlem Yeri",
-                          validator: (val) {
-                            if (val.length == 0) {
-                              return "Zorunlu Alan * İşlem Yeri";
-                            }
-                          },
-                          onChanged: (val) {
-                            try {
-                              addProcessModel.companyName = val;
-                            } on Exception catch (e) {
-                              print(e);
-                            }
-                          },
-                        )),
-                        SizedBox(
-                          width: size.width * 0.050,
-                        )
-                      ]),
                       7.height,
                       Row(children: [
                         SizedBox(
@@ -184,7 +198,6 @@ class _AddProcessPageState extends State<AddProcessPage> {
                         Expanded(
                             child: CustomTextFormField(
                           controller: processController.amountCtrl,
-                          textInputType: TextInputType.number,
                           placeholder: "İşlem Tutarı",
                           validator: (val) {
                             if (val.length == 0) {
@@ -211,7 +224,6 @@ class _AddProcessPageState extends State<AddProcessPage> {
                         Expanded(
                             child: CustomTextFormField(
                           controller: processController.commentCtrl,
-                          textInputType: TextInputType.number,
                           placeholder: "Yorum",
                           validator: (val) {
                             if (val.length == 0) {
@@ -263,50 +275,60 @@ class _AddProcessPageState extends State<AddProcessPage> {
                     ],
                   ),
                 ),
-                7.height,
-                Row(children: [
-                  SizedBox(
-                    width: size.width * 0.050,
+                if (widget.processType == 1)
+                  Column(
+                    children: [
+                      7.height,
+                      Row(children: [
+                        SizedBox(
+                          width: size.width * 0.050,
+                        ),
+                        Expanded(
+                            child: CustomTextFormField(
+                          controller: processController.pointsEarned,
+                          textInputType: TextInputType.number,
+                          placeholder: "Kazanılan Puan (Opsiyonel)",
+                          onChanged: (val) {
+                            try {
+                              addProcessModel.pointsEarned = int.parse(val);
+                            } on Exception catch (e) {
+                              print(e);
+                            }
+                          },
+                        )),
+                        SizedBox(
+                          width: size.width * 0.050,
+                        )
+                      ]),
+                    ],
                   ),
-                  Expanded(
-                      child: CustomTextFormField(
-                    controller: processController.pointsEarned,
-                    textInputType: TextInputType.number,
-                    placeholder: "Kazanılan Puan (Opsiyonel)",
-                    onChanged: (val) {
-                      try {
-                        addProcessModel.pointsEarned = int.parse(val);
-                      } on Exception catch (e) {
-                        print(e);
-                      }
-                    },
-                  )),
-                  SizedBox(
-                    width: size.width * 0.050,
-                  )
-                ]),
-                7.height,
-                Row(children: [
-                  SizedBox(
-                    width: size.width * 0.050,
+                if (widget.processType == 1)
+                  Column(
+                    children: [
+                      7.height,
+                      Row(children: [
+                        SizedBox(
+                          width: size.width * 0.050,
+                        ),
+                        Expanded(
+                            child: CustomTextFormField(
+                          controller: processController.pointsSpent,
+                          textInputType: TextInputType.number,
+                          placeholder: "Harcanan Puan (Opsiyonel)",
+                          onChanged: (val) {
+                            try {
+                              addProcessModel.pointsSpent = int.parse(val);
+                            } on Exception catch (e) {
+                              print(e);
+                            }
+                          },
+                        )),
+                        SizedBox(
+                          width: size.width * 0.050,
+                        )
+                      ]),
+                    ],
                   ),
-                  Expanded(
-                      child: CustomTextFormField(
-                    controller: processController.pointsSpent,
-                    textInputType: TextInputType.number,
-                    placeholder: "Harcanan Puan (Opsiyonel)",
-                    onChanged: (val) {
-                      try {
-                        addProcessModel.pointsSpent = int.parse(val);
-                      } on Exception catch (e) {
-                        print(e);
-                      }
-                    },
-                  )),
-                  SizedBox(
-                    width: size.width * 0.050,
-                  )
-                ]),
                 SizedBox(
                   height: size.height * 0.030,
                 ),
@@ -326,7 +348,8 @@ class _AddProcessPageState extends State<AddProcessPage> {
                     ),
                     onPressed: () async {
                       if (_formkey.currentState.validate()) {
-                        await _dbHelper.insertShopping(addProcessModel);
+                        print(addProcessModel.amount);
+                        await _dbHelper.insertProcess(addProcessModel);
                         await Get.back();
                         await value.refresh(isProcessAdd: true);
                       } else {

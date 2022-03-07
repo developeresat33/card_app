@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:card_application/database/db_models/shopping_model.dart';
+import 'package:card_application/database/db_models/process_model.dart';
 import 'package:card_application/database/shop_data.dart';
 import 'package:card_application/model/wa_card_model.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,6 +9,7 @@ import 'package:sqflite/sqflite.dart';
 
 class DbHelper extends ChangeNotifier {
   static Database _db;
+  int count;
 
   Future<Database> get db async {
     if (_db != null) return _db;
@@ -26,10 +27,12 @@ class DbHelper extends ChangeNotifier {
     await db.execute(
         'CREATE TABLE Cards (id INTEGER PRIMARY KEY,image TEXT,boundary TEXT,select_type INTEGER,card_name TEXT,color TEXT,payment_date TEXT,cut_of_date TEXT,cash_advance_limit TEXT,point INTEGER,last_numbers TEXT)');
     await db.execute(
-        'CREATE TABLE Shopping (id INTEGER ,card_id INTEGER,date_time TEXT,company_name TEXT,comment TEXT,amount TEXT,installments INTEGER,points_earned INTEGER,points_spent INTEGER,picture TEXT,  FOREIGN KEY("card_id") REFERENCES "Cards"("id"), PRIMARY KEY("id")) ');
+        'CREATE TABLE Process (id INTEGER ,card_id INTEGER,process_type INTEGER,date_time TEXT,company_name TEXT,comment TEXT,amount TEXT,installments INTEGER,points_earned INTEGER,points_spent INTEGER,picture TEXT,  FOREIGN KEY("card_id") REFERENCES "Cards"("id"), PRIMARY KEY("id")) ');
   }
 
   Future<List<WACardModel>> getCards() async {
+    count = await getCount();
+    print("the count " + count.toString());
     var dbClient = await db;
     var result = await dbClient.query("Cards", orderBy: "card_name");
     print(result);
@@ -39,7 +42,6 @@ class DbHelper extends ChangeNotifier {
   Future<int> insertCard(
     WACardModel card,
   ) async {
-    print("sdsds");
     var dbClient = await db;
 
     notifyListeners();
@@ -52,22 +54,28 @@ class DbHelper extends ChangeNotifier {
         .update("Cards", card.toMap(), where: "id=?", whereArgs: [card.id]);
   }
 
+  Future<int> getCount() async {
+    //database connection
+    var dbClient = await db;
+    var x = await dbClient.rawQuery('SELECT COUNT (*) FROM  Cards');
+    int count = Sqflite.firstIntValue(x);
+    return count;
+  }
+
   Future<void> removeCard(int id) async {
     var dbClient = await db;
     return await dbClient.delete("Cards", where: "id=?", whereArgs: [id]);
   }
 
-  Future<List<ShopData>> getShopping() async {
+  Future<List<ProcessData>> getProcess() async {
     var dbClient = await db;
     var result = await dbClient.rawQuery(
-        'SELECT company_name,comment,amount,card_name FROM Shopping JOIN Cards ON Cards.id=Shopping.card_id');
-    print(result);
-    return result.map((data) => ShopData.fromMap(data)).toList();
+        'SELECT date_time,process_type,company_name,comment,amount,card_name FROM Process JOIN Cards ON Cards.id=Process.card_id');
+    return result.map((data) => ProcessData.fromMap(data)).toList();
   }
 
-  Future<int> insertShopping(ShoppingModel shop) async {
-    print("sdsds");
+  Future<int> insertProcess(ProcessModel process) async {
     var dbClient = await db;
-    return await dbClient.insert("Shopping", shop.toMap());
+    return await dbClient.insert("Process", process.toMap());
   }
 }

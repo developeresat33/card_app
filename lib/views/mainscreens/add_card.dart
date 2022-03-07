@@ -23,6 +23,7 @@ class AddCardPage extends StatefulWidget {
 }
 
 class _AddCardPageState extends State<AddCardPage> {
+  bool _keyboardVisible = false;
   var cardModel = WACardModel(
       selectType: 0,
       cardName: "",
@@ -50,6 +51,7 @@ class _AddCardPageState extends State<AddCardPage> {
 
   @override
   Widget build(BuildContext context) {
+    _keyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
     return Consumer<CardTransactionsProvider>(
         builder: (context, value, child) => Scaffold(
               appBar: AppBar(
@@ -63,64 +65,75 @@ class _AddCardPageState extends State<AddCardPage> {
                     SizedBox(
                       height: size.height * 0.020,
                     ),
-                    Container(
-                      height: size.height * 0.23,
-                      width: size.width * 0.8,
-                      child: WACardComponent(
-                        cardModel: cardModel,
-                      ),
-                    ).paddingAll(10),
-                    SizedBox(
-                      height: size.height * 0.060,
-                      child: Row(
+                    if (!_keyboardVisible)
+                      Column(
                         children: [
+                          Container(
+                            height: size.height * 0.23,
+                            width: size.width * 0.8,
+                            child: WACardComponent(
+                              cardModel: cardModel,
+                            ),
+                          ).paddingAll(10),
                           SizedBox(
-                            width: size.width * 0.050,
-                          ),
-                          Expanded(
-                            child: Text("Renk :"),
-                          ),
-                          Expanded(
-                              flex: 5,
-                              child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: ct.colorList.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return Row(
-                                      children: [
-                                        InkWell(
-                                            borderRadius:
-                                                BorderRadius.circular(40),
-                                            onTap: () {
-                                              setState(() {
-                                                cardModel.color = ct
-                                                    .colorList[index]
-                                                    .circleModel
-                                                    .secondColor
-                                                    .value
-                                                    .toString();
-                                                value.addCardModel.color = ct
-                                                    .colorList[index]
-                                                    .circleModel
-                                                    .secondColor
-                                                    .value
-                                                    .toString();
-                                              });
-                                            },
-                                            child: ct.colorList[index]),
-                                        SizedBox(
-                                          width: size.width * 0.020,
-                                        )
-                                      ],
-                                    );
-                                  })),
-                          SizedBox(
-                            width: size.width * 0.020,
+                            height: size.height * 0.060,
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                  width: size.width * 0.050,
+                                ),
+                                Expanded(
+                                  child: Text("Renk :"),
+                                ),
+                                Expanded(
+                                    flex: 5,
+                                    child: ListView.builder(
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: ct.colorList.length,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          return Row(
+                                            children: [
+                                              InkWell(
+                                                  borderRadius:
+                                                      BorderRadius.circular(40),
+                                                  onTap: () {
+                                                    print(ct
+                                                        .colorList[index]
+                                                        .circleModel
+                                                        .secondColor
+                                                        .value);
+                                                    setState(() {
+                                                      cardModel.color = ct
+                                                          .colorList[index]
+                                                          .circleModel
+                                                          .secondColor
+                                                          .value
+                                                          .toString();
+                                                      value.addCardModel.color =
+                                                          ct
+                                                              .colorList[index]
+                                                              .circleModel
+                                                              .secondColor
+                                                              .value
+                                                              .toString();
+                                                    });
+                                                  },
+                                                  child: ct.colorList[index]),
+                                              SizedBox(
+                                                width: size.width * 0.020,
+                                              )
+                                            ],
+                                          );
+                                        })),
+                                SizedBox(
+                                  width: size.width * 0.020,
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
-                    ),
                     Row(
                       children: [
                         SizedBox(
@@ -338,7 +351,6 @@ class _AddCardPageState extends State<AddCardPage> {
                                       value.addCardModel.point = int.parse(val);
                                     } on Exception catch (e) {
                                       print(e);
-                                      // TODO
                                     }
                                   },
                                 )),

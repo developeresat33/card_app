@@ -44,68 +44,72 @@ class WACardComponentState extends State<WACardComponent> {
         spreadRadius: 4.0,
         shadowColor: Color(int.parse(widget.cardModel.color)).withAlpha(50),
       ),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Align(
-              alignment: Alignment.topRight,
-              child: ImageIcon(
-                widget.cardModel.selectType == 0
-                    ? AssetImage(
-                        'assets/wa_visa.png',
-                      )
-                    : AssetImage('assets/wa_master.png'),
-                size: 50,
-                color:
-                    widget.cardModel.color == Color.fromRGBO(214, 214, 214, 1)
-                        ? Colors.black87
-                        : Colors.white,
-              ),
+      child: Stack(
+        children: [
+          Positioned(
+            top: 0,
+            right: 0,
+            child: ImageIcon(
+              widget.cardModel.selectType == 0
+                  ? AssetImage(
+                      'assets/wa_visa.png',
+                    )
+                  : AssetImage('assets/wa_master.png'),
+              size: 50,
+              color: widget.cardModel.color == "4292269782"
+                  ? Colors.black87
+                  : Colors.white,
             ),
-            Text(widget.cardModel.cardName,
-                style: TextStyle(
-                    color: widget.cardModel.color ==
-                            Color.fromRGBO(214, 214, 214, 1)
-                        ? Colors.black87
-                        : Colors.white,
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold)),
-            8.height,
-            if (widget.cardModel.lastNumbers != null &&
-                widget.cardModel.lastNumbers != "")
-              Column(
+          ),
+          Positioned(
+            left: 0,
+            bottom: 0,
+            child: FittedBox(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    '**** **** **** ${widget.cardModel.lastNumbers}',
-                    style: TextStyle(
-                        color: widget.cardModel.color ==
-                                Color.fromRGBO(214, 214, 214, 1)
-                            ? Colors.black87
-                            : Colors.white70,
-                        fontSize: 15),
-                  ),
+                  Text(widget.cardModel.cardName,
+                      style: TextStyle(
+                          color: widget.cardModel.color == "4292269782"
+                              ? Colors.black87
+                              : Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold)),
                   8.height,
+                  if (widget.cardModel.lastNumbers != null &&
+                      widget.cardModel.lastNumbers != "")
+                    Column(
+                      children: [
+                        Text(
+                          '**** **** **** ${widget.cardModel.lastNumbers}',
+                          style: TextStyle(
+                              color: widget.cardModel.color == "4292269782"
+                                  ? Colors.black87
+                                  : Colors.white70,
+                              fontSize: 15),
+                        ),
+                        8.height,
+                      ],
+                    ),
+                  Text('Kullanılabilir Limit',
+                      style: TextStyle(
+                          color: widget.cardModel.color == "4292269782"
+                              ? Colors.black87
+                              : Colors.white70,
+                          fontSize: 15)),
+                  8.height,
+                  Text('${widget.cardModel.boundary} ₺',
+                      style: TextStyle(
+                          color: widget.cardModel.color == "4292269782"
+                              ? Colors.black87
+                              : Colors.white70,
+                          fontSize: 18)),
+                  20.height,
                 ],
               ),
-            Text('Limit',
-                style: TextStyle(
-                    color: widget.cardModel.color ==
-                            Color.fromRGBO(214, 214, 214, 1)
-                        ? Colors.black87
-                        : Colors.white70,
-                    fontSize: 15)),
-            8.height,
-            Text('${widget.cardModel.boundary} ₺',
-                style: TextStyle(
-                    color: widget.cardModel.color ==
-                            Color.fromRGBO(214, 214, 214, 1)
-                        ? Colors.black87
-                        : Colors.white70,
-                    fontSize: 18)),
-            20.height,
-          ],
-        ),
+            ),
+          ),
+        ],
       ),
     );
   }

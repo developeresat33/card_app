@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 class WATransactionComponent extends StatefulWidget {
   static String tag = '/WATransactionComponent';
 
-  final ShopData transactionModel;
+  final ProcessData transactionModel;
 
   WATransactionComponent({this.transactionModel});
 
@@ -50,7 +50,9 @@ class WATransactionComponentState extends State<WATransactionComponent> {
             decoration: boxDecorationWithRoundedCorners(
                 boxShape: BoxShape.circle,
                 backgroundColor: colorGenerator().withOpacity(0.1)),
-            child: Icon(Icons.shopping_cart)),
+            child: Icon(widget.transactionModel.processType == 1
+                ? Icons.shopping_cart
+                : Icons.price_change)),
         title: RichTextWidget(
           list: [
             TextSpan(
@@ -58,7 +60,9 @@ class WATransactionComponentState extends State<WATransactionComponent> {
               style: TextStyle(color: Colors.black54, fontSize: 14),
             ),
             TextSpan(
-              text: '${widget.transactionModel.companyName}',
+              text: widget.transactionModel.processType == 1
+                  ? '${widget.transactionModel.companyName}'
+                  : "Nakit Avans",
               style: TextStyle(color: Colors.black54, fontSize: 14),
             ),
           ],

@@ -11,19 +11,19 @@ import 'package:card_application/component/transaction_component.dart';
 import 'package:card_application/extensions/content_extensions.dart';
 import 'package:card_application/extensions/int_extensions.dart';
 import 'package:card_application/extensions/widget_extension.dart';
-import 'package:card_application/model/app_model.dart';
+
 import 'package:card_application/utils/colors.dart';
 import 'package:card_application/utils/functions.dart';
 import 'package:card_application/utils/localization_manager.dart';
 import 'package:card_application/views/mainscreens/add_card.dart';
-import 'package:card_application/views/mainscreens/add_process.dart';
-import 'package:card_application/widgets/data_generator.dart';
-import 'package:card_application/widgets/tools/somesheets.dart';
+import 'package:card_application/widgets/dialogs/toasy_msg.dart';
+
 import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_boom_menu/flutter_boom_menu.dart';
 import 'package:get/route_manager.dart';
 import 'package:provider/provider.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:unicorndial/unicorndial.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -34,10 +34,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<HomeScreen> {
-  List<WAOperationsModel> operationsList = waOperationList();
-  List<WATransactionModel> transactionList = waTransactionList();
-
-  List<WACardModel> cards;
   DbHelper _dbHelper;
 
   @override
@@ -45,11 +41,7 @@ class HomeScreenState extends State<HomeScreen> {
     _dbHelper = DbHelper();
 
     super.initState();
-    init();
-  }
-
-  Future<void> init() async {
-    //
+    ;
   }
 
   @override
@@ -60,6 +52,7 @@ class HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     /*  var ct = Provider.of<CardTransactionsProvider>(Get.context, listen: false); */
+
     ProviderHeader.dshprovider.subLanguage = [
       UnicornButton(
         labelText: "Türkçe",
@@ -151,13 +144,13 @@ class HomeScreenState extends State<HomeScreen> {
               child: Scaffold(
                 floatingActionButton: Stack(
                   children: [
-                    UnicornDialer(
+                    /*              UnicornDialer(
                             animationDuration: 150,
                             backgroundColor: Colors.transparent,
                             parentButtonBackground: WAPrimaryColor,
                             parentButton: Icon(Icons.translate),
                             childButtons: value.subLanguage)
-                        .paddingOnly(left: 30),
+                        .paddingOnly(left: 30), */
                     BoomMenu(
                         animatedIcon: AnimatedIcons.menu_arrow,
                         backgroundColor: WAPrimaryColor,
@@ -179,14 +172,20 @@ class HomeScreenState extends State<HomeScreen> {
                             onTap: () => Get.to(AddCardPage()),
                           ),
                           MenuItem(
-                            child: Icon(Icons.adjust, color: Colors.black),
-                            title: "İşlem Ekle",
-                            titleColor: Colors.white,
-                            subtitle: "Mevcut kartınıza işlem ekleyiniz",
-                            subTitleColor: Colors.white,
-                            backgroundColor: Colors.blueAccent,
-                            onTap: () => Get.to(AddProcessPage()),
-                          ),
+                              child: Icon(Icons.adjust, color: Colors.black),
+                              title: "İşlem Ekle",
+                              titleColor: Colors.white,
+                              subtitle: "Mevcut kartınıza işlem ekleyiniz",
+                              subTitleColor: Colors.white,
+                              backgroundColor: Colors.blueAccent,
+                              onTap: () {
+                                if (_dbHelper.count != null &&
+                                    _dbHelper.count > 0) {
+                                  value.choseeProcess();
+                                } else {
+                                  setMessage("Lütfen öncelikle kart ekleyiniz");
+                                }
+                              }),
                         ]),
                   ],
                 ),
@@ -267,8 +266,8 @@ class HomeScreenState extends State<HomeScreen> {
                           ],
                         ).paddingOnly(left: 16, right: 16),
                         5.height,
-                        SizedBox(
-                          height: size.height * 0.17,
+                        Expanded(
+                          flex: 14,
                           child: Row(
                             children: [
                               SizedBox(
@@ -276,29 +275,17 @@ class HomeScreenState extends State<HomeScreen> {
                                 child: Container(
                                   padding: EdgeInsets.only(
                                       left: 16, right: 16, bottom: 30, top: 8),
-                                  child: FittedBox(
-                                    child: InkWell(
-                                      onTap: () {
-                                        Get.to(AddCardPage());
-                                      },
+                                  child: InkWell(
+                                    onTap: () {
+                                      Get.to(AddCardPage());
+                                    },
+                                    child: FittedBox(
                                       child: CircleAvatar(
-                                        backgroundColor: Colors.black26,
-                                        radius: size.height * 0.050,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Icon(
-                                              Icons.add,
-                                              color: Colors.white,
-                                            ),
-                                            3.height,
-                                            Text(
-                                              'home.add_card'.tr(),
-                                              style: TextStyle(
-                                                  color: Colors.white),
-                                            ),
-                                          ],
+                                        backgroundColor: WAPrimaryColor,
+                                        radius: size.height * 0.030,
+                                        child: Icon(
+                                          Icons.add,
+                                          color: Colors.white,
                                         ),
                                       ),
                                     ),
@@ -349,15 +336,16 @@ class HomeScreenState extends State<HomeScreen> {
                             ],
                           ),
                         ),
-                        16.height,
-                        InkWell(
-                          onTap: () {
-                            print("hi dude");
-                          },
+                        Spacer(
+                          flex: 3,
+                        ),
+                        11.height,
+                        Flexible(
+                          flex: 2,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('home.op'.tr(),
+                              Text('home.transc'.tr(),
                                   style: TextStyle(
                                       fontSize: 20,
                                       fontStyle: FontStyle.normal)),
@@ -365,36 +353,16 @@ class HomeScreenState extends State<HomeScreen> {
                             ],
                           ).paddingOnly(left: 16, right: 16),
                         ),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Wrap(
-                            direction: Axis.horizontal,
-                            spacing: 16,
-                            children: operationsList.map((operationModel) {
-                              return WAOperationComponent(
-                                  itemModel: operationModel);
-                            }).toList(),
-                          ).paddingAll(16),
-                        ),
-                        16.height,
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('home.transc'.tr(),
-                                style: TextStyle(
-                                    fontSize: 20, fontStyle: FontStyle.normal)),
-                            Icon(Icons.play_arrow, color: Colors.grey),
-                          ],
-                        ).paddingOnly(left: 16, right: 16),
                         16.height,
                         Consumer<CardTransactionsProvider>(
                             builder: (context, value, child) => value
                                     .isAddProcess
                                 ? Expanded(
+                                    flex: 40,
                                     child: FutureBuilder(
-                                        future: _dbHelper.getShopping(),
+                                        future: _dbHelper.getProcess(),
                                         builder: (BuildContext context,
-                                            AsyncSnapshot<List<ShopData>>
+                                            AsyncSnapshot<List<ProcessData>>
                                                 snapshot) {
                                           if (!snapshot.hasData)
                                             return Center(
@@ -422,9 +390,10 @@ class HomeScreenState extends State<HomeScreen> {
                                           );
                                         }))
                                 : Expanded(
+                                    flex: 40,
                                     child: Center(
-                                    child: CircularProgressIndicator(),
-                                  ))),
+                                      child: CircularProgressIndicator(),
+                                    ))),
                         SizedBox(
                           height: size.height * 0.090,
                         )

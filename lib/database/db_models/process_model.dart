@@ -1,5 +1,6 @@
-class ShoppingModel {
+class ProcessModel {
   int cardID;
+  int processType;
   String dateTime;
   String companyName;
   String comment;
@@ -9,7 +10,7 @@ class ShoppingModel {
   int pointsSpent;
   String picture;
 
-  ShoppingModel({
+  ProcessModel({
     this.cardID,
     this.dateTime,
     this.companyName,
@@ -25,7 +26,9 @@ class ShoppingModel {
     var map = Map<String, dynamic>();
 
     map['card_id'] = cardID;
+    map['process_type'] = processType;
     map['date_time'] = dateTime;
+
     map['company_name'] = companyName;
     map['comment'] = comment;
     map['amount'] = amount;
@@ -37,9 +40,11 @@ class ShoppingModel {
     return map;
   }
 
-  ShoppingModel.fromMap(Map<String, dynamic> map) {
+  ProcessModel.fromMap(Map<String, dynamic> map) {
     cardID = map['card_id'];
+    processType = map['process_type'];
     dateTime = map['date_time'];
+
     companyName = map['company_name'];
     comment = map['comment'];
     amount = map['amount'];
