@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:card_application/database/shop_data.dart';
 import 'package:card_application/utils/box_constraints.dart';
+import 'package:card_application/utils/functions.dart';
 import 'package:card_application/widgets/rich_text_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -53,20 +54,25 @@ class WATransactionComponentState extends State<WATransactionComponent> {
             child: Icon(widget.transactionModel.processType == 1
                 ? Icons.shopping_cart
                 : Icons.price_change)),
-        title: RichTextWidget(
-          list: [
-            TextSpan(
-              /*      text: '${widget.transactionModel.}', */
-              style: TextStyle(color: Colors.black54, fontSize: 14),
-            ),
-            TextSpan(
-              text: widget.transactionModel.processType == 1
+        title: Row(
+          children: [
+            Text(
+              widget.transactionModel.processType == 1
                   ? '${widget.transactionModel.companyName}'
                   : "Nakit Avans",
-              style: TextStyle(color: Colors.black54, fontSize: 14),
+              style: TextStyle(
+                  color: Colors.black54,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600),
             ),
+            SizedBox(
+              width: size.width * 0.15,
+            ),
+            /*        Text(
+              widget.transactionModel.dateTime,
+              style: TextStyle(color: Colors.black54, fontSize: 11),
+            ) */
           ],
-          maxLines: 1,
         ),
         /*   subtitle: Text('${widget.transactionModel.dateTime}',
             style: TextStyle(color: Colors.black54, fontSize: 14)), */
@@ -78,7 +84,7 @@ class WATransactionComponentState extends State<WATransactionComponent> {
               borderRadius: BorderRadius.circular(30),
               backgroundColor: colorGenerator().withOpacity(0.1)),
           child: Text(
-            '${widget.transactionModel.amount}' + " ₺",
+            '-${widget.transactionModel.amount}' + " ₺",
             maxLines: 1,
             style: TextStyle(color: Colors.black54, fontSize: 12),
           ),

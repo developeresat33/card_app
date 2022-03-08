@@ -1,6 +1,11 @@
+import 'dart:io';
+
 import 'package:card_application/extensions/string_extension.dart';
 import 'package:card_application/utils/functions.dart';
+import 'package:card_application/utils/localization_manager.dart';
 import 'package:card_application/views/mainscreens/login_page.dart';
+import 'package:card_application/widgets/select_language.dart';
+import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -51,20 +56,71 @@ class _MainDrawerState extends State<MainDrawer> {
                       ),
                       title: Text('maindrawer.p_page'.translate()),
                     ),
-                    ListTile(
-                      onTap: () {},
+                    ExpansionTile(
+                      /*    onTap: () {}, */
                       leading: Icon(
                         Icons.settings,
                         color: Colors.black,
                       ),
                       title: Text('maindrawer.p_set'.translate()),
+                      children: [
+                        SizedBox(
+                          height: size.height * 0.010,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: size.width * 0.030,
+                            ),
+                            Text("Dil Değiştir"),
+                          ],
+                        ),
+                        SizedBox(
+                          height: size.height * 0.010,
+                        ),
+                        Divider(),
+                        SizedBox(
+                          height: size.height * 0.010,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            if (context.locale !=
+                                LocalizationManager.instance.enLocale) {
+                              context.locale =
+                                  LocalizationManager.instance.enLocale;
+                              Get.rootController.restartApp();
+                            }
+                          },
+                          child: SelectLanguage(
+                            language: "English",
+                            isSelected: context.locale ==
+                                LocalizationManager.instance.enLocale,
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            if (context.locale !=
+                                LocalizationManager.instance.trLocale) {
+                              context.locale =
+                                  LocalizationManager.instance.trLocale;
+                              Get.rootController.restartApp();
+                            }
+                          },
+                          child: SelectLanguage(
+                            language: "Türkçe",
+                            isSelected: context.locale ==
+                                LocalizationManager.instance.trLocale,
+                          ),
+                        )
+                      ],
                     ),
                   ],
                 ),
               ),
               ListTile(
                 onTap: () {
-                  Get.offAll(() => LoginScreen());
+                  exit(0);
                 },
                 leading: Icon(
                   Icons.logout,

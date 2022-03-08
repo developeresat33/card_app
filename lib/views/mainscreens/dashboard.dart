@@ -6,7 +6,6 @@ import 'package:card_application/views/mainscreens/statistic_screen.dart';
 import 'package:card_application/widgets/dialogs/common_dialogs.dart';
 import 'package:card_application/widgets/drawer/profile_drawer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_boom_menu/flutter_boom_menu.dart';
 import 'package:provider/provider.dart';
 
 class WADashboardScreen extends StatefulWidget {
@@ -26,6 +25,7 @@ class WADashboardScreenState extends State<WADashboardScreen> {
   @override
   void initState() {
     ProviderHeader.dshprovider.getOverViewList();
+    ProviderHeader.dshprovider.dashkey = GlobalKey<ScaffoldState>();
     super.initState();
     init();
   }

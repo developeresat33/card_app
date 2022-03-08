@@ -67,10 +67,18 @@ class DbHelper extends ChangeNotifier {
     return await dbClient.delete("Cards", where: "id=?", whereArgs: [id]);
   }
 
+  Future<ProcessModel> getProcessSingle(int id) async {
+    var dbClient = await db;
+    var result =
+        await dbClient.rawQuery('SELECT * FROM Process WHERE id = $id');
+    print(result);
+    return ProcessModel.fromMap(result.first);
+  }
+
   Future<List<ProcessData>> getProcess() async {
     var dbClient = await db;
     var result = await dbClient.rawQuery(
-        'SELECT date_time,process_type,company_name,comment,amount,card_name FROM Process JOIN Cards ON Cards.id=Process.card_id');
+        'SELECT Process.id,date_time,process_type,company_name,comment,amount,card_name FROM Process JOIN Cards ON Cards.id=Process.card_id');
     return result.map((data) => ProcessData.fromMap(data)).toList();
   }
 

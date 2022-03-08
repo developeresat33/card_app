@@ -1,12 +1,12 @@
-import 'package:card_application/states/provider_header.dart';
 import 'package:card_application/utils/box_constraints.dart';
 import 'package:card_application/extensions/int_extensions.dart';
 import 'package:card_application/utils/colors.dart';
-import 'package:card_application/widgets/custom_textformfield.dart';
+import 'package:card_application/views/mainscreens/dashboard.dart';
 import 'package:card_application/widgets/dialogs/common_dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:card_application/extensions/string_extension.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   static String tag = '/LoginScreen';
@@ -58,8 +58,6 @@ class LoginScreenState extends State<LoginScreen> {
               child: Column(
                 children: <Widget>[
                   50.height,
-                  Text('login.log_in'.translate(),
-                      style: TextStyle(fontSize: 24)),
                   Container(
                     margin: EdgeInsets.all(16),
                     child: Stack(
@@ -73,26 +71,17 @@ class LoginScreenState extends State<LoginScreen> {
                           decoration: boxDecorationWithShadow(
                               borderRadius: BorderRadius.circular(30)),
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
                               Container(
                                 child: Column(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                        CrossAxisAlignment.center,
                                     children: [
-                                      60.height,
-                                      CustomTextFormField(
-                                          placeholder: "login.id".translate()),
-                                      16.height,
-                                      CustomTextFormField(
-                                        placeholder: "login.pw".translate(),
-                                        obscureText: true,
-                                      ),
-                                      16.height,
-                                      Align(
-                                        alignment: Alignment.centerRight,
-                                        child: Text("login.forgot".translate(),
-                                            style: TextStyle(fontSize: 14)),
+                                      80.height,
+                                      Text(
+                                        "Bu uygulama'da hesap işlemleri bulunmamaktadır.\nVerileriniz telefonunuzun hafızasına kaydedilecektir.\nYedekleme işlemleri için seçeneklerimiz bulunmaktadır.",
+                                        textAlign: TextAlign.center,
                                       ),
                                       30.height,
                                       Row(
@@ -103,8 +92,9 @@ class LoginScreenState extends State<LoginScreen> {
                                           Expanded(
                                             child: MaterialButton(
                                               onPressed: () async {
-                                                ProviderHeader.dshprovider
-                                                    .getPage();
+                                                await _saveOptions();
+                                                await Get.to(
+                                                    () => WADashboardScreen());
                                               },
                                               child: Text(
                                                   "login.login".translate()),
@@ -116,23 +106,6 @@ class LoginScreenState extends State<LoginScreen> {
                                               ),
                                             ),
                                           ),
-                                          SizedBox(
-                                            width: 5,
-                                          )
-                                        ],
-                                      ),
-                                      5.height,
-                                      Row(
-                                        children: [
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Expanded(
-                                              child: TextButton(
-                                            onPressed: () {},
-                                            child: Text(
-                                                "login.register".translate()),
-                                          )),
                                           SizedBox(
                                             width: 5,
                                           )
@@ -166,5 +139,14 @@ class LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  _saveOptions() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('passlogin', true);
+    } on Exception catch (e) {
+      print(e);
+    }
   }
 }

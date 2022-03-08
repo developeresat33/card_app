@@ -1,4 +1,5 @@
 import 'package:card_application/database/db_helper.dart';
+import 'package:card_application/database/db_models/process_model.dart';
 import 'package:card_application/database/shop_data.dart';
 import 'package:card_application/model/wa_card_model.dart';
 import 'package:card_application/states/card_transactions.dart';
@@ -6,7 +7,6 @@ import 'package:card_application/states/dashboard_provider.dart';
 import 'package:card_application/states/provider_header.dart';
 import 'package:card_application/utils/box_constraints.dart';
 import 'package:card_application/component/card_component.dart';
-import 'package:card_application/component/operation_component.dart';
 import 'package:card_application/component/transaction_component.dart';
 import 'package:card_application/extensions/content_extensions.dart';
 import 'package:card_application/extensions/int_extensions.dart';
@@ -16,6 +16,7 @@ import 'package:card_application/utils/colors.dart';
 import 'package:card_application/utils/functions.dart';
 import 'package:card_application/utils/localization_manager.dart';
 import 'package:card_application/views/mainscreens/add_card.dart';
+import 'package:card_application/views/mainscreens/procces_detail.dart';
 import 'package:card_application/widgets/dialogs/toasy_msg.dart';
 
 import 'package:easy_localization/src/public_ext.dart';
@@ -23,7 +24,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_boom_menu/flutter_boom_menu.dart';
 import 'package:get/route_manager.dart';
 import 'package:provider/provider.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:unicorndial/unicorndial.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -267,7 +267,7 @@ class HomeScreenState extends State<HomeScreen> {
                         ).paddingOnly(left: 16, right: 16),
                         5.height,
                         Expanded(
-                          flex: 14,
+                          flex: 18,
                           child: Row(
                             children: [
                               SizedBox(
@@ -337,11 +337,11 @@ class HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         Spacer(
-                          flex: 3,
+                          flex: 1,
                         ),
                         11.height,
                         Flexible(
-                          flex: 2,
+                          flex: 4,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -379,12 +379,25 @@ class HomeScreenState extends State<HomeScreen> {
                                             itemCount: snapshot.data.length,
                                             itemBuilder: (BuildContext context,
                                                 int index) {
-                                              return Container(
-                                                width: size.width * 0.1,
-                                                child: WATransactionComponent(
-                                                  transactionModel:
-                                                      snapshot.data[index],
-                                                ).paddingOnly(right: 10),
+                                              return InkWell(
+                                                onTap: () async {
+                                                  ProcessModel data;
+                                                  data = await _dbHelper
+                                                      .getProcessSingle(snapshot
+                                                          .data[index].id);
+                                                  Get.to(ProcessDetail(
+                                                    processDetail: data,
+                                                    processData:
+                                                        snapshot.data[index],
+                                                  ));
+                                                },
+                                                child: Container(
+                                                  width: size.width * 0.1,
+                                                  child: WATransactionComponent(
+                                                    transactionModel:
+                                                        snapshot.data[index],
+                                                  ).paddingOnly(right: 10),
+                                                ),
                                               );
                                             },
                                           );

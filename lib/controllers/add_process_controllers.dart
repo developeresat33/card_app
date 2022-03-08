@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_masked_text/flutter_masked_text.dart';
 
 class AddPControllers {
   TextEditingController dateTime;
@@ -13,7 +14,8 @@ class AddPControllers {
     dateTime = TextEditingController();
     companyCtrl = TextEditingController();
     commentCtrl = TextEditingController();
-    amountCtrl = TextEditingController();
+    amountCtrl = MoneyMaskedTextController(
+        decimalSeparator: '.', thousandSeparator: ',');
     pointsEarned = TextEditingController();
     pointsSpent = TextEditingController();
     installments = TextEditingController();

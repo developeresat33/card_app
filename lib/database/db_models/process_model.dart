@@ -1,10 +1,12 @@
+import 'dart:typed_data';
+
 class ProcessModel {
   int cardID;
   int processType;
   String dateTime;
   String companyName;
   String comment;
-  int amount;
+  String amount;
   int installments;
   int pointsEarned;
   int pointsSpent;

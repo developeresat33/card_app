@@ -1,4 +1,5 @@
 class ProcessData {
+  int id;
   String dateTime;
   int processType;
   String companyName;
@@ -7,6 +8,7 @@ class ProcessData {
   String cardName;
 
   ProcessData({
+    this.id,
     this.dateTime,
     this.processType,
     this.companyName,
@@ -17,6 +19,7 @@ class ProcessData {
 
   Map<String, dynamic> toMap() {
     var map = Map<String, dynamic>();
+    map['id'] = id;
     map['date_time'] = dateTime;
     map['process_type'] = processType;
     map['company_name'] = companyName;
@@ -28,6 +31,7 @@ class ProcessData {
   }
 
   ProcessData.fromMap(Map<String, dynamic> map) {
+    id = map['id'];
     dateTime = map['date_time'];
     processType = map['process_type'];
     companyName = map['company_name'];

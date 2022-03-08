@@ -1,7 +1,6 @@
 import 'package:card_application/component/card_component.dart';
 import 'package:card_application/database/db_helper.dart';
 import 'package:card_application/extensions/int_extensions.dart';
-import 'package:card_application/extensions/string_extension.dart';
 import 'package:card_application/model/wa_card_model.dart';
 import 'package:card_application/states/card_transactions.dart';
 import 'package:card_application/utils/box_constraints.dart';
@@ -45,7 +44,8 @@ class _AddCardPageState extends State<AddCardPage> {
     ct.colorList = [];
     ct.getColors();
     ct.addCardState.init();
-    ct.addCardModel = WACardModel(color: WAPrimaryColor.value.toString());
+    ct.addCardModel =
+        WACardModel(color: WAPrimaryColor.value.toString(), selectType: 0);
     super.initState();
   }
 
@@ -293,7 +293,8 @@ class _AddCardPageState extends State<AddCardPage> {
                                   },
                                   onTap: () {
                                     value.selectDate(
-                                        value.addCardState.cutOfCtrl);
+                                        value.addCardState.cutOfCtrl,
+                                        selectDate: 2);
                                   },
                                 )),
                                 SizedBox(
@@ -315,10 +316,12 @@ class _AddCardPageState extends State<AddCardPage> {
                                   hintText: "21.05.2022",
                                   onChanged: (val) {
                                     value.addCardModel.paymentDate = val;
+                                    print("IM HERE");
                                   },
                                   onTap: () {
                                     value.selectDate(
-                                        value.addCardState.paymentCtrl);
+                                        value.addCardState.paymentCtrl,
+                                        selectDate: 1);
                                   },
                                   validator: (val) {
                                     if (val.length == 0) {
@@ -400,6 +403,12 @@ class _AddCardPageState extends State<AddCardPage> {
                                   child: MaterialButton(
                                     onPressed: () async {
                                       if (_formkey.currentState.validate()) {
+                                        print("cut of date" +
+                                            value.addCardModel.cutOfDate
+                                                .toString());
+                                        print("payment date" +
+                                            value.addCardModel.paymentDate
+                                                .toString());
                                         await dbhelper.insertCard(
                                           value.addCardModel,
                                         );

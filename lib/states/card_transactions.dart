@@ -1,15 +1,21 @@
+import 'dart:io';
+
 import 'package:card_application/component/circle_component.dart';
 import 'package:card_application/controllers/add_card_controllers.dart';
+import 'package:card_application/database/db_models/process_model.dart';
 import 'package:card_application/model/app_model.dart';
 import 'package:card_application/model/wa_card_model.dart';
 import 'package:card_application/widgets/data_generator.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 class CardTransactionsProvider extends ChangeNotifier {
   AddCControllers addCardState = AddCControllers();
   WACardModel addCardModel;
+  ProcessModel addProcessModel;
   List<ColorComponent> colorList = [];
   bool isAddCard = true;
   bool isAddProcess = true;
@@ -60,9 +66,7 @@ class CardTransactionsProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> selectDate(
-    TextEditingController ct,
-  ) async {
+  Future<void> selectDate(TextEditingController ct, {int selectDate}) async {
     selectedDate = DateTime.now();
     final DateTime picked = await showDatePicker(
         locale: Get.context.locale,
@@ -72,6 +76,16 @@ class CardTransactionsProvider extends ChangeNotifier {
         lastDate: DateTime(2101));
     if (picked != null && picked != selectedDate) selectedDate = picked;
     ct.text = formatter.format(selectedDate);
+    if (selectDate == 1) {
+      addCardModel.paymentDate = formatter.format(selectedDate);
+      print("heyy");
+    } else if (selectDate == 3) {
+      addProcessModel.dateTime = formatter.format(selectedDate);
+    } else {
+      addCardModel.cutOfDate = formatter.format(selectedDate);
+      print("heyy1");
+    }
+
     notifyListeners();
   }
 }

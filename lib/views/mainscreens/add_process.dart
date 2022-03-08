@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:card_application/controllers/add_process_controllers.dart';
 import 'package:card_application/database/db_helper.dart';
 import 'package:card_application/database/db_models/process_model.dart';
@@ -12,6 +14,7 @@ import 'package:card_application/widgets/dialogs/toasy_msg.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class AddProcessPage extends StatefulWidget {
@@ -22,18 +25,24 @@ class AddProcessPage extends StatefulWidget {
   State<AddProcessPage> createState() => _AddProcessPageState();
 }
 
+enum ImageSourceType { gallery, camera }
+
 class _AddProcessPageState extends State<AddProcessPage> {
+  var ctprovider =
+      Provider.of<CardTransactionsProvider>(Get.context, listen: false);
   var _dbHelper = DbHelper();
   AddPControllers processController = AddPControllers();
-  ProcessModel addProcessModel;
+
   List<String> installments;
   var selectedDropDownValue = "Taksit Seçiniz";
   var _formkey = GlobalKey<FormState>();
-
+  var _image;
+  var imagePicker;
+  var type;
   @override
   void initState() {
     installments = [];
-    addProcessModel = ProcessModel();
+    ctprovider.addProcessModel = ProcessModel();
     processController.init();
 
     for (int i = 1; i < 13; i++) {
@@ -45,8 +54,8 @@ class _AddProcessPageState extends State<AddProcessPage> {
 
   @override
   Widget build(BuildContext context) {
-    addProcessModel.cardID = 1;
-    addProcessModel.processType = widget.processType;
+    ctprovider.addProcessModel.cardID = 1;
+    ctprovider.addProcessModel.processType = widget.processType;
 
     return Consumer<CardTransactionsProvider>(
         builder: (context, value, child) => Scaffold(
@@ -67,7 +76,39 @@ class _AddProcessPageState extends State<AddProcessPage> {
                     ),
                     Expanded(
                       child: ListTile(
-                        trailing: Icon(Icons.add),
+                        trailing: GestureDetector(
+                          onTap: () async {
+                            var source = type = ImageSource.gallery;
+                            XFile image =
+                                await ImagePicker().pickImage(source: source);
+                            setState(() {
+                              _image = File(image.path);
+                            });
+                            value.addProcessModel.picture = image.path;
+                          },
+                          child: Container(
+                            width: 200,
+                            height: 200,
+                            decoration: BoxDecoration(color: Colors.white60),
+                            child: _image != null
+                                ? Image.file(
+                                    _image,
+                                    width: 200.0,
+                                    height: 200.0,
+                                    fit: BoxFit.fitHeight,
+                                  )
+                                : Container(
+                                    decoration:
+                                        BoxDecoration(color: Colors.white60),
+                                    width: 200,
+                                    height: 200,
+                                    child: Icon(
+                                      Icons.camera_alt,
+                                      color: Colors.grey[800],
+                                    ),
+                                  ),
+                          ),
+                        ),
                         title: Text("Resim Ekle (Opsiyonel)"),
                         onTap: () {},
                       ),
@@ -77,7 +118,7 @@ class _AddProcessPageState extends State<AddProcessPage> {
                     ),
                   ],
                 ),
-                4.height,
+                10.height,
                 Form(
                   key: _formkey,
                   child: Column(
@@ -111,7 +152,7 @@ class _AddProcessPageState extends State<AddProcessPage> {
                                       );
                                     }).toList(),
                                     onChanged: (val) {
-                                      addProcessModel.cardID = val.id;
+                                      value.addProcessModel.cardID = val.id;
                                     },
                                   );
                                 }),
@@ -139,7 +180,7 @@ class _AddProcessPageState extends State<AddProcessPage> {
                           ],
                           onChanged: (val) {
                             try {
-                              addProcessModel.dateTime = val;
+                              value.addProcessModel.dateTime = val;
                             } on Exception catch (e) {
                               print(e);
                             }
@@ -152,7 +193,8 @@ class _AddProcessPageState extends State<AddProcessPage> {
                             }
                           },
                           onTap: () {
-                            value.selectDate(processController.dateTime);
+                            value.selectDate(processController.dateTime,
+                                selectDate: 3);
                           },
                         )),
                         SizedBox(
@@ -178,7 +220,7 @@ class _AddProcessPageState extends State<AddProcessPage> {
                                 },
                                 onChanged: (val) {
                                   try {
-                                    addProcessModel.companyName = val;
+                                    value.addProcessModel.companyName = val;
                                   } on Exception catch (e) {
                                     print(e);
                                   }
@@ -206,7 +248,7 @@ class _AddProcessPageState extends State<AddProcessPage> {
                           },
                           onChanged: (val) {
                             try {
-                              addProcessModel.amount = int.parse(val);
+                              value.addProcessModel.amount = val;
                             } on Exception catch (e) {
                               print(e);
                             }
@@ -232,7 +274,7 @@ class _AddProcessPageState extends State<AddProcessPage> {
                           },
                           onChanged: (val) {
                             try {
-                              addProcessModel.comment = val;
+                              value.addProcessModel.comment = val;
                             } on Exception catch (e) {
                               print(e);
                             }
@@ -262,7 +304,8 @@ class _AddProcessPageState extends State<AddProcessPage> {
                           },
                           onChanged: (val) {
                             try {
-                              addProcessModel.installments = int.parse(val);
+                              value.addProcessModel.installments =
+                                  int.parse(val);
                             } on Exception catch (e) {
                               print(e);
                             }
@@ -288,9 +331,13 @@ class _AddProcessPageState extends State<AddProcessPage> {
                           controller: processController.pointsEarned,
                           textInputType: TextInputType.number,
                           placeholder: "Kazanılan Puan (Opsiyonel)",
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
                           onChanged: (val) {
                             try {
-                              addProcessModel.pointsEarned = int.parse(val);
+                              value.addProcessModel.pointsEarned =
+                                  int.parse(val);
                             } on Exception catch (e) {
                               print(e);
                             }
@@ -315,9 +362,13 @@ class _AddProcessPageState extends State<AddProcessPage> {
                           controller: processController.pointsSpent,
                           textInputType: TextInputType.number,
                           placeholder: "Harcanan Puan (Opsiyonel)",
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
                           onChanged: (val) {
                             try {
-                              addProcessModel.pointsSpent = int.parse(val);
+                              value.addProcessModel.pointsSpent =
+                                  int.parse(val);
                             } on Exception catch (e) {
                               print(e);
                             }
@@ -348,8 +399,8 @@ class _AddProcessPageState extends State<AddProcessPage> {
                     ),
                     onPressed: () async {
                       if (_formkey.currentState.validate()) {
-                        print(addProcessModel.amount);
-                        await _dbHelper.insertProcess(addProcessModel);
+                        print(value.addProcessModel.amount);
+                        await _dbHelper.insertProcess(value.addProcessModel);
                         await Get.back();
                         await value.refresh(isProcessAdd: true);
                       } else {
