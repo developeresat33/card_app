@@ -1,6 +1,7 @@
 import 'package:card_application/database/db_helper.dart';
 import 'package:card_application/states/card_transactions.dart';
 import 'package:card_application/states/dashboard_provider.dart';
+import 'package:card_application/states/provider_header.dart';
 import 'package:card_application/utils/colors.dart';
 import 'package:card_application/utils/localization_manager.dart';
 import 'package:card_application/views/mainscreens/dashboard.dart';
@@ -22,7 +23,8 @@ void main() async {
 
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-  await _init();
+  await initPass();
+
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
 
@@ -93,11 +95,12 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-_init() async {
+initPass() async {
   try {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
+    name = prefs.getString('name');
     isPass = prefs.getBool('passlogin');
+
     print("isPass" + isPass.toString());
     if (isPass == null) {
       isPass = false;

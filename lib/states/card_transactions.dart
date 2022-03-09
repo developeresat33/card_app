@@ -5,18 +5,19 @@ import 'package:card_application/controllers/add_card_controllers.dart';
 import 'package:card_application/database/db_models/process_model.dart';
 import 'package:card_application/model/app_model.dart';
 import 'package:card_application/model/wa_card_model.dart';
+import 'package:card_application/utils/colors.dart';
+import 'package:card_application/utils/functions.dart';
 import 'package:card_application/widgets/data_generator.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 
 class CardTransactionsProvider extends ChangeNotifier {
   AddCControllers addCardState = AddCControllers();
   WACardModel addCardModel;
   ProcessModel addProcessModel;
   List<ColorComponent> colorList = [];
+  List<int> installments = [];
   bool isAddCard = true;
   bool isAddProcess = true;
   DateTime selectedDate;
@@ -55,7 +56,7 @@ class CardTransactionsProvider extends ChangeNotifier {
       notifyListeners();
     }
 
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(Duration(milliseconds: 300));
 
     if (!isProcessAdd) {
       isAddCard = true;
@@ -87,5 +88,63 @@ class CardTransactionsProvider extends ChangeNotifier {
     }
 
     notifyListeners();
+  }
+
+  void selectInstallment(TextEditingController ct) {
+    installments.clear();
+    for (int i = 1; i < 13; i++) {
+      installments.add(i);
+    }
+    showModalBottomSheet(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(15.0)),
+        ),
+        context: Get.context,
+        builder: (BuildContext context) {
+          return Container(
+              height: size.height * 0.3,
+              color: Colors.white,
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: size.height * 0.015,
+                  ),
+                  GestureDetector(
+                    onTap: () => Get.back(),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Icon(
+                          Icons.cancel,
+                          color: WAPrimaryColor,
+                        ),
+                        SizedBox(
+                          width: size.width * 0.030,
+                        )
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: size.height * 0.015,
+                  ),
+                  Expanded(
+                      child: ListView.builder(
+                    physics: BouncingScrollPhysics(),
+                    itemCount: installments.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(installments[index].toString()),
+                        onTap: () async {
+                          await Get.back();
+                          ct.text = installments[index].toString();
+                          addProcessModel.installments = installments[index];
+                        },
+                        leading: Icon(Icons.align_horizontal_left),
+                      );
+                    },
+                  ))
+                ],
+              ));
+        });
   }
 }

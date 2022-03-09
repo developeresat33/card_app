@@ -2,12 +2,12 @@ import 'package:card_application/extensions/string_extension.dart';
 import 'package:card_application/utils/colors.dart';
 import 'package:card_application/utils/functions.dart';
 import 'package:card_application/views/mainscreens/add_process.dart';
-import 'package:card_application/views/mainscreens/dashboard.dart';
 import 'package:card_application/widgets/data_generator.dart';
-import 'package:card_application/widgets/logo_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:unicorndial/unicorndial.dart';
+
+String name;
 
 class DashProvider extends ChangeNotifier {
   GlobalKey<ScaffoldState> dashkey;
@@ -47,7 +47,7 @@ class DashProvider extends ChangeNotifier {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'İşlem türü seçiniz;',
+                          'dialogs.choose'.translate(),
                           style: TextStyle(
                             color: Colors.black87,
                           ),
@@ -66,7 +66,7 @@ class DashProvider extends ChangeNotifier {
                                 ));
                               },
                               child: Text(
-                                "Alışveriş",
+                                'dialogs.shopping'.translate(),
                                 style: TextStyle(
                                   color: WAPrimaryColor,
                                 ),
@@ -83,7 +83,7 @@ class DashProvider extends ChangeNotifier {
                                 ));
                               },
                               child: Text(
-                                "Nakit Avans",
+                                'dialogs.cash_advance'.translate(),
                                 style: TextStyle(
                                   color: Colors.black,
                                 ),

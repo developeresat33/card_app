@@ -10,20 +10,24 @@ import 'package:provider/provider.dart';
 
 class WADashboardScreen extends StatefulWidget {
   static String tag = '/WADashboardScreen';
-
+  final String name;
+  WADashboardScreen({this.name});
   @override
   WADashboardScreenState createState() => WADashboardScreenState();
 }
 
 class WADashboardScreenState extends State<WADashboardScreen> {
   int _selectedIndex = 0;
-  var _pages = <Widget>[
-    HomeScreen(),
-    StatisticScreen(),
-  ];
+  var _pages;
 
   @override
   void initState() {
+    _pages = <Widget>[
+      HomeScreen(
+        name: widget.name,
+      ),
+      StatisticScreen(),
+    ];
     ProviderHeader.dshprovider.getOverViewList();
     ProviderHeader.dshprovider.dashkey = GlobalKey<ScaffoldState>();
     super.initState();

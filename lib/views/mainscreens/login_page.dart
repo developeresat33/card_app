@@ -1,8 +1,13 @@
+import 'package:card_application/main.dart';
+import 'package:card_application/states/provider_header.dart';
 import 'package:card_application/utils/box_constraints.dart';
 import 'package:card_application/extensions/int_extensions.dart';
 import 'package:card_application/utils/colors.dart';
+import 'package:card_application/utils/functions.dart';
 import 'package:card_application/views/mainscreens/dashboard.dart';
+import 'package:card_application/widgets/custom_textformfield.dart';
 import 'package:card_application/widgets/dialogs/common_dialogs.dart';
+import 'package:card_application/widgets/dialogs/toasy_msg.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:card_application/extensions/string_extension.dart';
@@ -16,10 +21,9 @@ class LoginScreen extends StatefulWidget {
 }
 
 class LoginScreenState extends State<LoginScreen> {
-  var emailController = TextEditingController();
-  var passwordController = TextEditingController();
-  FocusNode emailFocusNode = FocusNode();
-  FocusNode passWordFocusNode = FocusNode();
+  var idController = TextEditingController();
+
+  var _formkey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -80,10 +84,33 @@ class LoginScreenState extends State<LoginScreen> {
                                     children: [
                                       80.height,
                                       Text(
-                                        "Bu uygulama'da hesap işlemleri bulunmamaktadır.\nVerileriniz telefonunuzun hafızasına kaydedilecektir.\nYedekleme işlemleri için seçeneklerimiz bulunmaktadır.",
+                                        "login.info".translate(),
                                         textAlign: TextAlign.center,
                                       ),
                                       30.height,
+                                      Form(
+                                        key: _formkey,
+                                        child: Row(
+                                          children: [
+                                            SizedBox(width: 5),
+                                            Expanded(
+                                                child: CustomTextFormField(
+                                              placeholder:
+                                                  "login.id".translate(),
+                                              controller: idController,
+                                              validator: (val) {
+                                                if (val.length == 0)
+                                                  return "login.required_field"
+                                                          .translate() +
+                                                      "*" +
+                                                      "login.id".translate();
+                                              },
+                                            )),
+                                            SizedBox(width: 5),
+                                          ],
+                                        ),
+                                      ),
+                                      10.height,
                                       Row(
                                         children: [
                                           SizedBox(
@@ -92,9 +119,19 @@ class LoginScreenState extends State<LoginScreen> {
                                           Expanded(
                                             child: MaterialButton(
                                               onPressed: () async {
-                                                await _saveOptions();
-                                                await Get.to(
-                                                    () => WADashboardScreen());
+                                                if (_formkey.currentState
+                                                    .validate()) {
+                                                  await _saveOptions();
+                                                  isPass = true;
+
+                                                  await Get.to(() =>
+                                                      WADashboardScreen(
+                                                        name: idController.text,
+                                                      ));
+                                                } else {
+                                                  setMessage("login.warning"
+                                                      .translate());
+                                                }
                                               },
                                               child: Text(
                                                   "login.login".translate()),
@@ -145,6 +182,7 @@ class LoginScreenState extends State<LoginScreen> {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setBool('passlogin', true);
+      await prefs.setString('name', idController.text);
     } on Exception catch (e) {
       print(e);
     }

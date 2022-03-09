@@ -14,12 +14,12 @@
     },
     "login":
     {
-           "log_in":"Giriş",
-           "id":"Kullanıcı Adı",
-           "pw":"Şifre",
-           "forgot":"Şifremi unuttum?",
-           "login":"Giriş Yap",
-           "register":"Kayıt Ol"
+      "id":"Adınız",
+      "required_field":"Zorunlu Alan",
+      "login":"Devam",
+    
+           "info":"Bu uygulama'da hesap işlemleri bulunmamaktadır.\nVerileriniz telefonunuzun hafızasına kaydedilecektir.\nYedekleme işlemleri için seçeneklerimiz bulunmaktadır.",
+           "warning":"Lütfen adınızı giriniz"
            
     },
     "statistics":{
@@ -61,6 +61,7 @@
       "p_name":"Profil Adı",
       "p_page":"Profil Sayfası",
       "p_set":"Ayarlar",
+      "language":"Dil Değiştir",
       "log_out":"Çıkış Yap"
 
 
@@ -68,5 +69,59 @@
 
 
 
+    },"cards":{
+      "warning":"Kart listeniz boş.",
+      "usable":"Kullanılabilir Limit"
+  
+  
+    },
+    "transactions":{"warning":"İşlem listeniz boş."},
+    "dialogs":{
+      "choose":"İşlem türü seçiniz;",
+    "shopping":"Alışveriş",
+  "cash_advance":"Nakit Avans",
+  "warning":"Boş veya geçersiz değer."
+},
+    "add_card":{
+      "default":"Kart Ekle",
+      "color":"Renk :",
+      "card_name":"Kart Adı",
+      "card_limit":"Kart Limiti",
+      "cash_advance":"Nakit Avans Limiti",
+      "cut_of":"Hesap Kesim Tarihi",
+      "payment":"Ödeme Tarihi",
+      "point":"Puan (Opsiyonel)",
+      "last_letter":"Son 4 Hane (Opsiyonel)",
+      "add":"Ekle",
+      "cancel":"İptal",
+      "warning":"Lütfen önce kart ekleyiniz"
+    },
+    "add_process":{
+      "default1":"Alışveriş Ekle",
+      "default2":"Nakit Avans Ekle",
+      "add_pic":"Resim Ekle (Opsiyonel)",
+      "shopping_date":"Alışveriş Tarihi",
+      "cash_date":"Nakit Avans Tarihi",
+      "shopping_place":"Alışveriş Yeri",
+      "amount":"İşlem Tutarı",
+      "comment":"Yorum",
+      "installments":"Taksit Sayısı",
+      "points_earned":"Kazanılan Puan (Opsiyonel)",
+      "points_spent":"Harcanan Puan (Opsiyonel)",
+      "save":"Kaydet"
+
+
+
+
+
+
+    },
+    "boom":{
+      "add":"Kart Ekle",
+      "card_info":"Kart bilgilerinizi ekleyiniz.",
+      "process":"İşlem Ekle",
+      "process_info":"Mevcut kartınıza işlem ekleyiniz."
+  
+  
     }
 }

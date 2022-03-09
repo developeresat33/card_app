@@ -14,12 +14,13 @@
   },
   "login":
   {
-         "log_in":"Log In",
-         "id":"ID",
-         "pw":"Password",
-         "forgot":"Forgot Password?",
+        
+         "id":"Your name",
+         "required_field":"Required Field",
          "login":"Continue",
-         "register":"Register"
+       
+         "info":"There are no account operations in this application.\nYour data will be saved in your phone's memory.\nWe have options for backup operations.",
+         "warning":"Please enter your name"
          
   },
   "statistics":{
@@ -61,7 +62,55 @@
     "p_name":"Profile Name",
     "p_page":"Profile Page",
     "p_set":"Settings",
+    "language":"Change Language",
     "log_out":"Log Out"
+
+  },"cards":{
+    "warning":"Your card list empty.",
+    "usable":"Usable Limit"
+
+
+  },   "transactions":{"warning":"Your process list empty."},  
+  "dialogs":{"choose":"Select transaction type;",
+    "shopping":"Shopping",
+  "cash_advance":"Cash Advance",
+  "warning":"Null or invalid value."
+  },  "add_card":{
+    "default":"Add Card",
+    "color":"Color :",
+    "card_name":"Card Name",
+    "card_limit":"Card Limit",
+    "cash_advance":"Cash Advance Limit",
+    "cut_of":"Cut Of Date",
+    "payment":"Payment Date",
+    "point":"Point (Optional)",
+    "last_letter":"Last 4 Digits (Optional)",
+    "add":"Add",
+    "cancel":"Cancel",
+    "warning":"Please add card first"
+    
+
+  },
+  "add_process":{
+    "default1":"Add Shopping",
+    "default2":"Add Cash Advance",
+    "add_pic":"Add Picture (Optional)",
+    "shopping_date":"Shopping Date",
+    "cash_date":"Cash Advance Date",
+    "shopping_place":"Shopping Place",
+    "amount":"Transaction Amount",
+    "comment":"Comment",
+    "installments":"Number Of Installments",
+    "points_earned":"Points Earned(Optional)",
+    "points_spent":"Points Spent (Optional)",
+    "save":"Save"
+  },
+  "boom":{
+    "add":"Add Card",
+    "card_info":"Add your card information.",
+    "process":"Add Process",
+    "process_info":"Add a transaction to your existing card."
+
 
   }
 }

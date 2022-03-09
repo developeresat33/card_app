@@ -62,9 +62,20 @@ class DbHelper extends ChangeNotifier {
     return count;
   }
 
-  Future<void> removeCard(int id) async {
+/*   Future<void> removeCard(int id) async {
     var dbClient = await db;
     return await dbClient.delete("Cards", where: "id=?", whereArgs: [id]);
+  }
+ */
+  void removeCard(var id) async {
+    var dbClient = await db;
+    try {
+      await dbClient.rawQuery('DELETE FROM Process  WHERE card_id = $id');
+      await dbClient.rawQuery('DELETE FROM Cards WHERE id = $id');
+    } on Exception catch (e) {
+      print(e);
+    }
+    notifyListeners();
   }
 
   Future<ProcessModel> getProcessSingle(int id) async {

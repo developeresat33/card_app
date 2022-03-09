@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:card_application/database/db_models/process_model.dart';
 import 'package:card_application/database/shop_data.dart';
+import 'package:card_application/utils/colors.dart';
 import 'package:card_application/utils/functions.dart';
+import 'package:card_application/widgets/app_bar.dart';
 import 'package:card_application/widgets/tools/data_holder.dart';
 import 'package:flutter/material.dart';
 
@@ -29,9 +31,13 @@ class _ProcessDetailState extends State<ProcessDetail> {
     if (widget.processDetail.picture != null)
       img = File(widget.processDetail.picture);
     return Scaffold(
-      appBar: AppBar(
-        title: Text("İşlem Detayı"),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {},
+        label: Text("İşlemi Sil"),
+        backgroundColor: WAPrimaryColor,
+        icon: Icon(Icons.remove),
       ),
+      appBar: getAppBar("İşlem Detayı"),
       body: Column(
         children: [
           SizedBox(
@@ -69,7 +75,8 @@ class _ProcessDetailState extends State<ProcessDetail> {
           if (widget.processDetail.processType == 1)
             buildDataHolder("İşlem Yeri", widget.processDetail.companyName),
           buildDataHolder("Açıklama", widget.processDetail.comment),
-          buildDataHolder("Tutar", widget.processDetail.amount),
+          if (widget.processDetail.amount != null)
+            buildDataHolder("Tutar", widget.processDetail.amount),
           buildDataHolder("Taksit", widget.processDetail.installments),
           if (widget.processDetail.pointsEarned != null)
             buildDataHolder(

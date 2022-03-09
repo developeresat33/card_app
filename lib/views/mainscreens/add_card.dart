@@ -6,6 +6,7 @@ import 'package:card_application/states/card_transactions.dart';
 import 'package:card_application/utils/box_constraints.dart';
 import 'package:card_application/utils/colors.dart';
 import 'package:card_application/utils/functions.dart';
+import 'package:card_application/widgets/app_bar.dart';
 import 'package:card_application/widgets/custom_textformfield.dart';
 import 'package:card_application/widgets/data_generator.dart';
 import 'package:card_application/widgets/dialogs/toasy_msg.dart';
@@ -13,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:card_application/extensions/string_extension.dart';
 
 class AddCardPage extends StatefulWidget {
   const AddCardPage({Key key}) : super(key: key);
@@ -54,9 +56,7 @@ class _AddCardPageState extends State<AddCardPage> {
     _keyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
     return Consumer<CardTransactionsProvider>(
         builder: (context, value, child) => Scaffold(
-              appBar: AppBar(
-                title: Text("Kart Ekle"),
-              ),
+              appBar: getAppBar("add_card.default".translate()),
               body: Form(
                 key: _formkey,
                 child: Column(
@@ -73,6 +73,7 @@ class _AddCardPageState extends State<AddCardPage> {
                             width: size.width * 0.8,
                             child: WACardComponent(
                               cardModel: cardModel,
+                              isEditing: true,
                             ),
                           ).paddingAll(10),
                           SizedBox(
@@ -83,7 +84,7 @@ class _AddCardPageState extends State<AddCardPage> {
                                   width: size.width * 0.050,
                                 ),
                                 Expanded(
-                                  child: Text("Renk :"),
+                                  child: Text("add_card.color".translate()),
                                 ),
                                 Expanded(
                                     flex: 5,
@@ -198,7 +199,7 @@ class _AddCardPageState extends State<AddCardPage> {
                                 Expanded(
                                     child: CustomTextFormField(
                                   controller: value.addCardState.cardNameCtrl,
-                                  placeholder: "Kart Adı",
+                                  placeholder: "add_card.card_name".translate(),
                                   hintText: "X Bank",
                                   onChanged: (val) {
                                     value.addCardModel.cardName = val;
@@ -208,7 +209,10 @@ class _AddCardPageState extends State<AddCardPage> {
                                   },
                                   validator: (val) {
                                     if (val.length == 0) {
-                                      return "Zorunlu Alan * Kart Adı";
+                                      return 'login.required_field'
+                                              .translate() +
+                                          "*" +
+                                          "add_card.card_name".translate();
                                     }
                                   },
                                 )),
@@ -226,7 +230,8 @@ class _AddCardPageState extends State<AddCardPage> {
                                 Expanded(
                                     child: CustomTextFormField(
                                   controller: value.addCardState.limitCtrl,
-                                  placeholder: "Kart Limiti",
+                                  placeholder:
+                                      "add_card.card_limit".translate(),
                                   inputFormatters: [],
                                   hintText: "1.000 ₺",
                                   onChanged: (val) {
@@ -236,8 +241,11 @@ class _AddCardPageState extends State<AddCardPage> {
                                     });
                                   },
                                   validator: (val) {
-                                    if (val.length == 0) {
-                                      return "Zorunlu Alan * Kart Limiti";
+                                    if (val.length == 0 || val == "0.00") {
+                                      return 'login.required_field'
+                                              .translate() +
+                                          "*" +
+                                          "add_card.card_limit".translate();
                                     }
                                   },
                                 )),
@@ -255,14 +263,18 @@ class _AddCardPageState extends State<AddCardPage> {
                                 Expanded(
                                     child: CustomTextFormField(
                                   controller: value.addCardState.advanceCtrl,
-                                  placeholder: "Nakit Avans Limiti",
+                                  placeholder:
+                                      "add_card.cash_advance".translate(),
                                   hintText: "1.000 ₺",
                                   onChanged: (val) {
                                     value.addCardModel.cashAdvanceLimit = val;
                                   },
                                   validator: (val) {
-                                    if (val.length == 0) {
-                                      return "Zorunlu Alan * Nakit Avans Limiti";
+                                    if (val.length == 0 || val == "0.00") {
+                                      return 'login.required_field'
+                                              .translate() +
+                                          "*" +
+                                          "add_card.cash_advance".translate();
                                     }
                                   },
                                 )),
@@ -281,14 +293,17 @@ class _AddCardPageState extends State<AddCardPage> {
                                     child: CustomTextFormField(
                                   controller: value.addCardState.cutOfCtrl,
                                   readOnly: true,
-                                  placeholder: "Hesap Kesim Tarihi",
+                                  placeholder: "add_card.cut_of".translate(),
                                   hintText: "21.05.2022",
                                   onChanged: (val) {
                                     value.addCardModel.cutOfDate = val;
                                   },
                                   validator: (val) {
                                     if (val.length == 0) {
-                                      return "Zorunlu Alan * Hesap Kesim Tarihi";
+                                      return 'login.required_field'
+                                              .translate() +
+                                          "*" +
+                                          "add_card.cut_of".translate();
                                     }
                                   },
                                   onTap: () {
@@ -312,7 +327,7 @@ class _AddCardPageState extends State<AddCardPage> {
                                     child: CustomTextFormField(
                                   controller: value.addCardState.paymentCtrl,
                                   readOnly: true,
-                                  placeholder: "Ödeme Tarihi",
+                                  placeholder: "add_card.payment".translate(),
                                   hintText: "21.05.2022",
                                   onChanged: (val) {
                                     value.addCardModel.paymentDate = val;
@@ -325,7 +340,10 @@ class _AddCardPageState extends State<AddCardPage> {
                                   },
                                   validator: (val) {
                                     if (val.length == 0) {
-                                      return "Zorunlu Alan * Ödeme Tarihi";
+                                      return 'login.required_field'
+                                              .translate() +
+                                          "*" +
+                                          "add_card.payment".translate();
                                     }
                                   },
                                 )),
@@ -344,7 +362,7 @@ class _AddCardPageState extends State<AddCardPage> {
                                     child: CustomTextFormField(
                                   controller: value.addCardState.pointCtrl,
                                   textInputType: TextInputType.number,
-                                  placeholder: "Puan (Opsiyonel)",
+                                  placeholder: "add_card.point".translate(),
                                   inputFormatters: [
                                     FilteringTextInputFormatter.digitsOnly
                                   ],
@@ -371,7 +389,8 @@ class _AddCardPageState extends State<AddCardPage> {
                                 Expanded(
                                     child: CustomTextFormField(
                                   controller: value.addCardState.lastNumbers,
-                                  placeholder: "Son 4 Hane (Opsiyonel)",
+                                  placeholder:
+                                      "add_card.last_letter".translate(),
                                   textInputType: TextInputType.number,
                                   maxLength: 4,
                                   inputFormatters: [
@@ -403,12 +422,6 @@ class _AddCardPageState extends State<AddCardPage> {
                                   child: MaterialButton(
                                     onPressed: () async {
                                       if (_formkey.currentState.validate()) {
-                                        print("cut of date" +
-                                            value.addCardModel.cutOfDate
-                                                .toString());
-                                        print("payment date" +
-                                            value.addCardModel.paymentDate
-                                                .toString());
                                         await dbhelper.insertCard(
                                           value.addCardModel,
                                         );
@@ -420,7 +433,7 @@ class _AddCardPageState extends State<AddCardPage> {
                                         setMessage("Boş veya geçersiz değer");
                                       }
                                     },
-                                    child: Text("Ekle"),
+                                    child: Text("add_card.add".translate()),
                                     color: WAPrimaryColor,
                                     textColor: Colors.white,
                                     shape: RoundedRectangleBorder(
@@ -434,7 +447,7 @@ class _AddCardPageState extends State<AddCardPage> {
                                     Get.back();
                                   },
                                   child: Text(
-                                    "İptal",
+                                    "add_card.cancel".translate(),
                                     style: TextStyle(color: WAPrimaryColor),
                                   ),
                                 )),

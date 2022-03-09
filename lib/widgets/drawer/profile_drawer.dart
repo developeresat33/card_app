@@ -1,9 +1,10 @@
 import 'dart:io';
 
 import 'package:card_application/extensions/string_extension.dart';
+import 'package:card_application/main.dart';
+import 'package:card_application/states/dashboard_provider.dart';
 import 'package:card_application/utils/functions.dart';
 import 'package:card_application/utils/localization_manager.dart';
-import 'package:card_application/views/mainscreens/login_page.dart';
 import 'package:card_application/widgets/select_language.dart';
 import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/material.dart';
@@ -41,23 +42,14 @@ class _MainDrawerState extends State<MainDrawer> {
                     SizedBox(
                       width: 20.0,
                     ),
-                    Text('maindrawer.p_name'.translate())
+                    Text(name)
                   ],
                 ),
               ),
               Expanded(
                 child: ListView(
                   children: [
-                    ListTile(
-                      onTap: () {},
-                      leading: Icon(
-                        Icons.person,
-                        color: Colors.black,
-                      ),
-                      title: Text('maindrawer.p_page'.translate()),
-                    ),
                     ExpansionTile(
-                      /*    onTap: () {}, */
                       leading: Icon(
                         Icons.settings,
                         color: Colors.black,
@@ -73,7 +65,7 @@ class _MainDrawerState extends State<MainDrawer> {
                             SizedBox(
                               width: size.width * 0.030,
                             ),
-                            Text("Dil Değiştir"),
+                            Text("maindrawer.language".translate()),
                           ],
                         ),
                         SizedBox(
@@ -84,12 +76,13 @@ class _MainDrawerState extends State<MainDrawer> {
                           height: size.height * 0.010,
                         ),
                         InkWell(
-                          onTap: () {
+                          onTap: () async {
                             if (context.locale !=
                                 LocalizationManager.instance.enLocale) {
                               context.locale =
                                   LocalizationManager.instance.enLocale;
-                              Get.rootController.restartApp();
+                              await Get.rootController.restartApp();
+                              await initPass();
                             }
                           },
                           child: SelectLanguage(
@@ -99,12 +92,13 @@ class _MainDrawerState extends State<MainDrawer> {
                           ),
                         ),
                         InkWell(
-                          onTap: () {
+                          onTap: () async {
                             if (context.locale !=
                                 LocalizationManager.instance.trLocale) {
                               context.locale =
                                   LocalizationManager.instance.trLocale;
-                              Get.rootController.restartApp();
+                              await Get.rootController.restartApp();
+                              await initPass();
                             }
                           },
                           child: SelectLanguage(

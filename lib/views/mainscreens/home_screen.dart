@@ -11,23 +11,22 @@ import 'package:card_application/component/transaction_component.dart';
 import 'package:card_application/extensions/content_extensions.dart';
 import 'package:card_application/extensions/int_extensions.dart';
 import 'package:card_application/extensions/widget_extension.dart';
-
 import 'package:card_application/utils/colors.dart';
 import 'package:card_application/utils/functions.dart';
-import 'package:card_application/utils/localization_manager.dart';
 import 'package:card_application/views/mainscreens/add_card.dart';
-import 'package:card_application/views/mainscreens/procces_detail.dart';
+import 'package:card_application/views/mainscreens/card_detail.dart';
+import 'package:card_application/views/mainscreens/process_detail.dart';
 import 'package:card_application/widgets/dialogs/toasy_msg.dart';
-
 import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_boom_menu/flutter_boom_menu.dart';
 import 'package:get/route_manager.dart';
 import 'package:provider/provider.dart';
-import 'package:unicorndial/unicorndial.dart';
 
 class HomeScreen extends StatefulWidget {
   static String tag = '/HomeScreen';
+  final String name;
+  HomeScreen({this.name});
 
   @override
   HomeScreenState createState() => HomeScreenState();
@@ -41,7 +40,6 @@ class HomeScreenState extends State<HomeScreen> {
     _dbHelper = DbHelper();
 
     super.initState();
-    ;
   }
 
   @override
@@ -53,106 +51,13 @@ class HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     /*  var ct = Provider.of<CardTransactionsProvider>(Get.context, listen: false); */
 
-    ProviderHeader.dshprovider.subLanguage = [
-      UnicornButton(
-        labelText: "Türkçe",
-        labelFontSize: 13,
-        labelHasShadow: true,
-        currentButton: FloatingActionButton(
-          onPressed: () {},
-          heroTag: "Türkçe",
-          backgroundColor: Colors.redAccent,
-          mini: true,
-          child: InkWell(
-            onTap: () {
-              if (context.locale != LocalizationManager.instance.trLocale) {
-                context.locale = LocalizationManager.instance.trLocale;
-                Get.rootController.restartApp();
-              }
-            },
-            child: Stack(
-              children: [
-                Align(
-                  alignment: Alignment.center,
-                  child: CircleAvatar(
-                    backgroundImage: AssetImage("assets/tr_flag.png"),
-                  ),
-                ),
-                if (context.locale == LocalizationManager.instance.trLocale)
-                  Positioned(
-                    top: -5,
-                    right: -5,
-                    child: CircleAvatar(
-                      radius: 12,
-                      backgroundColor: Colors.white,
-                      child: Icon(
-                        Icons.check,
-                        color: WAPrimaryColor,
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-          ),
-        ),
-      ),
-      UnicornButton(
-        labelText: "İngilizce",
-        labelFontSize: 13,
-        labelHasShadow: true,
-        currentButton: FloatingActionButton(
-          onPressed: () {},
-          heroTag: "İngilizce",
-          backgroundColor: Colors.blueAccent,
-          mini: true,
-          child: InkWell(
-            onTap: () {
-              if (context.locale != LocalizationManager.instance.enLocale) {
-                context.locale = LocalizationManager.instance.enLocale;
-                Get.rootController.restartApp();
-              }
-            },
-            child: Stack(
-              children: [
-                Align(
-                  alignment: Alignment.center,
-                  child: CircleAvatar(
-                    backgroundImage: AssetImage("assets/us_flag.png"),
-                  ),
-                ),
-                if (context.locale == LocalizationManager.instance.enLocale)
-                  Positioned(
-                    top: -5,
-                    right: -5,
-                    child: CircleAvatar(
-                      radius: 12,
-                      backgroundColor: Colors.white,
-                      child: Icon(
-                        Icons.check,
-                        color: WAPrimaryColor,
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-          ),
-        ),
-      )
-    ];
     return Consumer<DashProvider>(
         builder: (context, value, child) => SafeArea(
               child: Scaffold(
                 floatingActionButton: Stack(
                   children: [
-                    /*              UnicornDialer(
-                            animationDuration: 150,
-                            backgroundColor: Colors.transparent,
-                            parentButtonBackground: WAPrimaryColor,
-                            parentButton: Icon(Icons.translate),
-                            childButtons: value.subLanguage)
-                        .paddingOnly(left: 30), */
                     BoomMenu(
-                        animatedIcon: AnimatedIcons.menu_arrow,
+                        animatedIcon: AnimatedIcons.add_event,
                         backgroundColor: WAPrimaryColor,
                         animatedIconTheme: IconThemeData(size: 22.0),
                         //child: Icon(Icons.add),
@@ -164,18 +69,18 @@ class HomeScreenState extends State<HomeScreen> {
                         children: [
                           MenuItem(
                             child: Icon(Icons.add, color: Colors.black),
-                            title: "Kart Ekle",
+                            title: "boom.add".tr(),
                             titleColor: Colors.white,
-                            subtitle: "Kart bilgilerinizi giriniz",
+                            subtitle: "boom.card_info".tr(),
                             subTitleColor: Colors.white,
                             backgroundColor: Colors.greenAccent,
                             onTap: () => Get.to(AddCardPage()),
                           ),
                           MenuItem(
                               child: Icon(Icons.adjust, color: Colors.black),
-                              title: "İşlem Ekle",
+                              title: "boom.process".tr(),
                               titleColor: Colors.white,
-                              subtitle: "Mevcut kartınıza işlem ekleyiniz",
+                              subtitle: "boom.process_info".tr(),
                               subTitleColor: Colors.white,
                               backgroundColor: Colors.blueAccent,
                               onTap: () {
@@ -183,7 +88,7 @@ class HomeScreenState extends State<HomeScreen> {
                                     _dbHelper.count > 0) {
                                   value.choseeProcess();
                                 } else {
-                                  setMessage("Lütfen öncelikle kart ekleyiniz");
+                                  setMessage('add_card.warning'.tr());
                                 }
                               }),
                         ]),
@@ -235,7 +140,7 @@ class HomeScreenState extends State<HomeScreen> {
                                   fontSize: 20,
                                   fontWeight: FontWeight.normal,
                                 )).paddingOnly(left: 16, right: 0),
-                            Text('Esat Akyıldız',
+                            Text(name != null ? name : widget.name,
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
@@ -265,33 +170,35 @@ class HomeScreenState extends State<HomeScreen> {
                                     Icon(Icons.play_arrow, color: Colors.grey)),
                           ],
                         ).paddingOnly(left: 16, right: 16),
-                        5.height,
+                        10.height,
                         Expanded(
                           flex: 18,
                           child: Row(
                             children: [
                               SizedBox(
-                                width: size.width * 0.20,
-                                child: Container(
-                                  padding: EdgeInsets.only(
-                                      left: 16, right: 16, bottom: 30, top: 8),
-                                  child: InkWell(
-                                    onTap: () {
-                                      Get.to(AddCardPage());
-                                    },
-                                    child: FittedBox(
-                                      child: CircleAvatar(
-                                        backgroundColor: WAPrimaryColor,
-                                        radius: size.height * 0.030,
-                                        child: Icon(
-                                          Icons.add,
-                                          color: Colors.white,
-                                        ),
-                                      ),
+                                height: size.height * 0.090,
+                                width: size.width * 0.17,
+                                child: InkWell(
+                                  onTap: () {
+                                    Get.to(AddCardPage());
+                                  },
+                                  child: Container(
+                                    margin: EdgeInsets.only(left: 10),
+                                    width: 40,
+                                    height: 40,
+                                    decoration: boxDecorationWithRoundedCorners(
+                                      backgroundColor: Colors.white,
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(
+                                          color: Colors.grey.withOpacity(0.3)),
+                                    ),
+                                    child: Icon(
+                                      Icons.credit_card,
+                                      color: Colors.black54,
                                     ),
                                   ),
                                 ).paddingOnly(
-                                    top: 16, bottom: 16, right: 5, left: 5),
+                                    top: 17, bottom: 17, right: 10, left: 5),
                               ),
                               Consumer<CardTransactionsProvider>(
                                   builder: (context, value, child) => value
@@ -310,7 +217,7 @@ class HomeScreenState extends State<HomeScreen> {
                                                 if (snapshot.data.isEmpty)
                                                   return Center(
                                                     child: Text(
-                                                        "Your card list empty."),
+                                                        "cards.warning".tr()),
                                                   );
                                                 return ListView.builder(
                                                   physics:
@@ -322,10 +229,26 @@ class HomeScreenState extends State<HomeScreen> {
                                                   itemBuilder:
                                                       (BuildContext context,
                                                           int index) {
-                                                    return WACardComponent(
-                                                      cardModel:
-                                                          snapshot.data[index],
-                                                    ).paddingOnly(right: 10);
+                                                    return InkWell(
+                                                      onLongPress: () {
+                                                        print("heyy");
+                                                        PopupMenuItem(
+                                                          child: Text("First"),
+                                                          value: 1,
+                                                        );
+                                                      },
+                                                      onTap: () {
+                                                        Get.to(() => CardDetail(
+                                                              cardModel:
+                                                                  snapshot.data[
+                                                                      index],
+                                                            ));
+                                                      },
+                                                      child: WACardComponent(
+                                                        cardModel: snapshot
+                                                            .data[index],
+                                                      ).paddingOnly(right: 10),
+                                                    );
                                                   },
                                                 );
                                               }))
@@ -339,7 +262,17 @@ class HomeScreenState extends State<HomeScreen> {
                         Spacer(
                           flex: 1,
                         ),
-                        11.height,
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: size.width * 0.040,
+                            ),
+                            Expanded(child: Divider()),
+                            SizedBox(
+                              width: size.width * 0.040,
+                            )
+                          ],
+                        ).paddingOnly(top: 10, bottom: 10),
                         Flexible(
                           flex: 4,
                           child: Row(
@@ -371,7 +304,7 @@ class HomeScreenState extends State<HomeScreen> {
                                           if (snapshot.data.isEmpty)
                                             return Center(
                                               child: Text(
-                                                  "Your process list empty."),
+                                                  "transactions.warning".tr()),
                                             );
                                           return ListView.builder(
                                             physics: BouncingScrollPhysics(),

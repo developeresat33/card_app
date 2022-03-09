@@ -4,11 +4,13 @@ import 'package:card_application/controllers/add_process_controllers.dart';
 import 'package:card_application/database/db_helper.dart';
 import 'package:card_application/database/db_models/process_model.dart';
 import 'package:card_application/extensions/int_extensions.dart';
+import 'package:card_application/extensions/string_extension.dart';
 import 'package:card_application/model/wa_card_model.dart';
 import 'package:card_application/states/card_transactions.dart';
 import 'package:card_application/utils/box_constraints.dart';
 import 'package:card_application/utils/colors.dart';
 import 'package:card_application/utils/functions.dart';
+import 'package:card_application/widgets/app_bar.dart';
 import 'package:card_application/widgets/custom_textformfield.dart';
 import 'package:card_application/widgets/dialogs/toasy_msg.dart';
 import 'package:flutter/material.dart';
@@ -59,11 +61,9 @@ class _AddProcessPageState extends State<AddProcessPage> {
 
     return Consumer<CardTransactionsProvider>(
         builder: (context, value, child) => Scaffold(
-            appBar: AppBar(
-              title: Text(widget.processType == 1
-                  ? "Alışveriş Ekle"
-                  : "Nakit Avans Ekle"),
-            ),
+            appBar: getAppBar(widget.processType == 1
+                ? "add_process.default1".translate()
+                : "add_process.default2".translate()),
             body: SingleChildScrollView(
               child: Column(children: [
                 SizedBox(
@@ -109,7 +109,7 @@ class _AddProcessPageState extends State<AddProcessPage> {
                                   ),
                           ),
                         ),
-                        title: Text("Resim Ekle (Opsiyonel)"),
+                        title: Text("add_process.add_pic".translate()),
                         onTap: () {},
                       ),
                     ),
@@ -171,8 +171,8 @@ class _AddProcessPageState extends State<AddProcessPage> {
                             child: CustomTextFormField(
                           controller: processController.dateTime,
                           placeholder: widget.processType == 1
-                              ? "Alışveriş Tarihi"
-                              : "Nakit Avans Tarihi",
+                              ? "add_process.shopping_date".translate()
+                              : "add_process.cash_date".translate(),
                           readOnly: true,
                           maxLength: 2,
                           inputFormatters: [
@@ -188,8 +188,12 @@ class _AddProcessPageState extends State<AddProcessPage> {
                           validator: (val) {
                             if (val.length == 0) {
                               return widget.processType == 1
-                                  ? "Zorunlu Alan * Alışveriş Tarihi"
-                                  : " Zorunlu Alan * Nakit Avans Tarihi";
+                                  ? 'login.required_field'.translate() +
+                                      "*" +
+                                      "add_process.shopping_date".translate()
+                                  : 'login.required_field'.translate() +
+                                      "*" +
+                                      "add_process.cash_date".translate();
                             }
                           },
                           onTap: () {
@@ -212,10 +216,14 @@ class _AddProcessPageState extends State<AddProcessPage> {
                               Expanded(
                                   child: CustomTextFormField(
                                 controller: processController.companyCtrl,
-                                placeholder: "Alışveriş Yeri",
+                                placeholder:
+                                    "add_process.shopping_place".translate(),
                                 validator: (val) {
                                   if (val.length == 0) {
-                                    return "Zorunlu Alan * Alışveriş Yeri";
+                                    return 'login.required_field'.translate() +
+                                        "*" +
+                                        "add_process.shopping_place"
+                                            .translate();
                                   }
                                 },
                                 onChanged: (val) {
@@ -240,10 +248,12 @@ class _AddProcessPageState extends State<AddProcessPage> {
                         Expanded(
                             child: CustomTextFormField(
                           controller: processController.amountCtrl,
-                          placeholder: "İşlem Tutarı",
+                          placeholder: "add_process.amount".translate(),
                           validator: (val) {
-                            if (val.length == 0) {
-                              return "Zorunlu Alan * İşlem Tutarı";
+                            if (val.length == 0 || val == "0.00") {
+                              return 'login.required_field'.translate() +
+                                  "*" +
+                                  "add_process.amount".translate();
                             }
                           },
                           onChanged: (val) {
@@ -266,10 +276,12 @@ class _AddProcessPageState extends State<AddProcessPage> {
                         Expanded(
                             child: CustomTextFormField(
                           controller: processController.commentCtrl,
-                          placeholder: "Yorum",
+                          placeholder: "add_process.comment".translate(),
                           validator: (val) {
                             if (val.length == 0) {
-                              return "Zorunlu Alan * Yorum";
+                              return 'login.required_field'.translate() +
+                                  "*" +
+                                  "add_process.comment".translate();
                             }
                           },
                           onChanged: (val) {
@@ -291,16 +303,20 @@ class _AddProcessPageState extends State<AddProcessPage> {
                         ),
                         Expanded(
                             child: CustomTextFormField(
+                          readOnly: true,
                           controller: processController.installments,
                           textInputType: TextInputType.number,
-                          placeholder: "Taksit Sayısı",
+                          placeholder: "add_process.installments".translate(),
                           validator: (val) {
                             if (val.length == 0) {
-                              return "Zorunlu Alan * Taksit Sayısı";
+                              return 'login.required_field'.translate() +
+                                  "*" +
+                                  "add_process.installments".translate();
                             }
-                            if (int.parse(val) > 12) {
-                              return "Taksit 12'den büyük olamaz";
-                            }
+                          },
+                          onTap: () {
+                            value.selectInstallment(
+                                processController.installments);
                           },
                           onChanged: (val) {
                             try {
@@ -330,7 +346,7 @@ class _AddProcessPageState extends State<AddProcessPage> {
                             child: CustomTextFormField(
                           controller: processController.pointsEarned,
                           textInputType: TextInputType.number,
-                          placeholder: "Kazanılan Puan (Opsiyonel)",
+                          placeholder: "add_process.points_earned".translate(),
                           inputFormatters: [
                             FilteringTextInputFormatter.digitsOnly
                           ],
@@ -361,7 +377,7 @@ class _AddProcessPageState extends State<AddProcessPage> {
                             child: CustomTextFormField(
                           controller: processController.pointsSpent,
                           textInputType: TextInputType.number,
-                          placeholder: "Harcanan Puan (Opsiyonel)",
+                          placeholder: "add_process.points_spent".translate(),
                           inputFormatters: [
                             FilteringTextInputFormatter.digitsOnly
                           ],
@@ -394,7 +410,7 @@ class _AddProcessPageState extends State<AddProcessPage> {
                       borderRadius: BorderRadius.circular(10), // <-- Radius
                     ),
                     child: Text(
-                      "Kaydet",
+                      "add_process.save".translate(),
                       style: TextStyle(color: Colors.white),
                     ),
                     onPressed: () async {
@@ -404,7 +420,7 @@ class _AddProcessPageState extends State<AddProcessPage> {
                         await Get.back();
                         await value.refresh(isProcessAdd: true);
                       } else {
-                        setMessage("Boş veya geçersiz değer.");
+                        setMessage("dialogs.warning".translate());
                       }
                     },
                   )),
