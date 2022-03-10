@@ -4,6 +4,7 @@ import 'package:card_application/model/wa_card_model.dart';
 import 'package:card_application/states/card_transactions.dart';
 import 'package:card_application/utils/box_constraints.dart';
 import 'package:card_application/extensions/int_extensions.dart';
+import 'package:card_application/utils/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -41,10 +42,7 @@ class WACardComponentState extends State<WACardComponent> {
     return Consumer<CardTransactionsProvider>(
         builder: (context, value, child) => Container(
               width: 300,
-              padding: EdgeInsets.only(
-                left: 10,
-                right: 10,
-              ),
+              padding: EdgeInsets.only(left: 10, right: 10),
               decoration: boxDecorationRoundedWithShadow(
                 15,
                 backgroundColor: Color(int.parse(widget.cardModel.color)),
@@ -73,65 +71,72 @@ class WACardComponentState extends State<WACardComponent> {
                   Positioned(
                     left: 0,
                     bottom: 0,
-                    child: FittedBox(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(widget.cardModel.cardName,
-                              style: TextStyle(
-                                  color: widget.cardModel.color == "4292269782"
-                                      ? Colors.black87
-                                      : Colors.white,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold)),
-                          8.height,
-                          if (widget.cardModel.lastNumbers != null &&
-                              widget.cardModel.lastNumbers != "")
-                            Column(
-                              children: [
-                                Text(
-                                  '**** **** **** ${widget.cardModel.lastNumbers}',
-                                  style: TextStyle(
-                                      color:
-                                          widget.cardModel.color == "4292269782"
-                                              ? Colors.black87
-                                              : Colors.white70,
-                                      fontSize: 15),
-                                ),
-                                8.height,
-                              ],
-                            ),
-                          if (widget.cardModel.lastNumbers == null ||
-                              widget.cardModel.lastNumbers == "")
-                            Column(
-                              children: [
-                                Text(
-                                  '',
-                                  style: TextStyle(
-                                      color:
-                                          widget.cardModel.color == "4292269782"
-                                              ? Colors.black87
-                                              : Colors.white70,
-                                      fontSize: 15),
-                                ),
-                                8.height,
-                              ],
-                            ),
-                          Text('cards.usable'.translate(),
-                              style: TextStyle(
-                                  color: widget.cardModel.color == "4292269782"
-                                      ? Colors.black87
-                                      : Colors.white70,
-                                  fontSize: 15)),
-                          8.height,
-                          Text('${widget.cardModel.boundary} ₺',
-                              style: TextStyle(
-                                  color: widget.cardModel.color == "4292269782"
-                                      ? Colors.black87
-                                      : Colors.white70,
-                                  fontSize: 18)),
-                          20.height,
-                        ],
+                    child: Container(
+                      alignment: Alignment.bottomLeft,
+                      height: size.height * 0.18,
+                      child: FittedBox(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(widget.cardModel.cardName,
+                                style: TextStyle(
+                                    color:
+                                        widget.cardModel.color == "4292269782"
+                                            ? Colors.black87
+                                            : Colors.white,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold)),
+                            8.height,
+                            if (widget.cardModel.lastNumbers != null &&
+                                widget.cardModel.lastNumbers != "")
+                              Column(
+                                children: [
+                                  Text(
+                                    '**** **** **** ${widget.cardModel.lastNumbers}',
+                                    style: TextStyle(
+                                        color: widget.cardModel.color ==
+                                                "4292269782"
+                                            ? Colors.black87
+                                            : Colors.white70,
+                                        fontSize: 15),
+                                  ),
+                                  8.height,
+                                ],
+                              ),
+                            if (widget.cardModel.lastNumbers == null ||
+                                widget.cardModel.lastNumbers == "")
+                              Column(
+                                children: [
+                                  Text(
+                                    '',
+                                    style: TextStyle(
+                                        color: widget.cardModel.color ==
+                                                "4292269782"
+                                            ? Colors.black87
+                                            : Colors.white70,
+                                        fontSize: 15),
+                                  ),
+                                  8.height,
+                                ],
+                              ),
+                            Text('cards.usable'.translate(),
+                                style: TextStyle(
+                                    color:
+                                        widget.cardModel.color == "4292269782"
+                                            ? Colors.black87
+                                            : Colors.white70,
+                                    fontSize: 15)),
+                            8.height,
+                            Text('${widget.cardModel.boundary} ₺',
+                                style: TextStyle(
+                                    color:
+                                        widget.cardModel.color == "4292269782"
+                                            ? Colors.black87
+                                            : Colors.white70,
+                                    fontSize: 18)),
+                            20.height,
+                          ],
+                        ),
                       ),
                     ),
                   ),

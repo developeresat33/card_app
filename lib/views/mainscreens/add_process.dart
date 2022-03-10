@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:card_application/controllers/add_process_controllers.dart';
@@ -10,9 +11,11 @@ import 'package:card_application/states/card_transactions.dart';
 import 'package:card_application/utils/box_constraints.dart';
 import 'package:card_application/utils/colors.dart';
 import 'package:card_application/utils/functions.dart';
+import 'package:card_application/utils/localization_manager.dart';
 import 'package:card_application/widgets/app_bar.dart';
 import 'package:card_application/widgets/custom_textformfield.dart';
 import 'package:card_application/widgets/dialogs/toasy_msg.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -34,7 +37,7 @@ class _AddProcessPageState extends State<AddProcessPage> {
       Provider.of<CardTransactionsProvider>(Get.context, listen: false);
   var _dbHelper = DbHelper();
   AddPControllers processController = AddPControllers();
-
+  WACardModel cardData = WACardModel();
   List<String> installments;
   var selectedDropDownValue = "Taksit Seçiniz";
   var _formkey = GlobalKey<FormState>();
@@ -54,11 +57,15 @@ class _AddProcessPageState extends State<AddProcessPage> {
     super.initState();
   }
 
+  _init(int id) async {
+    cardData = await _dbHelper.getCardSingle(id);
+  }
+
   @override
   Widget build(BuildContext context) {
     ctprovider.addProcessModel.cardID = 1;
     ctprovider.addProcessModel.processType = widget.processType;
-
+    _init(ctprovider.addProcessModel.cardID);
     return Consumer<CardTransactionsProvider>(
         builder: (context, value, child) => Scaffold(
             appBar: getAppBar(widget.processType == 1
@@ -151,8 +158,9 @@ class _AddProcessPageState extends State<AddProcessPage> {
                                             style: TextStyle(fontSize: 14)),
                                       );
                                     }).toList(),
-                                    onChanged: (val) {
+                                    onChanged: (val) async {
                                       value.addProcessModel.cardID = val.id;
+                                      _init(value.addProcessModel.cardID);
                                     },
                                   );
                                 }),
@@ -414,9 +422,40 @@ class _AddProcessPageState extends State<AddProcessPage> {
                       style: TextStyle(color: Colors.white),
                     ),
                     onPressed: () async {
+                      var result;
+                      String evolve;
+                      String send;
+
                       if (_formkey.currentState.validate()) {
-                        print(value.addProcessModel.amount);
+                        if (cardData.boundary.contains(",") ||
+                            value.addProcessModel.amount.contains(",")) {
+                          result = double.parse(
+                                  cardData.boundary.replaceAll(",", "")) -
+                              double.parse(value.addProcessModel.amount
+                                  .replaceAll(",", ""));
+                          evolve = NumberFormat.currency()
+                              .format(result)
+                              .replaceAll(
+                                  context.locale ==
+                                          LocalizationManager.instance.enLocale
+                                      ? "USD"
+                                      : "TRY",
+                                  "");
+                        } else {
+                          var result = double.parse(cardData.boundary) -
+                              double.parse(value.addProcessModel.amount);
+
+                          evolve = NumberFormat.currency().format(result);
+                        }
+                        if (evolve.contains("USD")) {
+                          send = evolve.replaceAll("USD", "");
+                        } else {
+                          send = evolve.replaceAll("TRY", "");
+                        }
+                        print("the evolve " + send);
                         await _dbHelper.insertProcess(value.addProcessModel);
+                        await _dbHelper.updateCard(
+                            value.addProcessModel.cardID, send);
                         await Get.back();
                         await value.refresh(isProcessAdd: true);
                       } else {

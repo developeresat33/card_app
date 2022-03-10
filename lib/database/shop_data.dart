@@ -6,16 +6,17 @@ class ProcessData {
   String comment;
   String amount;
   String cardName;
+  String cardAmount;
 
-  ProcessData({
-    this.id,
-    this.dateTime,
-    this.processType,
-    this.companyName,
-    this.comment,
-    this.amount,
-    this.cardName,
-  });
+  ProcessData(
+      {this.id,
+      this.dateTime,
+      this.processType,
+      this.companyName,
+      this.comment,
+      this.amount,
+      this.cardName,
+      this.cardAmount});
 
   Map<String, dynamic> toMap() {
     var map = Map<String, dynamic>();
@@ -26,6 +27,7 @@ class ProcessData {
     map['comment'] = comment;
     map['amount'] = amount;
     map['card_name'] = cardName;
+    map['boundary'] = cardAmount;
 
     return map;
   }
@@ -38,5 +40,6 @@ class ProcessData {
     comment = map['comment'];
     amount = map['amount'];
     cardName = map['card_name'];
+    cardAmount = map['boundary'];
   }
 }

@@ -54,25 +54,30 @@ class WATransactionComponentState extends State<WATransactionComponent> {
             child: Icon(widget.transactionModel.processType == 1
                 ? Icons.shopping_cart
                 : Icons.price_change)),
-        title: Row(
-          children: [
-            Text(
-              widget.transactionModel.processType == 1
-                  ? '${widget.transactionModel.companyName}'
-                  : "dialogs.cash_advance".translate(),
-              style: TextStyle(
-                  color: Colors.black54,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600),
+        title: FittedBox(
+          child: SizedBox(
+            width: size.width * 0.50,
+            child: Row(
+              children: [
+                Text(
+                  widget.transactionModel.processType == 1
+                      ? '${widget.transactionModel.companyName}'
+                      : "dialogs.cash_advance".translate(),
+                  style: TextStyle(
+                      color: Colors.black54,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600),
+                ),
+                SizedBox(
+                  width: size.width * 0.15,
+                ),
+                /*        Text(
+                  widget.transactionModel.dateTime,
+                  style: TextStyle(color: Colors.black54, fontSize: 11),
+                ) */
+              ],
             ),
-            SizedBox(
-              width: size.width * 0.15,
-            ),
-            /*        Text(
-              widget.transactionModel.dateTime,
-              style: TextStyle(color: Colors.black54, fontSize: 11),
-            ) */
-          ],
+          ),
         ),
         /*   subtitle: Text('${widget.transactionModel.dateTime}',
             style: TextStyle(color: Colors.black54, fontSize: 14)), */

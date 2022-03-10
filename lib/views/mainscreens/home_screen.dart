@@ -171,34 +171,38 @@ class HomeScreenState extends State<HomeScreen> {
                           ],
                         ).paddingOnly(left: 16, right: 16),
                         10.height,
-                        Expanded(
-                          flex: 18,
+                        SizedBox(
+                          height: size.height * 0.20,
                           child: Row(
                             children: [
                               SizedBox(
-                                height: size.height * 0.090,
-                                width: size.width * 0.17,
-                                child: InkWell(
-                                  onTap: () {
-                                    Get.to(AddCardPage());
-                                  },
-                                  child: Container(
-                                    margin: EdgeInsets.only(left: 10),
-                                    width: 40,
-                                    height: 40,
-                                    decoration: boxDecorationWithRoundedCorners(
-                                      backgroundColor: Colors.white,
-                                      borderRadius: BorderRadius.circular(12),
-                                      border: Border.all(
-                                          color: Colors.grey.withOpacity(0.3)),
+                                height: size.height * 0.100,
+                                width: size.width * 0.18,
+                                child: FittedBox(
+                                  child: InkWell(
+                                    onTap: () {
+                                      Get.to(AddCardPage());
+                                    },
+                                    child: Container(
+                                      margin: EdgeInsets.only(left: 10),
+                                      width: 40,
+                                      height: 40,
+                                      decoration:
+                                          boxDecorationWithRoundedCorners(
+                                        backgroundColor: Colors.white,
+                                        borderRadius: BorderRadius.circular(12),
+                                        border: Border.all(
+                                            color:
+                                                Colors.grey.withOpacity(0.3)),
+                                      ),
+                                      child: Icon(
+                                        Icons.credit_card,
+                                        color: Colors.black54,
+                                      ),
                                     ),
-                                    child: Icon(
-                                      Icons.credit_card,
-                                      color: Colors.black54,
-                                    ),
-                                  ),
-                                ).paddingOnly(
-                                    top: 17, bottom: 17, right: 10, left: 5),
+                                  ).paddingOnly(
+                                      top: 17, bottom: 17, right: 10, left: 5),
+                                ),
                               ),
                               Consumer<CardTransactionsProvider>(
                                   builder: (context, value, child) => value
@@ -251,16 +255,14 @@ class HomeScreenState extends State<HomeScreen> {
                                                     );
                                                   },
                                                 );
-                                              }))
+                                              }),
+                                        )
                                       : Expanded(
                                           child: Center(
                                           child: CircularProgressIndicator(),
                                         )))
                             ],
                           ),
-                        ),
-                        Spacer(
-                          flex: 1,
                         ),
                         Row(
                           children: [
@@ -273,25 +275,20 @@ class HomeScreenState extends State<HomeScreen> {
                             )
                           ],
                         ).paddingOnly(top: 10, bottom: 10),
-                        Flexible(
-                          flex: 4,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('home.transc'.tr(),
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontStyle: FontStyle.normal)),
-                              Icon(Icons.play_arrow, color: Colors.grey),
-                            ],
-                          ).paddingOnly(left: 16, right: 16),
-                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('home.transc'.tr(),
+                                style: TextStyle(
+                                    fontSize: 20, fontStyle: FontStyle.normal)),
+                            Icon(Icons.play_arrow, color: Colors.grey),
+                          ],
+                        ).paddingOnly(left: 16, right: 16),
                         16.height,
                         Consumer<CardTransactionsProvider>(
                             builder: (context, value, child) => value
                                     .isAddProcess
-                                ? Expanded(
-                                    flex: 40,
+                                ? Flexible(
                                     child: FutureBuilder(
                                         future: _dbHelper.getProcess(),
                                         builder: (BuildContext context,
@@ -334,15 +331,12 @@ class HomeScreenState extends State<HomeScreen> {
                                               );
                                             },
                                           );
-                                        }))
-                                : Expanded(
-                                    flex: 40,
+                                        }),
+                                  )
+                                : Flexible(
                                     child: Center(
-                                      child: CircularProgressIndicator(),
-                                    ))),
-                        SizedBox(
-                          height: size.height * 0.090,
-                        )
+                                    child: CircularProgressIndicator(),
+                                  ))),
                       ],
                     ),
                   ),

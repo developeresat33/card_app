@@ -53,7 +53,9 @@ class WADashboardScreenState extends State<WADashboardScreen> {
               },
               child: Scaffold(
                 key: value.dashkey,
-                drawer: MainDrawer(),
+                drawer: MainDrawer(
+                  name: widget.name,
+                ),
                 body: _pages.elementAt(_selectedIndex),
                 bottomNavigationBar: BottomAppBar(
                   shape: CircularNotchedRectangle(),

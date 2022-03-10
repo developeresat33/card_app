@@ -11,8 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class MainDrawer extends StatefulWidget {
-  const MainDrawer({Key key}) : super(key: key);
-
+  const MainDrawer({Key key, this.name}) : super(key: key);
+  final String name;
   @override
   _MainDrawerState createState() => _MainDrawerState();
 }
@@ -42,7 +42,9 @@ class _MainDrawerState extends State<MainDrawer> {
                     SizedBox(
                       width: 20.0,
                     ),
-                    Text(name)
+                    Text(
+                      name != null ? name : widget.name,
+                    )
                   ],
                 ),
               ),

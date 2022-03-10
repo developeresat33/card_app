@@ -48,10 +48,21 @@ class DbHelper extends ChangeNotifier {
     return await dbClient.insert("Cards", card.toMap());
   }
 
-  Future<int> updateCard(WACardModel card) async {
+  void updateCard(var id, var value) async {
     var dbClient = await db;
-    return await dbClient
-        .update("Cards", card.toMap(), where: "id=?", whereArgs: [card.id]);
+    try {
+      await dbClient
+          .rawQuery('UPDATE Cards SET boundary="$value"  WHERE id = $id');
+    } on Exception catch (e) {
+      print(e);
+    }
+  }
+
+  Future<WACardModel> getCardSingle(int id) async {
+    var dbClient = await db;
+    var result = await dbClient.rawQuery('SELECT * FROM Cards WHERE id = $id');
+    print(result);
+    return WACardModel.fromMap(result.first);
   }
 
   Future<int> getCount() async {
@@ -78,6 +89,18 @@ class DbHelper extends ChangeNotifier {
     notifyListeners();
   }
 
+  void removeProcess(var process_id, var card_id, var value) async {
+    var dbClient = await db;
+    try {
+      await dbClient.rawQuery('DELETE FROM Process  WHERE id = $process_id');
+      await dbClient
+          .rawQuery('UPDATE Cards SET boundary="$value"  WHERE id = $card_id');
+    } on Exception catch (e) {
+      print(e);
+    }
+    notifyListeners();
+  }
+
   Future<ProcessModel> getProcessSingle(int id) async {
     var dbClient = await db;
     var result =
@@ -89,7 +112,14 @@ class DbHelper extends ChangeNotifier {
   Future<List<ProcessData>> getProcess() async {
     var dbClient = await db;
     var result = await dbClient.rawQuery(
-        'SELECT Process.id,date_time,process_type,company_name,comment,amount,card_name FROM Process JOIN Cards ON Cards.id=Process.card_id');
+        'SELECT boundary,Process.id,date_time,process_type,company_name,comment,amount,card_name FROM Process JOIN Cards ON Cards.id=Process.card_id');
+    return result.map((data) => ProcessData.fromMap(data)).toList();
+  }
+
+  Future<List<ProcessData>> getProcesstoCard(int id) async {
+    var dbClient = await db;
+    var result = await dbClient.rawQuery(
+        'SELECT Process.id,date_time,process_type,company_name,comment,amount,card_name FROM Process JOIN Cards ON Cards.id=Process.card_id WHERE card_id=$id');
     return result.map((data) => ProcessData.fromMap(data)).toList();
   }
 

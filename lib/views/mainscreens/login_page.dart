@@ -52,6 +52,7 @@ class LoginScreenState extends State<LoginScreen> {
           return;
         },
         child: Scaffold(
+          resizeToAvoidBottomInset: false,
           body: Container(
             width: context.width,
             height: context.height,

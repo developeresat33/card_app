@@ -83,8 +83,14 @@ class _AddCardPageState extends State<AddCardPage> {
                                 SizedBox(
                                   width: size.width * 0.050,
                                 ),
-                                Expanded(
-                                  child: Text("add_card.color".translate()),
+                                FittedBox(
+                                  child: SizedBox(
+                                    width: size.width * 0.15,
+                                    child: Text("add_card.color".translate()),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: size.width * 0.010,
                                 ),
                                 Expanded(
                                     flex: 5,
