@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:card_application/extensions/string_extension.dart';
 import 'package:card_application/utils/colors.dart';
 import 'package:card_application/utils/functions.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,7 @@ class CommonDialogs {
                     backgroundColor: Colors.white,
                     title: FittedBox(
                       child: Text(
-                        'Çıkmak istediğinizden emin misiniz?',
+                        'dialogs.sure'.translate(),
                         style: TextStyle(
                           color: Colors.black87,
                         ),
@@ -36,7 +37,7 @@ class CommonDialogs {
                             TextButton(
                               onPressed: () => exit(0),
                               child: Text(
-                                "Evet",
+                                'dialogs.ok'.translate(),
                                 style: TextStyle(
                                   color: WAPrimaryColor,
                                 ),
@@ -48,7 +49,7 @@ class CommonDialogs {
                             TextButton(
                               onPressed: () => Navigator.of(context).pop(false),
                               child: Text(
-                                "Hayır",
+                                'dialogs.dont'.translate(),
                                 style: TextStyle(
                                   color: Colors.black,
                                 ),

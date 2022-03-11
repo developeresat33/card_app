@@ -63,9 +63,8 @@ class _AddProcessPageState extends State<AddProcessPage> {
 
   @override
   Widget build(BuildContext context) {
-    ctprovider.addProcessModel.cardID = 1;
     ctprovider.addProcessModel.processType = widget.processType;
-    _init(ctprovider.addProcessModel.cardID);
+
     return Consumer<CardTransactionsProvider>(
         builder: (context, value, child) => Scaffold(
             appBar: getAppBar(widget.processType == 1
@@ -140,6 +139,14 @@ class _AddProcessPageState extends State<AddProcessPage> {
                                 future: _dbHelper.getCards(),
                                 builder: (BuildContext context,
                                     AsyncSnapshot<List<WACardModel>> snapshot) {
+                                  if (snapshot.data != null &&
+                                      snapshot.data[0] != null &&
+                                      snapshot.hasData) {
+                                    ctprovider.addProcessModel.cardID =
+                                        snapshot.data[0].id;
+                                    _init(snapshot.data[0].id);
+                                  }
+
                                   if (!snapshot.hasData)
                                     return Center(
                                         child: CircularProgressIndicator());
@@ -423,39 +430,54 @@ class _AddProcessPageState extends State<AddProcessPage> {
                     ),
                     onPressed: () async {
                       var result;
-                      String evolve;
-                      String send;
+                      RegExp exp = RegExp(r"[.,]");
+                      final oCcy = new NumberFormat("#,##0.00", "tr_TR");
 
                       if (_formkey.currentState.validate()) {
-                        if (cardData.boundary.contains(",") ||
+                        if (cardData.boundary.contains(",") &&
+                            !value.addProcessModel.amount.contains(",")) {
+                          result = oCcy.format(double.parse(cardData.boundary
+                                  .replaceAll(exp, "")
+                                  .substring(
+                                      0,
+                                      cardData.boundary
+                                              .replaceAll(exp, "")
+                                              .length -
+                                          2)) -
+                              double.parse(value.addProcessModel.amount));
+                        } else if (!cardData.boundary.contains(",") &&
                             value.addProcessModel.amount.contains(",")) {
-                          result = double.parse(
-                                  cardData.boundary.replaceAll(",", "")) -
+                          result = oCcy.format(double.parse(value
+                                  .addProcessModel.amount
+                                  .replaceAll(exp, "")
+                                  .substring(
+                                      0,
+                                      value.addProcessModel.amount
+                                              .replaceAll(exp, "")
+                                              .length -
+                                          2)) -
+                              double.parse(cardData.boundary));
+                        } else {
+                          result = oCcy.format(double.parse(cardData.boundary
+                                  .replaceAll(exp, "")
+                                  .substring(
+                                      0,
+                                      cardData.boundary
+                                              .replaceAll(exp, "")
+                                              .length -
+                                          2)) -
                               double.parse(value.addProcessModel.amount
-                                  .replaceAll(",", ""));
-                          evolve = NumberFormat.currency()
-                              .format(result)
-                              .replaceAll(
-                                  context.locale ==
-                                          LocalizationManager.instance.enLocale
-                                      ? "USD"
-                                      : "TRY",
-                                  "");
-                        } else {
-                          var result = double.parse(cardData.boundary) -
-                              double.parse(value.addProcessModel.amount);
-
-                          evolve = NumberFormat.currency().format(result);
+                                  .replaceAll(exp, "")
+                                  .substring(
+                                      0,
+                                      value.addProcessModel.amount
+                                              .replaceAll(exp, "")
+                                              .length -
+                                          2)));
                         }
-                        if (evolve.contains("USD")) {
-                          send = evolve.replaceAll("USD", "");
-                        } else {
-                          send = evolve.replaceAll("TRY", "");
-                        }
-                        print("the evolve " + send);
                         await _dbHelper.insertProcess(value.addProcessModel);
                         await _dbHelper.updateCard(
-                            value.addProcessModel.cardID, send);
+                            value.addProcessModel.cardID, result);
                         await Get.back();
                         await value.refresh(isProcessAdd: true);
                       } else {

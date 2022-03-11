@@ -119,7 +119,7 @@ class DbHelper extends ChangeNotifier {
   Future<List<ProcessData>> getProcesstoCard(int id) async {
     var dbClient = await db;
     var result = await dbClient.rawQuery(
-        'SELECT Process.id,date_time,process_type,company_name,comment,amount,card_name FROM Process JOIN Cards ON Cards.id=Process.card_id WHERE card_id=$id');
+        'SELECT  boundary,Process.id,date_time,process_type,company_name,comment,amount,card_name FROM Process JOIN Cards ON Cards.id=Process.card_id WHERE card_id=$id');
     return result.map((data) => ProcessData.fromMap(data)).toList();
   }
 

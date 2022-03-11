@@ -77,6 +77,9 @@
     },
     "transactions":{"warning":"İşlem listeniz boş."},
     "dialogs":{
+      "sure":"Çıkmak istediğinizden emin misiniz?",
+      "ok":"Evet",
+      "dont":"Hayır",
       "choose":"İşlem türü seçiniz;",
     "shopping":"Alışveriş",
   "cash_advance":"Nakit Avans",
@@ -123,5 +126,36 @@
       "process_info":"Mevcut kartınıza işlem ekleyiniz."
   
   
+    },
+    "process_detail":{
+      "default":"İşlem Detayı",
+      "delete":"İşlemi Sil",
+      "not":"Resim bulunamadı.",
+      "process_type":"İşlem Türü",
+      "shop":"Alışveriş",
+      "cash_advance":"Nakit Avans",
+      "card":"Kart",
+      "process_date":"İşlem Tarihi",
+      "process_place":"İşlem Yeri",
+      "comment":"Yorum",
+      "amount":"Tutar",
+      "installment":"Taksit",
+      "earned":"Kazanılan Puan",
+      "spent":"Harcanan Puan"
+
+
+
+
+    },
+    "card_detail":{
+      "default":"Kart Detayı",
+      "delete":"Kartı Sil",
+      "name":"Kart Adı",
+      "point":"Puan",
+      "type":"Kart Tipi",
+      "cut_of":"Hesap Kesim Tarihi",
+      "payment":"Ödeme Tarihi",
+      "advance":"Nakit Avans Limiti",
+      "usable":"Kullanılabilir Limit"
     }
 }

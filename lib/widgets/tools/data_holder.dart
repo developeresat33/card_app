@@ -9,7 +9,7 @@ Widget buildDataHolder(key, value, {color}) {
         child:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Text('$key', style: TextStyle(fontSize: 14, color: Colors.grey)),
-          Text('$value', style: TextStyle(fontSize: 14)),
+          SelectableText('$value', style: TextStyle(fontSize: 14)),
         ]),
       ),
       Divider(height: 1),

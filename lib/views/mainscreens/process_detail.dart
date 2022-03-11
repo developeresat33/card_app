@@ -1,8 +1,10 @@
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:card_application/database/db_helper.dart';
 import 'package:card_application/database/db_models/process_model.dart';
 import 'package:card_application/database/shop_data.dart';
+import 'package:card_application/extensions/string_extension.dart';
 import 'package:card_application/states/card_transactions.dart';
 import 'package:card_application/utils/colors.dart';
 import 'package:card_application/utils/functions.dart';
@@ -26,6 +28,8 @@ class ProcessDetail extends StatefulWidget {
 
 class _ProcessDetailState extends State<ProcessDetail> {
   DbHelper _dbHelper = DbHelper();
+  RegExp exp = RegExp(r"[.,]");
+  final oCcy = new NumberFormat("#,##0.00", "tr_TR");
   File img;
   @override
   void initState() {
@@ -42,45 +46,66 @@ class _ProcessDetailState extends State<ProcessDetail> {
               floatingActionButton: FloatingActionButton.extended(
                 onPressed: () async {
                   var result;
-                  String evolve;
-                  String send;
-                  print(widget.processData.cardAmount);
-                  if (widget.processData.cardAmount.contains(",") ||
-                      widget.processDetail.amount.contains(",")) {
-                    result = double.parse(
-                            widget.processData.cardAmount.replaceAll(",", "")) +
-                        double.parse(
-                            widget.processDetail.amount.replaceAll(",", ""));
-                    evolve = NumberFormat.currency().format(result).replaceAll(
-                        context.locale == LocalizationManager.instance.enLocale
-                            ? "USD"
-                            : "TRY",
-                        "");
+
+                  if (widget.processData.cardAmount.contains(",") &&
+                      !widget.processData.amount.contains(",")) {
+                    result = oCcy.format(double.parse(widget
+                            .processData.cardAmount
+                            .replaceAll(exp, "")
+                            .substring(
+                                0,
+                                widget.processData.cardAmount
+                                        .replaceAll(exp, "")
+                                        .length -
+                                    2)) +
+                        double.parse(widget.processDetail.amount));
+                  } else if (!widget.processData.cardAmount.contains(",") &&
+                      widget.processData.amount.contains(",")) {
+                    result = oCcy.format(double.parse(widget.processData.amount
+                            .replaceAll(exp, "")
+                            .substring(
+                                0,
+                                widget.processDetail.amount
+                                        .replaceAll(exp, "")
+                                        .length -
+                                    2)) +
+                        double.parse(widget.processData.cardAmount));
                   } else {
-                    var result = double.parse(widget.processData.cardAmount) +
-                        double.parse(widget.processDetail.amount);
-                    evolve = NumberFormat.currency().format(result).replaceAll(
-                        context.locale == LocalizationManager.instance.enLocale
-                            ? "USD"
-                            : "TRY",
-                        "");
+                    result = oCcy.format(double.parse(widget
+                            .processData.cardAmount
+                            .replaceAll(exp, "")
+                            .substring(
+                                0,
+                                widget.processData.cardAmount
+                                        .replaceAll(exp, "")
+                                        .length -
+                                    2)) +
+                        double.parse(widget.processDetail.amount
+                            .replaceAll(exp, "")
+                            .substring(
+                                0,
+                                widget.processDetail.amount
+                                        .replaceAll(exp, "")
+                                        .length -
+                                    2)));
                   }
-                  if (evolve.contains("USD")) {
-                    send = evolve.replaceAll("USD", "");
-                  } else {
-                    send = evolve.replaceAll("TRY", "");
-                  }
-                  print(send);
-                  /*   _dbHelper.removeProcess(
-                      widget.processData.id, widget.processDetail.cardID, send);
+                  print(result);
+
+                  _dbHelper.removeProcess(widget.processData.id,
+                      widget.processDetail.cardID, result);
                   await Get.back();
-                  await value.refresh(isProcessAdd: true); */
+                  await value.refresh(isProcessAdd: true);
+                  try {
+                    value.removeProcessState(widget.processDetail.cardID);
+                  } catch (e) {
+                    print(e);
+                  }
                 },
-                label: Text("İşlemi Sil"),
+                label: Text('process_detail.delete'.translate()),
                 backgroundColor: WAPrimaryColor,
                 icon: Icon(Icons.remove),
               ),
-              appBar: getAppBar("İşlem Detayı"),
+              appBar: getAppBar('process_detail.default'.translate()),
               body: Column(
                 children: [
                   SizedBox(
@@ -98,7 +123,9 @@ class _ProcessDetailState extends State<ProcessDetail> {
                                       padding: const EdgeInsets.all(8.0),
                                       child: Image.file(img),
                                     )
-                                  : Center(child: Text("Resim bulunamadı.")))),
+                                  : Center(
+                                      child: Text(
+                                          'process_detail.not'.translate())))),
                     ],
                   ),
                   Row(
@@ -109,26 +136,30 @@ class _ProcessDetailState extends State<ProcessDetail> {
                     ],
                   ),
                   buildDataHolder(
-                      "İşlem Türü",
+                      'process_detail.process_type'.translate(),
                       widget.processDetail.processType == 1
-                          ? "Alışveriş"
-                          : "Nakit Avans"),
-                  buildDataHolder("Kart", widget.processData.cardName),
-                  buildDataHolder(
-                      "İşlem Tarihi", widget.processDetail.dateTime),
+                          ? 'process_detail.shop'.translate()
+                          : 'process_detail.cash_advance'.translate()),
+                  buildDataHolder('process_detail.card'.translate(),
+                      widget.processData.cardName),
+                  buildDataHolder('process_detail.process_date'.translate(),
+                      widget.processDetail.dateTime),
                   if (widget.processDetail.processType == 1)
-                    buildDataHolder(
-                        "İşlem Yeri", widget.processDetail.companyName),
-                  buildDataHolder("Açıklama", widget.processDetail.comment),
+                    buildDataHolder('process_detail.process_place'.translate(),
+                        widget.processDetail.companyName),
+                  buildDataHolder('process_detail.comment'.translate(),
+                      widget.processDetail.comment),
                   if (widget.processDetail.amount != null)
-                    buildDataHolder("Tutar", widget.processDetail.amount),
-                  buildDataHolder("Taksit", widget.processDetail.installments),
+                    buildDataHolder('process_detail.amount'.translate(),
+                        widget.processDetail.amount),
+                  buildDataHolder('process_detail.installment'.translate(),
+                      widget.processDetail.installments),
                   if (widget.processDetail.pointsEarned != null)
-                    buildDataHolder(
-                        "Kazanılan Puan", widget.processDetail.pointsEarned),
+                    buildDataHolder('process_detail.earned'.translate(),
+                        widget.processDetail.pointsEarned),
                   if (widget.processDetail.pointsSpent != null)
-                    buildDataHolder(
-                        "Harcanan Puan", widget.processDetail.pointsSpent)
+                    buildDataHolder('process_detail.spent'.translate(),
+                        widget.processDetail.pointsSpent)
                 ],
               ),
             ));

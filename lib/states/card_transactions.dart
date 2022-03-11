@@ -2,10 +2,11 @@ import 'dart:io';
 
 import 'package:card_application/component/circle_component.dart';
 import 'package:card_application/controllers/add_card_controllers.dart';
+import 'package:card_application/database/db_helper.dart';
 import 'package:card_application/database/db_models/process_model.dart';
 import 'package:card_application/model/app_model.dart';
 import 'package:card_application/model/wa_card_model.dart';
-import 'package:card_application/utils/colors.dart';
+import 'package:card_application/utils/box_constraints.dart';
 import 'package:card_application/utils/functions.dart';
 import 'package:card_application/widgets/data_generator.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -13,8 +14,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class CardTransactionsProvider extends ChangeNotifier {
+  DbHelper _dbHelper = DbHelper();
   AddCControllers addCardState = AddCControllers();
-  WACardModel addCardModel;
+  WACardModel addCardModel, cardDetailModel;
   ProcessModel addProcessModel;
   List<ColorComponent> colorList = [];
   List<int> installments = [];
@@ -90,6 +92,11 @@ class CardTransactionsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void removeProcessState(var cardId) async {
+    cardDetailModel = await _dbHelper.getCardSingle(cardId);
+    notifyListeners();
+  }
+
   void selectInstallment(TextEditingController ct) {
     installments.clear();
     for (int i = 1; i < 13; i++) {
@@ -114,9 +121,20 @@ class CardTransactionsProvider extends ChangeNotifier {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Icon(
-                          Icons.cancel,
-                          color: WAPrimaryColor,
+                        Container(
+                          margin: EdgeInsets.only(left: 10),
+                          width: 40,
+                          height: 40,
+                          decoration: boxDecorationWithRoundedCorners(
+                            backgroundColor: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            border:
+                                Border.all(color: Colors.grey.withOpacity(0.2)),
+                          ),
+                          child: Icon(
+                            Icons.arrow_left,
+                            color: Colors.black54,
+                          ),
                         ),
                         SizedBox(
                           width: size.width * 0.030,

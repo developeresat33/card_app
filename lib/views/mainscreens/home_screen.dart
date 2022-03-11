@@ -17,6 +17,7 @@ import 'package:card_application/views/mainscreens/add_card.dart';
 import 'package:card_application/views/mainscreens/card_detail.dart';
 import 'package:card_application/views/mainscreens/process_detail.dart';
 import 'package:card_application/widgets/dialogs/toasy_msg.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_boom_menu/flutter_boom_menu.dart';
@@ -68,7 +69,7 @@ class HomeScreenState extends State<HomeScreen> {
                         overlayOpacity: 0.7,
                         children: [
                           MenuItem(
-                            child: Icon(Icons.add, color: Colors.black),
+                            child: Icon(Icons.add, color: Colors.white),
                             title: "boom.add".tr(),
                             titleColor: Colors.white,
                             subtitle: "boom.card_info".tr(),
@@ -77,7 +78,7 @@ class HomeScreenState extends State<HomeScreen> {
                             onTap: () => Get.to(AddCardPage()),
                           ),
                           MenuItem(
-                              child: Icon(Icons.adjust, color: Colors.black),
+                              child: Icon(Icons.adjust, color: Colors.white),
                               title: "boom.process".tr(),
                               titleColor: Colors.white,
                               subtitle: "boom.process_info".tr(),
@@ -223,38 +224,76 @@ class HomeScreenState extends State<HomeScreen> {
                                                     child: Text(
                                                         "cards.warning".tr()),
                                                   );
-                                                return ListView.builder(
-                                                  physics:
-                                                      BouncingScrollPhysics(),
-                                                  scrollDirection:
-                                                      Axis.horizontal,
-                                                  itemCount:
-                                                      snapshot.data.length,
-                                                  itemBuilder:
-                                                      (BuildContext context,
-                                                          int index) {
-                                                    return InkWell(
-                                                      onLongPress: () {
-                                                        print("heyy");
-                                                        PopupMenuItem(
-                                                          child: Text("First"),
-                                                          value: 1,
-                                                        );
-                                                      },
-                                                      onTap: () {
-                                                        Get.to(() => CardDetail(
-                                                              cardModel:
-                                                                  snapshot.data[
-                                                                      index],
-                                                            ));
-                                                      },
-                                                      child: WACardComponent(
-                                                        cardModel: snapshot
-                                                            .data[index],
-                                                      ).paddingOnly(right: 10),
-                                                    );
-                                                  },
-                                                );
+                                                return snapshot.data.length != 1
+                                                    ? CarouselSlider(
+                                                        options:
+                                                            CarouselOptions(
+                                                          height:
+                                                              size.height * 0.3,
+                                                          aspectRatio: 16 / 9,
+                                                          viewportFraction:
+                                                              0.81,
+                                                          initialPage: 0,
+                                                          enableInfiniteScroll:
+                                                              true,
+                                                          reverse: false,
+                                                          autoPlay: true,
+                                                          autoPlayInterval:
+                                                              Duration(
+                                                                  seconds: 3),
+                                                          autoPlayAnimationDuration:
+                                                              Duration(
+                                                                  milliseconds:
+                                                                      800),
+                                                          autoPlayCurve: Curves
+                                                              .fastOutSlowIn,
+                                                          enlargeCenterPage:
+                                                              true,
+                                                          scrollDirection:
+                                                              Axis.horizontal,
+                                                        ),
+                                                        // height: // NO HEIGHT SPECIFIED!
+
+                                                        items: snapshot.data
+                                                            .map((card) {
+                                                          return Builder(
+                                                            builder:
+                                                                (BuildContext
+                                                                    context) {
+                                                              return InkWell(
+                                                                onTap: () {
+                                                                  Get.to(() =>
+                                                                      CardDetail(
+                                                                        cardModel:
+                                                                            card,
+                                                                      ));
+                                                                },
+                                                                child:
+                                                                    WACardComponent(
+                                                                  cardModel:
+                                                                      card,
+                                                                ).paddingOnly(
+                                                                        right:
+                                                                            10),
+                                                              );
+                                                            },
+                                                          );
+                                                        }).toList())
+                                                    : InkWell(
+                                                        onTap: () {
+                                                          Get.to(
+                                                              () => CardDetail(
+                                                                    cardModel:
+                                                                        snapshot
+                                                                            .data[0],
+                                                                  ));
+                                                        },
+                                                        child: WACardComponent(
+                                                          cardModel:
+                                                              snapshot.data[0],
+                                                        ).paddingOnly(
+                                                            right: 10),
+                                                      );
                                               }),
                                         )
                                       : Expanded(

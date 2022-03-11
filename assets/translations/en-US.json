@@ -50,6 +50,7 @@
 
     }
     
+    
 
 
 
@@ -71,7 +72,12 @@
 
 
   },   "transactions":{"warning":"Your process list empty."},  
-  "dialogs":{"choose":"Select transaction type;",
+  "dialogs":{
+    "sure":"Are you sure you want to exit?",
+    "ok":"Yes",
+    "dont":"No",
+    
+    "choose":"Select transaction type;",
     "shopping":"Shopping",
   "cash_advance":"Cash Advance",
   "warning":"Null or invalid value."
@@ -112,5 +118,36 @@
     "process_info":"Add a transaction to your existing card."
 
 
+  },
+  "process_detail":{
+    "default":"Process Detail",
+    "delete":"Delete Process",
+    "not":"No picture found.",
+    "process_type":"Process Type",
+    "shop":"Shopping",
+    "cash_advance":"Cash Advance",
+    "card":"Card",
+    "process_date":"Process Date",
+    "process_place":"Process Place",
+    "comment":"Comment",
+    "amount":"Amount",
+    "installment":"Installment",
+    "earned":"Earned Point",
+    "spent":"Spent Point"
+
+
+
+
+  },
+  "card_detail":{
+    "default":"Card Detail",
+    "delete":"Delete Card",
+    "name":"Card Name",
+    "point":"Point",
+    "type":"Card Type",
+    "cut_of":"Cut Of Date",
+    "payment":"Payment Date",
+    "advance":"Cash Advance Limit",
+    "usable":"Usable Limit"
   }
 }
