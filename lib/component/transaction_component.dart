@@ -90,7 +90,7 @@ class WATransactionComponentState extends State<WATransactionComponent> {
               backgroundColor: colorGenerator().withOpacity(0.1)),
           child: Text(
             widget.transactionModel.amount != null
-                ? '-${widget.transactionModel.amount}' + " ₺"
+                ? '-${widget.transactionModel.amount}' + " "
                 : "0",
             maxLines: 1,
             style: TextStyle(color: Colors.black54, fontSize: 12),

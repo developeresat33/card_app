@@ -239,7 +239,7 @@ class _AddCardPageState extends State<AddCardPage> {
                                   placeholder:
                                       "add_card.card_limit".translate(),
                                   inputFormatters: [],
-                                  hintText: "1.000 ₺",
+                                  hintText: "1.000 ",
                                   onChanged: (val) {
                                     value.addCardModel.boundary = val;
                                     setState(() {
@@ -271,7 +271,7 @@ class _AddCardPageState extends State<AddCardPage> {
                                   controller: value.addCardState.advanceCtrl,
                                   placeholder:
                                       "add_card.cash_advance".translate(),
-                                  hintText: "1.000 ₺",
+                                  hintText: "1.000 ",
                                   onChanged: (val) {
                                     value.addCardModel.cashAdvanceLimit = val;
                                   },

@@ -127,7 +127,7 @@ class WACardComponentState extends State<WACardComponent> {
                                             : Colors.white70,
                                     fontSize: 15)),
                             8.height,
-                            Text('${widget.cardModel.boundary} ₺',
+                            Text('${widget.cardModel.boundary} ',
                                 style: TextStyle(
                                     color:
                                         widget.cardModel.color == "4292269782"

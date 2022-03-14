@@ -11,7 +11,6 @@ import 'package:card_application/states/card_transactions.dart';
 import 'package:card_application/utils/box_constraints.dart';
 import 'package:card_application/utils/colors.dart';
 import 'package:card_application/utils/functions.dart';
-import 'package:card_application/utils/localization_manager.dart';
 import 'package:card_application/widgets/app_bar.dart';
 import 'package:card_application/widgets/custom_textformfield.dart';
 import 'package:card_application/widgets/dialogs/toasy_msg.dart';
@@ -39,6 +38,8 @@ class _AddProcessPageState extends State<AddProcessPage> {
   AddPControllers processController = AddPControllers();
   WACardModel cardData = WACardModel();
   List<String> installments;
+  List<WACardModel> firstModel = [];
+
   var selectedDropDownValue = "Taksit Seçiniz";
   var _formkey = GlobalKey<FormState>();
   var _image;
@@ -46,6 +47,7 @@ class _AddProcessPageState extends State<AddProcessPage> {
   var type;
   @override
   void initState() {
+    _initIndex();
     installments = [];
     ctprovider.addProcessModel = ProcessModel();
     processController.init();
@@ -59,6 +61,14 @@ class _AddProcessPageState extends State<AddProcessPage> {
 
   _init(int id) async {
     cardData = await _dbHelper.getCardSingle(id);
+  }
+
+  _initIndex() async {
+    firstModel.clear();
+    firstModel = await _dbHelper.getCards();
+
+    ctprovider.addProcessModel.cardID = firstModel[0].id;
+    _init(ctprovider.addProcessModel.cardID);
   }
 
   @override
@@ -139,14 +149,6 @@ class _AddProcessPageState extends State<AddProcessPage> {
                                 future: _dbHelper.getCards(),
                                 builder: (BuildContext context,
                                     AsyncSnapshot<List<WACardModel>> snapshot) {
-                                  if (snapshot.data != null &&
-                                      snapshot.data[0] != null &&
-                                      snapshot.hasData) {
-                                    ctprovider.addProcessModel.cardID =
-                                        snapshot.data[0].id;
-                                    _init(snapshot.data[0].id);
-                                  }
-
                                   if (!snapshot.hasData)
                                     return Center(
                                         child: CircularProgressIndicator());

@@ -36,7 +36,7 @@ List<WATransactionModel> waTransactionList() {
     color: Color(0xFFFF7426),
     title: 'ALDA Market',
     image: 'assets/wa_voucher.png',
-    balance: '-20,000₺',
+    balance: '-20,000',
     name: '',
     time: 'home.tod'.translate() + '  5:30 ',
   ));
@@ -44,7 +44,7 @@ List<WATransactionModel> waTransactionList() {
     color: Color(0xFF26C884),
     title: 'Petrol Ofisi',
     image: 'assets/wa_bill_pay.png',
-    balance: '+50,000₺',
+    balance: '+50,000',
     name: '',
     time: 'home.tod'.translate() + ' 6:30 ',
   ));
@@ -70,13 +70,13 @@ List<WATransactionModel> waCategoriesList() {
       color: Color(0xFF26C884),
       title: 'statistics.cat_titles.clt'.translate(),
       image: 'assets/wa_clothes.png',
-      balance: '10,000₺',
+      balance: '10,000',
       time: 'home.tod'.translate() + ' 12:30'));
   list.add(WATransactionModel(
       color: Color(0xFFFF7426),
       title: 'statistics.cat_titles.shp'.translate(),
       image: 'assets/wa_food.png',
-      balance: '8,000₺',
+      balance: '8,000',
       time: 'home.tod'.translate() + ' 1:02'));
   return list;
 }
