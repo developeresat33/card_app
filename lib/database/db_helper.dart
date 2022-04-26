@@ -48,11 +48,21 @@ class DbHelper extends ChangeNotifier {
     return await dbClient.insert("Cards", card.toMap());
   }
 
-  void updateCard(var id, var value) async {
+  void updateCard(var id, var value, {var value2}) async {
     var dbClient = await db;
     try {
-      await dbClient
-          .rawQuery('UPDATE Cards SET boundary="$value"  WHERE id = $id');
+      await dbClient.rawQuery(
+          'UPDATE Cards SET boundary="$value",point="$value2"  WHERE id = $id');
+    } on Exception catch (e) {
+      print(e);
+    }
+  }
+
+  void updateCashAdvance(var id, var value) async {
+    var dbClient = await db;
+    try {
+      await dbClient.rawQuery(
+          'UPDATE Cards SET cash_advance_limit="$value"  WHERE id = $id');
     } on Exception catch (e) {
       print(e);
     }
@@ -89,12 +99,13 @@ class DbHelper extends ChangeNotifier {
     notifyListeners();
   }
 
-  void removeProcess(var process_id, var card_id, var value) async {
+  void removeProcess(var process_id, var card_id, var value,
+      {var value2, var value3}) async {
     var dbClient = await db;
     try {
       await dbClient.rawQuery('DELETE FROM Process  WHERE id = $process_id');
-      await dbClient
-          .rawQuery('UPDATE Cards SET boundary="$value"  WHERE id = $card_id');
+      await dbClient.rawQuery(
+          'UPDATE Cards SET boundary="$value",cash_advance_limit="$value2",point="$value3"   WHERE id = $card_id');
     } on Exception catch (e) {
       print(e);
     }
@@ -112,14 +123,14 @@ class DbHelper extends ChangeNotifier {
   Future<List<ProcessData>> getProcess() async {
     var dbClient = await db;
     var result = await dbClient.rawQuery(
-        'SELECT boundary,Process.id,date_time,process_type,company_name,comment,amount,card_name FROM Process JOIN Cards ON Cards.id=Process.card_id');
+        'SELECT cash_advance_limit,boundary,Process.id,date_time,process_type,company_name,comment,amount,card_name FROM Process JOIN Cards ON Cards.id=Process.card_id');
     return result.map((data) => ProcessData.fromMap(data)).toList();
   }
 
   Future<List<ProcessData>> getProcesstoCard(int id) async {
     var dbClient = await db;
     var result = await dbClient.rawQuery(
-        'SELECT  boundary,Process.id,date_time,process_type,company_name,comment,amount,card_name FROM Process JOIN Cards ON Cards.id=Process.card_id WHERE card_id=$id');
+        'SELECT cash_advance_limit,boundary,Process.id,date_time,process_type,company_name,comment,amount,card_name FROM Process JOIN Cards ON Cards.id=Process.card_id WHERE card_id=$id');
     return result.map((data) => ProcessData.fromMap(data)).toList();
   }
 

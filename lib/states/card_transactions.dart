@@ -7,6 +7,7 @@ import 'package:card_application/database/db_models/process_model.dart';
 import 'package:card_application/model/app_model.dart';
 import 'package:card_application/model/wa_card_model.dart';
 import 'package:card_application/utils/box_constraints.dart';
+import 'package:card_application/utils/colors.dart';
 import 'package:card_application/utils/functions.dart';
 import 'package:card_application/widgets/data_generator.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -25,6 +26,8 @@ class CardTransactionsProvider extends ChangeNotifier {
   DateTime selectedDate;
   ValueNotifier<List<WACardModel>> wreckerServiceState;
   final DateFormat formatter = DateFormat('dd.MM.yyyy');
+  var result, advanceResult, pointResult;
+  var processType;
 
   void getColors() {
     for (var i = 0; i < 6; i++) {
@@ -164,5 +167,89 @@ class CardTransactionsProvider extends ChangeNotifier {
                 ],
               ));
         });
+  }
+
+  void warningofLimit({bool limitOfAdvance = false}) {
+    showGeneralDialog(
+        barrierColor: Colors.black.withOpacity(0.5),
+        transitionBuilder: (context, a1, a2, widget) {
+          final curvedValue = Curves.easeInOutBack.transform(a1.value) - 1.0;
+          return Transform(
+              transform: Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
+              child: Opacity(
+                  opacity: a1.value,
+                  child: AlertDialog(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                    backgroundColor: Colors.white,
+                    title: FittedBox(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                              "Bu işlem sonunda limit aşımına gidilecektir.\nEmin misiniz?")
+                        ],
+                      ),
+                    ),
+                    actions: [
+                      if (limitOfAdvance)
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: size.width * 0.030,
+                            ),
+                            Text("- Nakit avans limitiniz aşılmaktadır.")
+                          ],
+                        ),
+                      SizedBox(
+                        height: size.height * 0.050,
+                      ),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            TextButton(
+                              onPressed: () async {
+                                await Get.back();
+                                await _dbHelper.insertProcess(addProcessModel);
+                                await _dbHelper.updateCard(
+                                    addProcessModel.cardID, result);
+                                if (processType == 2) {
+                                  await _dbHelper.updateCashAdvance(
+                                      addProcessModel.cardID, advanceResult);
+                                }
+                                await refresh(isProcessAdd: true);
+                                await Get.back();
+                              },
+                              child: Text(
+                                "Evet",
+                                style: TextStyle(
+                                  color: WAPrimaryColor,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: size.width * 0.020,
+                            ),
+                            TextButton(
+                              onPressed: () async {
+                                Get.back();
+                              },
+                              child: Text(
+                                "Hayır",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                          ]),
+                    ],
+                  )));
+        },
+        transitionDuration: Duration(milliseconds: 200),
+        barrierDismissible: true,
+        barrierLabel: '',
+        context: Get.context,
+        pageBuilder: (context, animation1, animation2) {});
   }
 }

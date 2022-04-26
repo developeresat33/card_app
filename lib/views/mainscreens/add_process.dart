@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:card_application/controllers/add_process_controllers.dart';
@@ -51,6 +50,7 @@ class _AddProcessPageState extends State<AddProcessPage> {
     installments = [];
     ctprovider.addProcessModel = ProcessModel();
     processController.init();
+    ctprovider.processType = widget.processType;
 
     for (int i = 1; i < 13; i++) {
       installments.add("$i");
@@ -431,14 +431,19 @@ class _AddProcessPageState extends State<AddProcessPage> {
                       style: TextStyle(color: Colors.white),
                     ),
                     onPressed: () async {
-                      var result;
                       RegExp exp = RegExp(r"[.,]");
                       final oCcy = new NumberFormat("#,##0.00", "tr_TR");
+                      value.advanceResult = 1;
+                      value.pointResult = 0;
+                      value.pointResult = cardData.point +
+                          value.addProcessModel.pointsEarned -
+                          value.addProcessModel.pointsSpent;
 
                       if (_formkey.currentState.validate()) {
                         if (cardData.boundary.contains(",") &&
                             !value.addProcessModel.amount.contains(",")) {
-                          result = oCcy.format(double.parse(cardData.boundary
+                          value.result = oCcy.format(double.parse(cardData
+                                  .boundary
                                   .replaceAll(exp, "")
                                   .substring(
                                       0,
@@ -447,9 +452,21 @@ class _AddProcessPageState extends State<AddProcessPage> {
                                               .length -
                                           2)) -
                               double.parse(value.addProcessModel.amount));
+                          if (widget.processType == 2) {
+                            value.advanceResult = oCcy.format(double.parse(
+                                    cardData.cashAdvanceLimit
+                                        .replaceAll(exp, "")
+                                        .substring(
+                                            0,
+                                            cardData.cashAdvanceLimit
+                                                    .replaceAll(exp, "")
+                                                    .length -
+                                                2)) -
+                                double.parse(value.addProcessModel.amount));
+                          }
                         } else if (!cardData.boundary.contains(",") &&
                             value.addProcessModel.amount.contains(",")) {
-                          result = oCcy.format(double.parse(value
+                          value.result = oCcy.format(double.parse(value
                                   .addProcessModel.amount
                                   .replaceAll(exp, "")
                                   .substring(
@@ -459,8 +476,21 @@ class _AddProcessPageState extends State<AddProcessPage> {
                                               .length -
                                           2)) -
                               double.parse(cardData.boundary));
+                          if (widget.processType == 2) {
+                            value.advanceResult = oCcy.format(double.parse(value
+                                    .addProcessModel.amount
+                                    .replaceAll(exp, "")
+                                    .substring(
+                                        0,
+                                        value.addProcessModel.amount
+                                                .replaceAll(exp, "")
+                                                .length -
+                                            2)) -
+                                double.parse(cardData.cashAdvanceLimit));
+                          }
                         } else {
-                          result = oCcy.format(double.parse(cardData.boundary
+                          value.result = oCcy.format(double.parse(cardData
+                                  .boundary
                                   .replaceAll(exp, "")
                                   .substring(
                                       0,
@@ -476,12 +506,57 @@ class _AddProcessPageState extends State<AddProcessPage> {
                                               .replaceAll(exp, "")
                                               .length -
                                           2)));
+                          if (widget.processType == 2) {
+                            value.advanceResult = oCcy.format(double.parse(
+                                    cardData.cashAdvanceLimit.replaceAll(exp, "").substring(
+                                        0,
+                                        cardData.cashAdvanceLimit
+                                                .replaceAll(exp, "")
+                                                .length -
+                                            2)) -
+                                double.parse(value.addProcessModel.amount
+                                    .replaceAll(exp, "")
+                                    .substring(
+                                        0,
+                                        value.addProcessModel.amount
+                                                .replaceAll(exp, "")
+                                                .length -
+                                            2)));
+                          }
                         }
-                        await _dbHelper.insertProcess(value.addProcessModel);
-                        await _dbHelper.updateCard(
-                            value.addProcessModel.cardID, result);
-                        await Get.back();
-                        await value.refresh(isProcessAdd: true);
+
+                        if (double.parse(value.result
+                                    .toString()
+                                    .replaceAll(exp, "")) <=
+                                0 &&
+                            widget.processType == 1) {
+                          if (double.parse(value.advanceResult
+                                  .toString()
+                                  .replaceAll(exp, "")) <=
+                              0) {
+                            value.warningofLimit(limitOfAdvance: true);
+                          } else {
+                            value.warningofLimit();
+                          }
+                        } else if (double.parse(value.advanceResult
+                                    .toString()
+                                    .replaceAll(exp, "")) <=
+                                0 &&
+                            widget.processType == 2) {
+                          value.warningofLimit(limitOfAdvance: true);
+                        } else {
+                          await _dbHelper.insertProcess(value.addProcessModel);
+                          await _dbHelper.updateCard(
+                              value.addProcessModel.cardID, value.result,
+                              value2: value.pointResult);
+                          if (widget.processType == 2) {
+                            await _dbHelper.updateCashAdvance(
+                                value.addProcessModel.cardID,
+                                value.advanceResult);
+                          }
+                          await Get.back();
+                          await value.refresh(isProcessAdd: true);
+                        }
                       } else {
                         setMessage("dialogs.warning".translate());
                       }
