@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:card_application/database/db_models/process_model.dart';
 import 'package:card_application/database/shop_data.dart';
+import 'package:card_application/model/pic.dart';
 import 'package:card_application/model/wa_card_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:path/path.dart';
@@ -25,9 +26,11 @@ class DbHelper extends ChangeNotifier {
 
   FutureOr<void> _onCreate(Database db, int version) async {
     await db.execute(
-        'CREATE TABLE Cards (id INTEGER PRIMARY KEY,image TEXT,boundary TEXT,select_type INTEGER,card_name TEXT,color TEXT,payment_date TEXT,cut_of_date TEXT,cash_advance_limit TEXT,point INTEGER,last_numbers TEXT)');
+        'CREATE TABLE Cards (id INTEGER PRIMARY KEY,image TEXT,boundary TEXT,select_type INTEGER,card_name TEXT,color TEXT,payment_date TEXT,cut_of_date TEXT,cash_advance_limit TEXT,point TEXT,last_numbers TEXT)');
     await db.execute(
         'CREATE TABLE Process (id INTEGER ,card_id INTEGER,process_type INTEGER,date_time TEXT,company_name TEXT,comment TEXT,amount TEXT,installments INTEGER,points_earned INTEGER,points_spent INTEGER,picture TEXT,  FOREIGN KEY("card_id") REFERENCES "Cards"("id"), PRIMARY KEY("id")) ');
+
+    await db.execute('CREATE TABLE Picture (pic TEXT)');
   }
 
   Future<List<WACardModel>> getCards() async {
@@ -123,19 +126,31 @@ class DbHelper extends ChangeNotifier {
   Future<List<ProcessData>> getProcess() async {
     var dbClient = await db;
     var result = await dbClient.rawQuery(
-        'SELECT cash_advance_limit,boundary,Process.id,date_time,process_type,company_name,comment,amount,card_name FROM Process JOIN Cards ON Cards.id=Process.card_id');
+        'SELECT point,cash_advance_limit,boundary,Process.id,date_time,process_type,company_name,comment,amount,card_name FROM Process JOIN Cards ON Cards.id=Process.card_id');
     return result.map((data) => ProcessData.fromMap(data)).toList();
   }
 
   Future<List<ProcessData>> getProcesstoCard(int id) async {
     var dbClient = await db;
     var result = await dbClient.rawQuery(
-        'SELECT cash_advance_limit,boundary,Process.id,date_time,process_type,company_name,comment,amount,card_name FROM Process JOIN Cards ON Cards.id=Process.card_id WHERE card_id=$id');
+        'SELECT point,cash_advance_limit,boundary,Process.id,date_time,process_type,company_name,comment,amount,card_name FROM Process JOIN Cards ON Cards.id=Process.card_id WHERE card_id=$id');
     return result.map((data) => ProcessData.fromMap(data)).toList();
   }
 
   Future<int> insertProcess(ProcessModel process) async {
     var dbClient = await db;
     return await dbClient.insert("Process", process.toMap());
+  }
+
+  Future<int> insertPicture(PicModel picture) async {
+    var dbClient = await db;
+    return await dbClient.insert("Picture", picture.toMap());
+  }
+
+  Future<List<PicModel>> getPicture() async {
+    var dbClient = await db;
+    var result = await dbClient.query("Picture", orderBy: "pic");
+
+    return result.map((data) => PicModel.fromMap(data)).toList();
   }
 }

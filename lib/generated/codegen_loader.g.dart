@@ -141,6 +141,16 @@ class CodegenLoader extends AssetLoader{
     "payment": "Payment Date",
     "advance": "Cash Advance Limit",
     "usable": "Usable Limit"
+  },
+  "intro_screen": {
+    "t1": "Add your card",
+    "t1_d": "Add your card to make more than one transaction with your cards.",
+    "t2": "Record your transactions",
+    "t2_d": "Add detailed transactions to your existing cards.",
+    "t3": "Provide your controls",
+    "t3_d": "Access and manage the card details in order to control and\nmanage the details of your transactions.",
+    "skip": "Skip",
+    "done": "Done"
   }
 };
 static const Map<String,dynamic> tr_TR = {
@@ -270,6 +280,16 @@ static const Map<String,dynamic> tr_TR = {
     "payment": "Ödeme Tarihi",
     "advance": "Nakit Avans Limiti",
     "usable": "Kullanılabilir Limit"
+  },
+  "intro_screen": {
+    "t1": "Kartınızı ekleyin",
+    "t1_d": "Kartlarınız  ile birden fazla işlem yapabilmek için kartınızı ekleyiniz.",
+    "t2": "İşlemlerinizi kaydedin",
+    "t2_d": "Mevcut kartlarınıza detaylı işlemler ekleyiniz.",
+    "t3": "Kontrollerinizi sağlayın",
+    "t3_d": "Yapılan işlemlerinizin detayını kontrol edebilmek ve\nyönetebilmek için kart detayına erişin ve yönetin.",
+    "skip": "Atla",
+    "done": "Tamam"
   }
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"en_US": en_US, "tr_TR": tr_TR};

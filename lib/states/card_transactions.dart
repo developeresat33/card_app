@@ -213,7 +213,8 @@ class CardTransactionsProvider extends ChangeNotifier {
                                 await Get.back();
                                 await _dbHelper.insertProcess(addProcessModel);
                                 await _dbHelper.updateCard(
-                                    addProcessModel.cardID, result);
+                                    addProcessModel.cardID, result,
+                                    value2: pointResult);
                                 if (processType == 2) {
                                   await _dbHelper.updateCashAdvance(
                                       addProcessModel.cardID, advanceResult);

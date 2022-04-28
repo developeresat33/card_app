@@ -157,5 +157,17 @@
       "payment":"Ödeme Tarihi",
       "advance":"Nakit Avans Limiti",
       "usable":"Kullanılabilir Limit"
+    },
+    "intro_screen":{
+
+      "t1":"Kartınızı ekleyin"
+      ,
+      "t1_d":"Kartlarınız  ile birden fazla işlem yapabilmek için kartınızı ekleyiniz.",
+      "t2":"İşlemlerinizi kaydedin",
+      "t2_d":"Mevcut kartlarınıza detaylı işlemler ekleyiniz.",
+      "t3":"Kontrollerinizi sağlayın",
+      "t3_d":"Yapılan işlemlerinizin detayını kontrol edebilmek ve\nyönetebilmek için kart detayına erişin ve yönetin.",
+      "skip":"Atla",
+      "done":"Tamam"
     }
 }

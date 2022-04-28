@@ -31,7 +31,7 @@ class _AddCardPageState extends State<AddCardPage> {
       boundary: "0",
       image: "",
       cashAdvanceLimit: "0",
-      point: 0,
+      point: "0",
       paymentDate: "",
       cutOfDate: "",
       color: WAPrimaryColor.value.toString());
@@ -375,7 +375,7 @@ class _AddCardPageState extends State<AddCardPage> {
                                   hintText: "100",
                                   onChanged: (val) {
                                     try {
-                                      value.addCardModel.point = int.parse(val);
+                                      value.addCardModel.point = val;
                                     } on Exception catch (e) {
                                       print(e);
                                     }

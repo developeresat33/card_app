@@ -4,6 +4,7 @@ import 'package:card_application/states/dashboard_provider.dart';
 import 'package:card_application/utils/colors.dart';
 import 'package:card_application/utils/localization_manager.dart';
 import 'package:card_application/views/mainscreens/dashboard.dart';
+import 'package:card_application/views/mainscreens/intro_screen.dart';
 import 'package:card_application/views/mainscreens/login_page.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -89,7 +90,7 @@ class _MyAppState extends State<MyApp> {
           scaffoldBackgroundColor: Colors.white,
           checkboxTheme: CheckboxThemeData(
               fillColor: MaterialStateProperty.all(WAPrimaryColor))),
-      home: isPass ? WADashboardScreen() : LoginScreen(),
+      home: isPass ? WADashboardScreen() : IntroScreen(),
     );
   }
 }

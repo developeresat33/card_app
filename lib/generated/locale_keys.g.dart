@@ -115,5 +115,14 @@ abstract class  LocaleKeys {
   static const card_detail_advance = 'card_detail.advance';
   static const card_detail_usable = 'card_detail.usable';
   static const card_detail = 'card_detail';
+  static const intro_screen_t1 = 'intro_screen.t1';
+  static const intro_screen_t1_d = 'intro_screen.t1_d';
+  static const intro_screen_t2 = 'intro_screen.t2';
+  static const intro_screen_t2_d = 'intro_screen.t2_d';
+  static const intro_screen_t3 = 'intro_screen.t3';
+  static const intro_screen_t3_d = 'intro_screen.t3_d';
+  static const intro_screen_skip = 'intro_screen.skip';
+  static const intro_screen_done = 'intro_screen.done';
+  static const intro_screen = 'intro_screen';
 
 }

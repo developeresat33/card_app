@@ -61,6 +61,9 @@ class _AddProcessPageState extends State<AddProcessPage> {
 
   _init(int id) async {
     cardData = await _dbHelper.getCardSingle(id);
+    ctprovider.pointResult = cardData.point;
+    ctprovider.advanceResult = cardData.cashAdvanceLimit;
+    print("POİNT RESULT " + ctprovider.pointResult.toString());
   }
 
   _initIndex() async {
@@ -433,11 +436,15 @@ class _AddProcessPageState extends State<AddProcessPage> {
                     onPressed: () async {
                       RegExp exp = RegExp(r"[.,]");
                       final oCcy = new NumberFormat("#,##0.00", "tr_TR");
-                      value.advanceResult = 1;
-                      value.pointResult = 0;
-                      value.pointResult = cardData.point +
-                          value.addProcessModel.pointsEarned -
-                          value.addProcessModel.pointsSpent;
+
+                      print("POİNT RESULT" + value.pointResult.toString());
+                      if (widget.processType == 1 &&
+                          cardData.point != null &&
+                          cardData.point != "null") {
+                        value.pointResult = int.parse(cardData.point) +
+                            value.addProcessModel.pointsEarned -
+                            value.addProcessModel.pointsSpent;
+                      }
 
                       if (_formkey.currentState.validate()) {
                         if (cardData.boundary.contains(",") &&
@@ -546,9 +553,11 @@ class _AddProcessPageState extends State<AddProcessPage> {
                           value.warningofLimit(limitOfAdvance: true);
                         } else {
                           await _dbHelper.insertProcess(value.addProcessModel);
+
                           await _dbHelper.updateCard(
                               value.addProcessModel.cardID, value.result,
-                              value2: value.pointResult);
+                              value2: cardData.point);
+
                           if (widget.processType == 2) {
                             await _dbHelper.updateCashAdvance(
                                 value.addProcessModel.cardID,

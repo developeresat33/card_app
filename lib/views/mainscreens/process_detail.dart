@@ -29,9 +29,15 @@ class _ProcessDetailState extends State<ProcessDetail> {
   RegExp exp = RegExp(r"[.,]");
   final oCcy = new NumberFormat("#,##0.00", "tr_TR");
   File img;
+  var advanceResult, pointsResult;
   @override
   void initState() {
-    print(widget.processData.cashAdvanceLimit);
+    advanceResult = widget.processData.cashAdvanceLimit;
+    pointsResult = widget.processData.point;
+    try {
+      print("CASH ADVANCE LIMIT " + advanceResult.toString());
+    } catch (e) {}
+
     img = null;
     super.initState();
   }
@@ -44,11 +50,14 @@ class _ProcessDetailState extends State<ProcessDetail> {
         builder: (context, value, child) => Scaffold(
               floatingActionButton: FloatingActionButton.extended(
                 onPressed: () async {
-                  var result, advanceResult, pointsResult;
-                  advanceResult = 0;
-/*                   pointsResult=cardData.point +
-                        widget.pr.pointsEarned -
-                          value.addProcessModel.pointsSpent; */
+                  var result;
+                  if (widget.processDetail.processType == 1 &&
+                      widget.processData.point != null &&
+                      widget.processData.point != "null") {
+                    pointsResult = int.parse(widget.processData.point) -
+                        widget.processDetail.pointsEarned +
+                        widget.processDetail.pointsSpent;
+                  }
 
                   if (widget.processData.cardAmount.contains(",") &&
                       !widget.processData.amount.contains(",")) {
@@ -62,17 +71,18 @@ class _ProcessDetailState extends State<ProcessDetail> {
                                         .length -
                                     2)) +
                         double.parse(widget.processDetail.amount));
-
-                    advanceResult = oCcy.format(double.parse(widget
-                            .processData.cashAdvanceLimit
-                            .replaceAll(exp, "")
-                            .substring(
-                                0,
-                                widget.processData.cashAdvanceLimit
-                                        .replaceAll(exp, "")
-                                        .length -
-                                    2)) +
-                        double.parse(widget.processDetail.amount));
+                    if (widget.processDetail.processType == 2) {
+                      advanceResult = oCcy.format(double.parse(widget
+                              .processData.cashAdvanceLimit
+                              .replaceAll(exp, "")
+                              .substring(
+                                  0,
+                                  widget.processData.cashAdvanceLimit
+                                          .replaceAll(exp, "")
+                                          .length -
+                                      2)) +
+                          double.parse(widget.processData.amount));
+                    }
                   } else if (!widget.processData.cardAmount.contains(",") &&
                       widget.processData.amount.contains(",")) {
                     result = oCcy.format(double.parse(widget.processData.amount
@@ -84,17 +94,18 @@ class _ProcessDetailState extends State<ProcessDetail> {
                                         .length -
                                     2)) +
                         double.parse(widget.processData.cardAmount));
-
-                    advanceResult = oCcy.format(double.parse(widget
-                            .processData.cashAdvanceLimit
-                            .replaceAll(exp, "")
-                            .substring(
-                                0,
-                                widget.processData.cashAdvanceLimit
-                                        .replaceAll(exp, "")
-                                        .length -
-                                    2)) +
-                        double.parse(widget.processDetail.amount));
+                    if (widget.processDetail.processType == 2) {
+                      advanceResult = oCcy.format(double.parse(widget
+                              .processData.cashAdvanceLimit
+                              .replaceAll(exp, "")
+                              .substring(
+                                  0,
+                                  widget.processData.cashAdvanceLimit
+                                          .replaceAll(exp, "")
+                                          .length -
+                                      2)) +
+                          double.parse(widget.processData.amount));
+                    }
                   } else {
                     result = oCcy.format(double.parse(widget
                             .processData.cardAmount
@@ -114,28 +125,30 @@ class _ProcessDetailState extends State<ProcessDetail> {
                                         .length -
                                     2)));
 
-                    advanceResult = oCcy.format(double.parse(widget
-                            .processData.cashAdvanceLimit
-                            .replaceAll(exp, "")
-                            .substring(
-                                0,
-                                widget.processData.cashAdvanceLimit
-                                        .replaceAll(exp, "")
-                                        .length -
-                                    2)) +
-                        double.parse(widget.processData.cashAdvanceLimit
-                            .replaceAll(exp, "")
-                            .substring(
-                                0,
-                                widget.processData.cashAdvanceLimit
-                                        .replaceAll(exp, "")
-                                        .length -
-                                    2)));
+                    if (widget.processDetail.processType == 2) {
+                      advanceResult = oCcy.format(double.parse(widget
+                              .processData.cashAdvanceLimit
+                              .replaceAll(exp, "")
+                              .substring(
+                                  0,
+                                  widget.processData.cashAdvanceLimit
+                                          .replaceAll(exp, "")
+                                          .length -
+                                      2)) +
+                          double.parse(widget.processData.amount
+                              .replaceAll(exp, "")
+                              .substring(
+                                  0,
+                                  widget.processData.amount
+                                          .replaceAll(exp, "")
+                                          .length -
+                                      2)));
+                    }
                   }
 
                   _dbHelper.removeProcess(widget.processData.id,
                       widget.processDetail.cardID, result,
-                      value2: advanceResult);
+                      value2: advanceResult, value3: pointsResult);
                   await Get.back();
                   await value.refresh(isProcessAdd: true);
                   try {

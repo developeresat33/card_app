@@ -46,6 +46,7 @@ dependencies:
   flutter_masked_text: ^0.8.0
   flutter_boom_menu: ^1.0.2
   image_picker: ^0.8.4+10
+  introduction_screen: ^3.0.2
  
 
 dev_dependencies:

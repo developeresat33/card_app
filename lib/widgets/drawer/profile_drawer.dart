@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:card_application/database/db_helper.dart';
 import 'package:card_application/extensions/string_extension.dart';
 import 'package:card_application/main.dart';
+import 'package:card_application/model/pic.dart';
 import 'package:card_application/states/dashboard_provider.dart';
 import 'package:card_application/utils/functions.dart';
 import 'package:card_application/utils/localization_manager.dart';
@@ -9,6 +11,7 @@ import 'package:card_application/widgets/select_language.dart';
 import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 class MainDrawer extends StatefulWidget {
   const MainDrawer({Key key, this.name}) : super(key: key);
@@ -18,6 +21,42 @@ class MainDrawer extends StatefulWidget {
 }
 
 class _MainDrawerState extends State<MainDrawer> {
+  DbHelper _db = DbHelper();
+  var _image;
+  var imagePicker;
+  var type;
+  File img;
+  PicModel profilePicture = PicModel();
+  List<PicModel> picData;
+  bool setLoading = false;
+  @override
+  void initState() {
+    picData = [];
+
+    _getPic();
+
+    super.initState();
+  }
+
+  _getPic() async {
+    setState(() {
+      setLoading = false;
+    });
+
+    picData = await _db.getPicture();
+    try {
+      img = File(picData[0].pic);
+      setState(() {
+        setLoading = true;
+      });
+    } catch (e) {
+      print(e);
+      setState(() {
+        setLoading = true;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -33,11 +72,39 @@ class _MainDrawerState extends State<MainDrawer> {
               DrawerHeader(
                 child: Row(
                   children: [
-                    CircleAvatar(
-                      backgroundImage: AssetImage(
-                        "assets/profile_screen.jpg",
+                    GestureDetector(
+                      onTap: () async {
+                        var source = type = ImageSource.gallery;
+                        XFile image =
+                            await ImagePicker().pickImage(source: source);
+                        setState(() {
+                          _image = File(image.path);
+                        });
+
+                        profilePicture.pic = image.path;
+                        await _db.insertPicture(profilePicture);
+                      },
+                      child: CircleAvatar(
+                        backgroundColor: Colors.black54,
+                        radius: 30.0,
+                        child: setLoading
+                            ? CircleAvatar(
+                                backgroundColor: Colors.white,
+                                radius: 28.0,
+                                child: picData != null &&
+                                        picData.isNotEmpty &&
+                                        picData[0].pic != "" &&
+                                        picData[0].pic != null &&
+                                        img != null
+                                    ? ClipOval(child: Image.file(img))
+                                    : Image.asset(
+                                        "assets/add_photo.png",
+                                        scale: size.height * 0.012,
+                                        color: Colors.black87,
+                                      ),
+                              )
+                            : CircularProgressIndicator(),
                       ),
-                      radius: 30.0,
                     ),
                     SizedBox(
                       width: 20.0,

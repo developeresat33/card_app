@@ -72,7 +72,8 @@ class _CardDetailState extends State<CardDetail> {
                         if (value.cardDetailModel.cardName != null)
                           buildDataHolder('card_detail.name'.translate(),
                               value.cardDetailModel.cardName),
-                        if (value.cardDetailModel.point != null)
+                        if (value.cardDetailModel.point != null &&
+                            value.cardDetailModel.point != "0")
                           buildDataHolder('card_detail.point'.translate(),
                               value.cardDetailModel.point),
                         if (value.cardDetailModel.selectType != null)

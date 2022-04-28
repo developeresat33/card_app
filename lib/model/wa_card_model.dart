@@ -5,7 +5,7 @@ class WACardModel {
   String cardName;
   String color;
   int selectType;
-  int point;
+  String point;
   String cutOfDate;
   String cashAdvanceLimit;
   String paymentDate;

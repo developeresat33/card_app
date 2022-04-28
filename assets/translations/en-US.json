@@ -149,5 +149,17 @@
     "payment":"Payment Date",
     "advance":"Cash Advance Limit",
     "usable":"Usable Limit"
+  },
+  "intro_screen":{
+
+    "t1":"Add your card"
+    ,
+    "t1_d":"Add your card to make more than one transaction with your cards.",
+    "t2":"Record your transactions",
+    "t2_d":"Add detailed transactions to your existing cards.",
+    "t3":"Provide your controls",
+    "t3_d":"Access and manage the card details in order to control and\nmanage the details of your transactions.",
+    "skip":"Skip",
+    "done":"Done"
   }
 }
