@@ -55,8 +55,12 @@ class _ProcessDetailState extends State<ProcessDetail> {
                       widget.processData.point != null &&
                       widget.processData.point != "null") {
                     pointsResult = int.parse(widget.processData.point) -
-                        widget.processDetail.pointsEarned +
-                        widget.processDetail.pointsSpent;
+                                widget.processDetail.pointsEarned !=
+                            null
+                        ? widget.processDetail.pointsEarned
+                        : 0 + widget.processDetail.pointsSpent != null
+                            ? widget.processDetail.pointsSpent
+                            : 0;
                   }
 
                   if (widget.processData.cardAmount.contains(",") &&

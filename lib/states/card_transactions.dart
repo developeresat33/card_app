@@ -4,6 +4,7 @@ import 'package:card_application/component/circle_component.dart';
 import 'package:card_application/controllers/add_card_controllers.dart';
 import 'package:card_application/database/db_helper.dart';
 import 'package:card_application/database/db_models/process_model.dart';
+import 'package:card_application/extensions/string_extension.dart';
 import 'package:card_application/model/app_model.dart';
 import 'package:card_application/model/wa_card_model.dart';
 import 'package:card_application/utils/box_constraints.dart';
@@ -13,6 +14,7 @@ import 'package:card_application/widgets/data_generator.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 class CardTransactionsProvider extends ChangeNotifier {
   DbHelper _dbHelper = DbHelper();
@@ -28,7 +30,9 @@ class CardTransactionsProvider extends ChangeNotifier {
   final DateFormat formatter = DateFormat('dd.MM.yyyy');
   var result, advanceResult, pointResult;
   var processType;
-
+  var imageSrc;
+  var imagePicker;
+  var type;
   void getColors() {
     for (var i = 0; i < 6; i++) {
       colorList.add(
@@ -185,10 +189,7 @@ class CardTransactionsProvider extends ChangeNotifier {
                     title: FittedBox(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                              "Bu işlem sonunda limit aşımına gidilecektir.\nEmin misiniz?")
-                        ],
+                        children: [Text("dialogs.warning_limit".translate())],
                       ),
                     ),
                     actions: [
@@ -199,7 +200,7 @@ class CardTransactionsProvider extends ChangeNotifier {
                             SizedBox(
                               width: size.width * 0.030,
                             ),
-                            Text("- Nakit avans limitiniz aşılmaktadır.")
+                            Text("dialogs.limit_desp".translate())
                           ],
                         ),
                       SizedBox(
@@ -223,7 +224,7 @@ class CardTransactionsProvider extends ChangeNotifier {
                                 await Get.back();
                               },
                               child: Text(
-                                "Evet",
+                                "dialogs.ok".translate(),
                                 style: TextStyle(
                                   color: WAPrimaryColor,
                                 ),
@@ -237,7 +238,7 @@ class CardTransactionsProvider extends ChangeNotifier {
                                 Get.back();
                               },
                               child: Text(
-                                "Hayır",
+                                "dialogs.dont".translate(),
                                 style: TextStyle(
                                   color: Colors.black,
                                 ),
@@ -252,5 +253,86 @@ class CardTransactionsProvider extends ChangeNotifier {
         barrierLabel: '',
         context: Get.context,
         pageBuilder: (context, animation1, animation2) {});
+  }
+
+  void selectStyle() {
+    showGeneralDialog(
+            barrierColor: Colors.black.withOpacity(0.5),
+            transitionBuilder: (context, a1, a2, widget) {
+              final curvedValue =
+                  Curves.easeInOutBack.transform(a1.value) - 1.0;
+              return Transform(
+                  transform:
+                      Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
+                  child: Opacity(
+                      opacity: a1.value,
+                      child: AlertDialog(
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20.0))),
+                        backgroundColor: Colors.white,
+                        title: FittedBox(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [Text("dialogs.method".translate())],
+                          ),
+                        ),
+                        actions: [
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  width: size.width * 0.040,
+                                ),
+                                Expanded(
+                                  child: ElevatedButton.icon(
+                                    icon: Icon(Icons.camera),
+                                    onPressed: () async {
+                                      var source = type = ImageSource.camera;
+                                      XFile image = await ImagePicker()
+                                          .pickImage(source: source);
+
+                                      imageSrc = File(image.path);
+                                      notifyListeners();
+
+                                      addProcessModel.picture = image.path;
+                                      Get.back();
+                                    },
+                                    label: Text("dialogs.camera".translate()),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: size.width * 0.040,
+                                ),
+                                Expanded(
+                                  child: ElevatedButton.icon(
+                                    icon: Icon(Icons.source),
+                                    onPressed: () async {
+                                      var source = type = ImageSource.gallery;
+                                      XFile image = await ImagePicker()
+                                          .pickImage(source: source);
+
+                                      imageSrc = File(image.path);
+                                      notifyListeners();
+
+                                      addProcessModel.picture = image.path;
+                                      Get.back();
+                                    },
+                                    label: Text("dialogs.gallery".translate()),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: size.width * 0.040,
+                                ),
+                              ]),
+                        ],
+                      )));
+            },
+            transitionDuration: Duration(milliseconds: 200),
+            barrierDismissible: true,
+            barrierLabel: '',
+            context: Get.context,
+            pageBuilder: (context, animation1, animation2) {})
+        .then((value) => Get.focusScope.unfocus());
   }
 }

@@ -41,9 +41,7 @@ class _AddProcessPageState extends State<AddProcessPage> {
 
   var selectedDropDownValue = "Taksit Seçiniz";
   var _formkey = GlobalKey<FormState>();
-  var _image;
-  var imagePicker;
-  var type;
+
   @override
   void initState() {
     _initIndex();
@@ -77,7 +75,9 @@ class _AddProcessPageState extends State<AddProcessPage> {
   @override
   Widget build(BuildContext context) {
     ctprovider.addProcessModel.processType = widget.processType;
-
+    processController.dateTime.text =
+        ctprovider.formatter.format(DateTime.now());
+    ctprovider.imageSrc = null;
     return Consumer<CardTransactionsProvider>(
         builder: (context, value, child) => Scaffold(
             appBar: getAppBar(widget.processType == 1
@@ -97,21 +97,15 @@ class _AddProcessPageState extends State<AddProcessPage> {
                       child: ListTile(
                         trailing: GestureDetector(
                           onTap: () async {
-                            var source = type = ImageSource.gallery;
-                            XFile image =
-                                await ImagePicker().pickImage(source: source);
-                            setState(() {
-                              _image = File(image.path);
-                            });
-                            value.addProcessModel.picture = image.path;
+                            value.selectStyle();
                           },
                           child: Container(
                             width: 200,
                             height: 200,
                             decoration: BoxDecoration(color: Colors.white60),
-                            child: _image != null
+                            child: value.imageSrc != null
                                 ? Image.file(
-                                    _image,
+                                    value.imageSrc,
                                     width: 200.0,
                                     height: 200.0,
                                     fit: BoxFit.fitHeight,
@@ -442,8 +436,12 @@ class _AddProcessPageState extends State<AddProcessPage> {
                           cardData.point != null &&
                           cardData.point != "null") {
                         value.pointResult = int.parse(cardData.point) +
-                            value.addProcessModel.pointsEarned -
-                            value.addProcessModel.pointsSpent;
+                                    value.addProcessModel.pointsEarned !=
+                                null
+                            ? value.addProcessModel.pointsEarned
+                            : 0 - value.addProcessModel.pointsSpent != null
+                                ? value.addProcessModel.pointsSpent
+                                : 0;
                       }
 
                       if (_formkey.currentState.validate()) {

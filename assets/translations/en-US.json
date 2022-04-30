@@ -80,7 +80,14 @@
     "choose":"Select transaction type;",
     "shopping":"Shopping",
   "cash_advance":"Cash Advance",
-  "warning":"Null or invalid value."
+  "warning":"Null or invalid value.",
+
+  "warning_limit":"At the end of this process, the limit will be exceeded.\nAre you sure?",
+  "limit_desp":"- Your cash advance limit is exceeded.",
+  "method":"Which method do you want to add?",
+  "camera":"Camera",
+  "gallery":"Gallery"
+
   },  "add_card":{
     "default":"Add Card",
     "color":"Color :",

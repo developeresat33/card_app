@@ -83,28 +83,42 @@ class _MainDrawerState extends State<MainDrawer> {
 
                         profilePicture.pic = image.path;
                         await _db.insertPicture(profilePicture);
+                        await _getPic();
                       },
-                      child: CircleAvatar(
-                        backgroundColor: Colors.black54,
-                        radius: 30.0,
-                        child: setLoading
-                            ? CircleAvatar(
-                                backgroundColor: Colors.white,
-                                radius: 28.0,
-                                child: picData != null &&
-                                        picData.isNotEmpty &&
-                                        picData[0].pic != "" &&
-                                        picData[0].pic != null &&
-                                        img != null
-                                    ? ClipOval(child: Image.file(img))
-                                    : Image.asset(
+                      child: setLoading
+                          ? picData != null &&
+                                  picData.isNotEmpty &&
+                                  picData[0].pic != "" &&
+                                  picData[0].pic != null &&
+                                  img != null
+                              ? Card(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Container(
+                                      height: size.height * 0.1,
+                                      width: size.height * 0.1,
+                                      child: Image.file(
+                                        img,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : Card(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Container(
+                                      height: size.height * 0.1,
+                                      width: size.height * 0.1,
+                                      child: Image.asset(
                                         "assets/add_photo.png",
                                         scale: size.height * 0.012,
                                         color: Colors.black87,
                                       ),
-                              )
-                            : CircularProgressIndicator(),
-                      ),
+                                    ),
+                                  ),
+                                )
+                          : CircularProgressIndicator(),
                     ),
                     SizedBox(
                       width: 20.0,
