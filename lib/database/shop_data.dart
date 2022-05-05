@@ -9,6 +9,7 @@ class ProcessData {
   String cardAmount;
   String cashAdvanceLimit;
   String point;
+  double total;
 
   ProcessData(
       {this.id,
@@ -20,7 +21,8 @@ class ProcessData {
       this.cardName,
       this.cardAmount,
       this.cashAdvanceLimit,
-      this.point});
+      this.point,
+      this.total});
 
   Map<String, dynamic> toMap() {
     var map = Map<String, dynamic>();
@@ -34,6 +36,7 @@ class ProcessData {
     map['boundary'] = cardAmount;
     map['cash_advance_limit'] = cashAdvanceLimit;
     map['point'] = point;
+    map['total'] = total;
 
     return map;
   }
@@ -49,5 +52,6 @@ class ProcessData {
     cardAmount = map['boundary'];
     cashAdvanceLimit = map['cash_advance_limit'];
     point = map['point'];
+    total = map['total'];
   }
 }

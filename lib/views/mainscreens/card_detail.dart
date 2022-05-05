@@ -5,16 +5,19 @@ import 'package:card_application/database/shop_data.dart';
 import 'package:card_application/extensions/int_extensions.dart';
 import 'package:card_application/model/wa_card_model.dart';
 import 'package:card_application/states/card_transactions.dart';
-import 'package:card_application/states/dashboard_provider.dart';
+import 'package:card_application/states/provider_header.dart';
+
 import 'package:card_application/utils/colors.dart';
 import 'package:card_application/utils/functions.dart';
 import 'package:card_application/views/mainscreens/process_detail.dart';
+import 'package:card_application/views/mainscreens/transfer_transactions.dart';
 import 'package:card_application/widgets/app_bar.dart';
 import 'package:card_application/widgets/tools/data_holder.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:card_application/extensions/string_extension.dart';
+import 'package:sqflite/utils/utils.dart';
 
 class CardDetail extends StatefulWidget {
   const CardDetail({Key key, this.cardModel}) : super(key: key);
@@ -25,28 +28,62 @@ class CardDetail extends StatefulWidget {
 }
 
 class _CardDetailState extends State<CardDetail> {
+  DbHelper _db = DbHelper();
+
   var cshprovider =
       Provider.of<CardTransactionsProvider>(Get.context, listen: false);
   @override
   void initState() {
     cshprovider.cardDetailModel = widget.cardModel;
+    cshprovider.initDetail(widget.cardModel.id);
     super.initState();
   }
 
-  DbHelper _db = DbHelper();
   @override
   Widget build(BuildContext context) {
     return Consumer<CardTransactionsProvider>(
         builder: (context, value, child) => Scaffold(
-              floatingActionButton: FloatingActionButton.extended(
-                onPressed: () async {
-                  await _db.removeCard(widget.cardModel.id);
-                  await Get.back();
-                  await value.refresh();
-                },
-                label: Text('card_detail.delete'.translate()),
-                backgroundColor: WAPrimaryColor,
-                icon: Icon(Icons.remove),
+              floatingActionButton: Row(
+                children: [
+                  if (ProviderHeader.dshprovider.outOfDate
+                      .contains(widget.cardModel.cardName))
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: size.width * 0.070,
+                        ),
+                        FloatingActionButton.extended(
+                          heroTag: Text("1"),
+                          onPressed: value.processList.length > 0
+                              ? () async {
+                                  List<ProcessData> transferData =
+                                      await _db.getProcessToCollection(
+                                          widget.cardModel.id);
+                                  Get.to(() => TransferTransactions(
+                                      processData: transferData[0]));
+                                }
+                              : null,
+                          label: Text("Devir İş."),
+                          backgroundColor: value.processList.length > 0
+                              ? WAPrimaryColor
+                              : Colors.grey,
+                          icon: Icon(Icons.transform_rounded),
+                        ),
+                      ],
+                    ),
+                  Spacer(),
+                  FloatingActionButton.extended(
+                    heroTag: Text("2"),
+                    onPressed: () async {
+                      await _db.removeCard(widget.cardModel.id);
+                      await Get.back();
+                      await value.refresh();
+                    },
+                    label: Text('card_detail.delete'.translate()),
+                    backgroundColor: WAPrimaryColor,
+                    icon: Icon(Icons.remove),
+                  ),
+                ],
               ),
               appBar: getAppBar('card_detail.default'.translate()),
               body: Column(
@@ -147,7 +184,10 @@ class _CardDetailState extends State<CardDetail> {
                                 );
                               },
                             );
-                          }))
+                          })),
+                  SizedBox(
+                    height: size.height * 0.1,
+                  )
                 ],
               ),
             ));

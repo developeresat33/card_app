@@ -78,6 +78,9 @@ class _AddProcessPageState extends State<AddProcessPage> {
     processController.dateTime.text =
         ctprovider.formatter.format(DateTime.now());
     ctprovider.imageSrc = null;
+
+    ctprovider.addProcessModel.dateTime =
+        ctprovider.formatter.format(DateTime.now());
     return Consumer<CardTransactionsProvider>(
         builder: (context, value, child) => Scaffold(
             appBar: getAppBar(widget.processType == 1
@@ -431,17 +434,18 @@ class _AddProcessPageState extends State<AddProcessPage> {
                       RegExp exp = RegExp(r"[.,]");
                       final oCcy = new NumberFormat("#,##0.00", "tr_TR");
 
-                      print("POİNT RESULT" + value.pointResult.toString());
                       if (widget.processType == 1 &&
-                          cardData.point != null &&
-                          cardData.point != "null") {
-                        value.pointResult = int.parse(cardData.point) +
-                                    value.addProcessModel.pointsEarned !=
-                                null
-                            ? value.addProcessModel.pointsEarned
-                            : 0 - value.addProcessModel.pointsSpent != null
-                                ? value.addProcessModel.pointsSpent
-                                : 0;
+                              cardData.point != null &&
+                              cardData.point != "null" &&
+                              processController.pointsEarned.text != null ||
+                          processController.pointsSpent.text != null) {
+                        value.pointResult = cardData.point != null
+                            ? int.parse(cardData.point)
+                            : 0 + value.addProcessModel.pointsEarned != null
+                                ? value.addProcessModel.pointsEarned
+                                : 0 - value.addProcessModel.pointsSpent != null
+                                    ? value.addProcessModel.pointsSpent
+                                    : 0;
                       }
 
                       if (_formkey.currentState.validate()) {

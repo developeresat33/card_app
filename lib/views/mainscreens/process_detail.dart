@@ -50,17 +50,18 @@ class _ProcessDetailState extends State<ProcessDetail> {
         builder: (context, value, child) => Scaffold(
               floatingActionButton: FloatingActionButton.extended(
                 onPressed: () async {
+                  await value.initDetail(widget.processData.id);
                   var result;
                   if (widget.processDetail.processType == 1 &&
                       widget.processData.point != null &&
                       widget.processData.point != "null") {
-                    pointsResult = int.parse(widget.processData.point) -
-                                widget.processDetail.pointsEarned !=
-                            null
-                        ? widget.processDetail.pointsEarned
-                        : 0 + widget.processDetail.pointsSpent != null
-                            ? widget.processDetail.pointsSpent
-                            : 0;
+                    pointsResult = widget.processData.point != null
+                        ? int.parse(widget.processData.point)
+                        : 0 - widget.processDetail.pointsEarned != null
+                            ? widget.processDetail.pointsEarned
+                            : 0 + widget.processDetail.pointsSpent != null
+                                ? widget.processDetail.pointsSpent
+                                : 0;
                   }
 
                   if (widget.processData.cardAmount.contains(",") &&
@@ -153,6 +154,7 @@ class _ProcessDetailState extends State<ProcessDetail> {
                   _dbHelper.removeProcess(widget.processData.id,
                       widget.processDetail.cardID, result,
                       value2: advanceResult, value3: pointsResult);
+
                   await Get.back();
                   await value.refresh(isProcessAdd: true);
                   try {

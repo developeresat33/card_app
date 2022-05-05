@@ -130,6 +130,13 @@ class DbHelper extends ChangeNotifier {
     return result.map((data) => ProcessData.fromMap(data)).toList();
   }
 
+  Future<List<ProcessData>> getProcessToCollection(var id) async {
+    var dbClient = await db;
+    var result = await dbClient.rawQuery(
+        'SELECT SUM(CAST(amount AS float)) AS total FROM Process JOIN Cards ON Cards.id=Process.card_id WHERE card_id=$id AND CAST(date_time AS DATE)<=CAST(cut_of_date AS DATE)');
+    return result.map((data) => ProcessData.fromMap(data)).toList();
+  }
+
   Future<List<ProcessData>> getProcesstoCard(int id) async {
     var dbClient = await db;
     var result = await dbClient.rawQuery(

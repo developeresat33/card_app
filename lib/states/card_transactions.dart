@@ -4,6 +4,7 @@ import 'package:card_application/component/circle_component.dart';
 import 'package:card_application/controllers/add_card_controllers.dart';
 import 'package:card_application/database/db_helper.dart';
 import 'package:card_application/database/db_models/process_model.dart';
+import 'package:card_application/database/shop_data.dart';
 import 'package:card_application/extensions/string_extension.dart';
 import 'package:card_application/model/app_model.dart';
 import 'package:card_application/model/wa_card_model.dart';
@@ -22,6 +23,8 @@ class CardTransactionsProvider extends ChangeNotifier {
   WACardModel addCardModel, cardDetailModel;
   ProcessModel addProcessModel;
   List<ColorComponent> colorList = [];
+  List<ProcessData> processList = [];
+  DbHelper _db = DbHelper();
   List<int> installments = [];
   bool isAddCard = true;
   bool isAddProcess = true;
@@ -171,6 +174,13 @@ class CardTransactionsProvider extends ChangeNotifier {
                 ],
               ));
         });
+  }
+
+  initDetail(var id) async {
+    processList.clear();
+
+    processList = await _db.getProcesstoCard(id);
+    notifyListeners();
   }
 
   void warningofLimit({bool limitOfAdvance = false}) {

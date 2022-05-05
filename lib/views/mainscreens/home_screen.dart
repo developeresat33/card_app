@@ -38,6 +38,7 @@ class HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
+    _init();
     _dbHelper = DbHelper();
 
     super.initState();
@@ -46,6 +47,13 @@ class HomeScreenState extends State<HomeScreen> {
   @override
   void setState(fn) {
     if (mounted) super.setState(fn);
+  }
+
+  _init() async {
+    await context.read<DashProvider>().calculateDate();
+    if (context.read<DashProvider>().outOfDate.length > 0) {
+      context.read<DashProvider>().showOutOfDate();
+    }
   }
 
   @override
