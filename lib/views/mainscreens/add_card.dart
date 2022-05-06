@@ -394,6 +394,13 @@ class _AddCardPageState extends State<AddCardPage> {
                                 ),
                                 Expanded(
                                     child: CustomTextFormField(
+                                  validator: (val) {
+                                    if (val.length > 0) {
+                                      if (val.length != 4) {
+                                        return "4 Hane olması zorunludur";
+                                      }
+                                    }
+                                  },
                                   controller: value.addCardState.lastNumbers,
                                   placeholder:
                                       "add_card.last_letter".translate(),

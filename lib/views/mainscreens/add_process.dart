@@ -431,21 +431,24 @@ class _AddProcessPageState extends State<AddProcessPage> {
                       style: TextStyle(color: Colors.white),
                     ),
                     onPressed: () async {
+                      if (value.addProcessModel.pointsEarned == null) {
+                        value.addProcessModel.pointsEarned = 0;
+                      }
+                      if (value.addProcessModel.pointsSpent == null) {
+                        value.addProcessModel.pointsSpent = 0;
+                      }
                       RegExp exp = RegExp(r"[.,]");
                       final oCcy = new NumberFormat("#,##0.00", "tr_TR");
-
+                      print("process type" + widget.processType.toString());
                       if (widget.processType == 1 &&
-                              cardData.point != null &&
-                              cardData.point != "null" &&
-                              processController.pointsEarned.text != null ||
-                          processController.pointsSpent.text != null) {
-                        value.pointResult = cardData.point != null
-                            ? int.parse(cardData.point)
-                            : 0 + value.addProcessModel.pointsEarned != null
-                                ? value.addProcessModel.pointsEarned
-                                : 0 - value.addProcessModel.pointsSpent != null
-                                    ? value.addProcessModel.pointsSpent
-                                    : 0;
+                          cardData.point != null &&
+                          cardData.point != "null") {
+                        value.pointResult = int.parse(cardData.point) +
+                            value.addProcessModel.pointsEarned -
+                            value.addProcessModel.pointsSpent;
+
+                        print("POİNT RESULT" + value.pointResult.toString());
+                        print("card point " + cardData.point);
                       }
 
                       if (_formkey.currentState.validate()) {
@@ -555,10 +558,15 @@ class _AddProcessPageState extends State<AddProcessPage> {
                           value.warningofLimit(limitOfAdvance: true);
                         } else {
                           await _dbHelper.insertProcess(value.addProcessModel);
-
-                          await _dbHelper.updateCard(
-                              value.addProcessModel.cardID, value.result,
-                              value2: cardData.point);
+                          if (widget.processType == 1) {
+                            await _dbHelper.updateCard(
+                                value.addProcessModel.cardID, value.result,
+                                value2: value.pointResult);
+                          } else if (widget.processType == 2) {
+                            await _dbHelper.updateCard(
+                                value.addProcessModel.cardID, value.result,
+                                value2: cardData.point);
+                          }
 
                           if (widget.processType == 2) {
                             await _dbHelper.updateCashAdvance(

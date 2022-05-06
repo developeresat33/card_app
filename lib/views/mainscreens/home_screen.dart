@@ -23,6 +23,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_boom_menu/flutter_boom_menu.dart';
 import 'package:get/route_manager.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 class HomeScreen extends StatefulWidget {
   static String tag = '/HomeScreen';
@@ -50,6 +51,7 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   _init() async {
+    await Future.delayed(Duration(seconds: 1));
     await context.read<DashProvider>().calculateDate();
     if (context.read<DashProvider>().outOfDate.length > 0) {
       context.read<DashProvider>().showOutOfDate();

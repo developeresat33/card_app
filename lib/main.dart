@@ -62,11 +62,10 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    var myprovider = Provider.of<DashProvider>(context, listen: true);
     return GetMaterialApp(
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
-      locale: myprovider.locale,
+      locale: context.locale,
       title: 'Card_App_Demo',
       theme: ThemeData(
           primarySwatch: Colors.red,

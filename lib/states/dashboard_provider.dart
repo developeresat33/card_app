@@ -1,5 +1,6 @@
 import 'package:card_application/database/db_helper.dart';
 import 'package:card_application/extensions/string_extension.dart';
+import 'package:card_application/main.dart';
 import 'package:card_application/model/wa_card_model.dart';
 import 'package:card_application/utils/colors.dart';
 import 'package:card_application/utils/functions.dart';
@@ -9,6 +10,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:unicorndial/unicorndial.dart';
+import 'package:intl/intl.dart';
 
 String name;
 
@@ -16,17 +18,13 @@ class DashProvider extends ChangeNotifier {
   GlobalKey<ScaffoldState> dashkey;
   // ignore: deprecated_member_use
   List<UnicornButton> subLanguage = [];
-  Locale locale;
+
   List<WACardModel> _cardList = [];
   List outOfDate = [];
   String _todayDate;
   final DateFormat formatter = DateFormat('dd.MM.yyyy');
   DbHelper _db = DbHelper();
-
-  void setLocale(Locale value) {
-    locale = value;
-    notifyListeners();
-  }
+  Widget page;
 
   void calculateDate() async {
     print("date calculate");
@@ -88,17 +86,18 @@ class DashProvider extends ChangeNotifier {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Container(
-                              alignment: Alignment.topLeft,
-                              height: size.height * 0.2,
-                              width: size.width * 0.4,
-                              child: ListView.builder(
-                                itemCount: outOfDate.length,
-                                itemBuilder: (context, index) {
-                                  return ListTile(
-                                      leading: Icon(Icons.credit_card),
-                                      title: Text(outOfDate[index]));
-                                },
+                            FittedBox(
+                              child: SizedBox(
+                                height: size.height * 0.4,
+                                width: size.width * 0.4,
+                                child: ListView.builder(
+                                  itemCount: outOfDate.length,
+                                  itemBuilder: (context, index) {
+                                    return ListTile(
+                                        leading: Icon(Icons.credit_card),
+                                        title: Text(outOfDate[index]));
+                                  },
+                                ),
                               ),
                             ),
                           ],

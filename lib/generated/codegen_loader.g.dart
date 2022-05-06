@@ -79,7 +79,12 @@ class CodegenLoader extends AssetLoader{
     "choose": "Select transaction type;",
     "shopping": "Shopping",
     "cash_advance": "Cash Advance",
-    "warning": "Null or invalid value."
+    "warning": "Null or invalid value.",
+    "warning_limit": "At the end of this process, the limit will be exceeded.\nAre you sure?",
+    "limit_desp": "- Your cash advance limit is exceeded.",
+    "method": "Which method do you want to add?",
+    "camera": "Camera",
+    "gallery": "Gallery"
   },
   "add_card": {
     "default": "Add Card",
@@ -218,7 +223,12 @@ static const Map<String,dynamic> tr_TR = {
     "choose": "İşlem türü seçiniz;",
     "shopping": "Alışveriş",
     "cash_advance": "Nakit Avans",
-    "warning": "Boş veya geçersiz değer."
+    "warning": "Boş veya geçersiz değer.",
+    "warning_limit": "Bu işlem sonunda limit aşımına gidilecektir.\nEmin misiniz?",
+    "limit_desp": "- Nakit avans limitiniz aşılmaktadır.",
+    "method": "Hangi yöntem ile eklemek istiyorsunuz ?",
+    "camera": "Kamera",
+    "gallery": "Galeri"
   },
   "add_card": {
     "default": "Kart Ekle",

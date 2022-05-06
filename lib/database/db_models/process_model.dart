@@ -12,17 +12,17 @@ class ProcessModel {
   int pointsSpent;
   String picture;
 
-  ProcessModel({
-    this.cardID,
-    this.dateTime,
-    this.companyName,
-    this.comment,
-    this.amount,
-    this.installments,
-    this.pointsEarned,
-    this.pointsSpent,
-    this.picture,
-  });
+  ProcessModel(
+      {this.cardID,
+      this.dateTime,
+      this.companyName,
+      this.comment,
+      this.amount,
+      this.installments,
+      this.pointsEarned,
+      this.pointsSpent,
+      this.picture,
+      this.processType});
 
   Map<String, dynamic> toMap() {
     var map = Map<String, dynamic>();

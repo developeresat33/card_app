@@ -28,6 +28,7 @@ class CardTransactionsProvider extends ChangeNotifier {
   List<int> installments = [];
   bool isAddCard = true;
   bool isAddProcess = true;
+  bool isTransfer = false;
   DateTime selectedDate;
   ValueNotifier<List<WACardModel>> wreckerServiceState;
   final DateFormat formatter = DateFormat('dd.MM.yyyy');
@@ -177,9 +178,17 @@ class CardTransactionsProvider extends ChangeNotifier {
   }
 
   initDetail(var id) async {
-    processList.clear();
+    processList = [];
 
     processList = await _db.getProcesstoCard(id);
+
+    if (processList.length > 0) {
+      isTransfer = true;
+      notifyListeners();
+    } else {
+      isTransfer = false;
+      notifyListeners();
+    }
     notifyListeners();
   }
 

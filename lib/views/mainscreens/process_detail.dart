@@ -52,16 +52,18 @@ class _ProcessDetailState extends State<ProcessDetail> {
                 onPressed: () async {
                   await value.initDetail(widget.processData.id);
                   var result;
+                  if (widget.processDetail.pointsEarned == null) {
+                    widget.processDetail.pointsEarned = 0;
+                  }
+                  if (widget.processDetail.pointsSpent == null) {
+                    widget.processDetail.pointsSpent = 0;
+                  }
                   if (widget.processDetail.processType == 1 &&
                       widget.processData.point != null &&
                       widget.processData.point != "null") {
-                    pointsResult = widget.processData.point != null
-                        ? int.parse(widget.processData.point)
-                        : 0 - widget.processDetail.pointsEarned != null
-                            ? widget.processDetail.pointsEarned
-                            : 0 + widget.processDetail.pointsSpent != null
-                                ? widget.processDetail.pointsSpent
-                                : 0;
+                    pointsResult = int.parse(widget.processData.point) -
+                        widget.processDetail.pointsEarned +
+                        widget.processDetail.pointsSpent;
                   }
 
                   if (widget.processData.cardAmount.contains(",") &&
@@ -159,6 +161,7 @@ class _ProcessDetailState extends State<ProcessDetail> {
                   await value.refresh(isProcessAdd: true);
                   try {
                     value.removeProcessState(widget.processDetail.cardID);
+                    value.initDetail(widget.processDetail.cardID);
                   } catch (e) {
                     print(e);
                   }

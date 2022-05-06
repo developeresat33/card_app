@@ -5,6 +5,7 @@ import 'package:card_application/database/shop_data.dart';
 import 'package:card_application/model/pic.dart';
 import 'package:card_application/model/wa_card_model.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -86,16 +87,28 @@ class DbHelper extends ChangeNotifier {
     return count;
   }
 
-/*   Future<void> removeCard(int id) async {
-    var dbClient = await db;
-    return await dbClient.delete("Cards", where: "id=?", whereArgs: [id]);
-  }
- */
   void removeCard(var id) async {
     var dbClient = await db;
     try {
       await dbClient.rawQuery('DELETE FROM Process  WHERE card_id = $id');
       await dbClient.rawQuery('DELETE FROM Cards WHERE id = $id');
+    } on Exception catch (e) {
+      print(e);
+    }
+    notifyListeners();
+  }
+
+  void calculateProcess(var id, var value, ProcessModel type3,
+      {bool isType4 = false, type4}) async {
+    var dbClient = await db;
+    try {
+      await dbClient.rawQuery('DELETE FROM Process  WHERE card_id = $id');
+      await dbClient
+          .rawQuery('UPDATE Cards SET boundary=$value   WHERE id = $id');
+      await insertProcess(type3);
+      if (isType4) {
+        await insertProcess(type4);
+      }
     } on Exception catch (e) {
       print(e);
     }
@@ -134,6 +147,13 @@ class DbHelper extends ChangeNotifier {
     var dbClient = await db;
     var result = await dbClient.rawQuery(
         'SELECT SUM(CAST(amount AS float)) AS total FROM Process JOIN Cards ON Cards.id=Process.card_id WHERE card_id=$id AND CAST(date_time AS DATE)<=CAST(cut_of_date AS DATE)');
+    return result.map((data) => ProcessData.fromMap(data)).toList();
+  }
+
+  Future<List<ProcessData>> getProcessToCollection2(var id) async {
+    var dbClient = await db;
+    var result = await dbClient.rawQuery(
+        'SELECT SUM(CAST(amount AS float)) AS total FROM Process JOIN Cards ON Cards.id=Process.card_id WHERE card_id=$id');
     return result.map((data) => ProcessData.fromMap(data)).toList();
   }
 

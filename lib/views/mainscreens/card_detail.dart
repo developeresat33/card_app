@@ -54,19 +54,25 @@ class _CardDetailState extends State<CardDetail> {
                         ),
                         FloatingActionButton.extended(
                           heroTag: Text("1"),
-                          onPressed: value.processList.length > 0
-                              ? () async {
-                                  List<ProcessData> transferData =
-                                      await _db.getProcessToCollection(
-                                          widget.cardModel.id);
-                                  Get.to(() => TransferTransactions(
-                                      processData: transferData[0]));
-                                }
-                              : null,
+                          onPressed:
+                              value.processList.length > 0 && value.isTransfer
+                                  ? () async {
+                                      List<ProcessData> transferData =
+                                          await _db.getProcessToCollection(
+                                              widget.cardModel.id);
+
+                                      Get.to(() => TransferTransactions(
+                                            processData: transferData[0],
+                                            cardId: widget.cardModel.id,
+                                            cardModel: widget.cardModel,
+                                          ));
+                                    }
+                                  : null,
                           label: Text("Devir İş."),
-                          backgroundColor: value.processList.length > 0
-                              ? WAPrimaryColor
-                              : Colors.grey,
+                          backgroundColor:
+                              value.processList.length > 0 && value.isTransfer
+                                  ? WAPrimaryColor
+                                  : Colors.grey,
                           icon: Icon(Icons.transform_rounded),
                         ),
                       ],
