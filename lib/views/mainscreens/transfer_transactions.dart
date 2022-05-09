@@ -32,8 +32,8 @@ class _TransferTransactionsState extends State<TransferTransactions> {
   bool isType4 = false;
   final oCcy = new NumberFormat("#,##0.00", "tr_TR");
   RegExp exp = RegExp(r"[.,]");
-  List<ProcessData> _processList = [];
-
+  RegExp regExp = RegExp(".");
+  var result;
   @override
   void initState() {
     _amountCtrl = TextEditingController();
@@ -41,7 +41,19 @@ class _TransferTransactionsState extends State<TransferTransactions> {
     _amountCtrl = MoneyMaskedTextController(
         decimalSeparator: '.', thousandSeparator: ',');
     isType4 = false;
+    print(widget.processData.total);
+    _init();
     super.initState();
+  }
+
+  _init() async {
+    print(regExp.allMatches(widget.processData.total.toString()).length);
+    if (regExp.allMatches(widget.processData.total.toString()).length == 5) {
+      result = oCcy.format(widget.processData.total).replaceAll(",", ".");
+    }
+    if (regExp.allMatches(widget.processData.total.toString()).length > 5) {
+      result = oCcy.format(widget.processData.total);
+    }
   }
 
   @override
@@ -54,7 +66,7 @@ class _TransferTransactionsState extends State<TransferTransactions> {
                     width: size.width * 0.070,
                   ),
                   Text(
-                    "Tutar : ${widget.processData.total != null ? widget.processData.total : "0"}",
+                    "Tutar : ${widget.processData.total != null ? result : "0"}",
                     style: TextStyle(fontWeight: FontWeight.w600),
                   ),
                   Spacer(),
@@ -62,49 +74,7 @@ class _TransferTransactionsState extends State<TransferTransactions> {
                     heroTag: Text("1"),
                     onPressed: widget.processData.total != null
                         ? () async {
-                            var result;
-                            _processList = [];
-                            _processList = await _db
-                                .getProcessToCollection2(widget.cardId);
-
-                            print(_processList[0].total.toString());
-
-                            if (_processList[0]
-                                    .total
-                                    .toString()
-                                    .contains(",") &&
-                                !widget.cardModel.boundary.contains(",")) {
-                              result = oCcy.format(double.parse(widget
-                                      .cardModel.boundary
-                                      .replaceAll(exp, "")
-                                      .substring(
-                                          0,
-                                          widget.cardModel.boundary
-                                                  .replaceAll(exp, "")
-                                                  .length -
-                                              2)) +
-                                  _processList[0].total);
-                            } else if (!widget.cardModel.boundary
-                                    .contains(",") &&
-                                _processList[0]
-                                    .total
-                                    .toString()
-                                    .contains(",")) {
-                              result = oCcy.format(_processList[0].total +
-                                  double.parse(widget.cardModel.boundary));
-                            } else {
-                              result = oCcy.format(double.parse(widget
-                                      .cardModel.boundary
-                                      .replaceAll(exp, "")
-                                      .substring(
-                                          0,
-                                          widget.cardModel.boundary
-                                                  .replaceAll(exp, "")
-                                                  .length -
-                                              2)) +
-                                  _processList[0].total);
-                            }
-
+                            var collection;
                             isType4 = false;
                             ProcessModel type4;
                             ProcessModel type3 = ProcessModel(
@@ -119,7 +89,7 @@ class _TransferTransactionsState extends State<TransferTransactions> {
                                 pointsSpent: null,
                                 picture: null);
 
-                            if (_amountCtrl.text.isNotEmpty) {
+                            if (_amountCtrl.text != "0.00") {
                               isType4 = true;
                               type4 = ProcessModel(
                                   cardID: widget.cardId,
@@ -132,14 +102,51 @@ class _TransferTransactionsState extends State<TransferTransactions> {
                                   pointsEarned: null,
                                   pointsSpent: null,
                                   picture: null);
-                            }
-                            print(type3.amount);
-                            print(result);
 
-                            /*          await _db.calculateProcess(
-                                widget.cardId, _amountCtrl.text, type3,
-                                isType4: isType4, type4: type4); */
+                              if (_amountCtrl.text.contains(",") &&
+                                  !widget.processData.total
+                                      .toString()
+                                      .contains(",")) {
+                                collection = oCcy.format(double.parse(
+                                        _amountCtrl.text
+                                            .replaceAll(exp, "")
+                                            .substring(
+                                                0,
+                                                _amountCtrl.text
+                                                        .replaceAll(exp, "")
+                                                        .length -
+                                                    2)) +
+                                    widget.processData.total);
+                              } else if (!_amountCtrl.text.contains(",") &&
+                                  widget.processData.total
+                                      .toString()
+                                      .contains(",")) {
+                                collection = oCcy.format(
+                                    widget.processData.total +
+                                        double.parse(_amountCtrl.text));
+                              } else {
+                                collection = oCcy.format(
+                                    double.parse(_amountCtrl.text) +
+                                        widget.processData.total);
+                              }
+                              var cnvcollection;
+                              if (regExp.allMatches(collection).length == 5) {
+                                cnvcollection = oCcy
+                                    .format(collection)
+                                    .replaceAll(",", ".");
+                              }
+                              if (regExp.allMatches(collection).length > 5) {
+                                cnvcollection = oCcy.format(collection);
+                              }
+                              print(cnvcollection);
+                            }
+
+/* 
+                            await _db.calculateProcess(
+                                widget.cardId, widget.cardModel.boundary, type3,
+                                isType4: isType4, type4: type4);
                             await value.refresh();
+                            await Get.back(); */
                           }
                         : null,
                     label: Text("Devret"),

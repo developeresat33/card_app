@@ -176,23 +176,25 @@ class _ProcessDetailState extends State<ProcessDetail> {
                   SizedBox(
                     height: size.height * 0.010,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                          height: size.height * 0.25,
-                          width: size.width * 0.5,
-                          child: Card(
-                              child: img != null && img != ""
-                                  ? Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Image.file(img),
-                                    )
-                                  : Center(
-                                      child: Text(
-                                          'process_detail.not'.translate())))),
-                    ],
-                  ),
+                  if (widget.processData.processType != 4 &&
+                      widget.processData.processType != 3)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                            height: size.height * 0.25,
+                            width: size.width * 0.5,
+                            child: Card(
+                                child: img != null && img != ""
+                                    ? Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Image.file(img),
+                                      )
+                                    : Center(
+                                        child: Text('process_detail.not'
+                                            .translate())))),
+                      ],
+                    ),
                   Row(
                     children: [
                       Spacer(),
@@ -204,7 +206,11 @@ class _ProcessDetailState extends State<ProcessDetail> {
                       'process_detail.process_type'.translate(),
                       widget.processDetail.processType == 1
                           ? 'process_detail.shop'.translate()
-                          : 'process_detail.cash_advance'.translate()),
+                          : widget.processDetail.processType == 3
+                              ? "Devir"
+                              : widget.processDetail.processType == 4
+                                  ? "Ödeme"
+                                  : 'process_detail.cash_advance'.translate()),
                   buildDataHolder('process_detail.card'.translate(),
                       widget.processData.cardName),
                   buildDataHolder('process_detail.process_date'.translate(),
@@ -217,8 +223,9 @@ class _ProcessDetailState extends State<ProcessDetail> {
                   if (widget.processDetail.amount != null)
                     buildDataHolder('process_detail.amount'.translate(),
                         widget.processDetail.amount),
-                  buildDataHolder('process_detail.installment'.translate(),
-                      widget.processDetail.installments),
+                  if (widget.processDetail.installments != null)
+                    buildDataHolder('process_detail.installment'.translate(),
+                        widget.processDetail.installments),
                   if (widget.processDetail.pointsEarned != null)
                     buildDataHolder('process_detail.earned'.translate(),
                         widget.processDetail.pointsEarned),

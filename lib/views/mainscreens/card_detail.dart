@@ -17,7 +17,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:card_application/extensions/string_extension.dart';
-import 'package:sqflite/utils/utils.dart';
 
 class CardDetail extends StatefulWidget {
   const CardDetail({Key key, this.cardModel}) : super(key: key);
@@ -173,17 +172,33 @@ class _CardDetailState extends State<CardDetail> {
                                     child: Card(
                                       child: ListTile(
                                         leading: Icon(Icons.data_saver_off),
-                                        title:
-                                            snapshot.data[index].companyName !=
-                                                    null
-                                                ? Text(snapshot
-                                                    .data[index].companyName
-                                                    .toString())
-                                                : Text("dialogs.cash_advance"
-                                                    .translate()),
-                                        subtitle: Text("-" +
-                                            snapshot.data[index].amount +
-                                            ""),
+                                        title: snapshot
+                                                    .data[index].companyName !=
+                                                null
+                                            ? Text(snapshot
+                                                .data[index].companyName
+                                                .toString())
+                                            : snapshot.data[index]
+                                                        .processType ==
+                                                    3
+                                                ? Text("Devir İşlemi")
+                                                : snapshot.data[index]
+                                                            .processType ==
+                                                        4
+                                                    ? Text("Ödeme İşlemi")
+                                                    : Text(
+                                                        "dialogs.cash_advance"
+                                                            .translate()),
+                                        subtitle: Text(snapshot.data[index]
+                                                        .processType !=
+                                                    3 &&
+                                                snapshot.data[index]
+                                                        .processType !=
+                                                    4
+                                            ? "-" + snapshot.data[index].amount
+                                            : "" +
+                                                snapshot.data[index].amount +
+                                                ""),
                                       ),
                                     ),
                                   ),

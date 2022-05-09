@@ -102,13 +102,16 @@ class DbHelper extends ChangeNotifier {
       {bool isType4 = false, type4}) async {
     var dbClient = await db;
     try {
-      await dbClient.rawQuery('DELETE FROM Process  WHERE card_id = $id');
       await dbClient
-          .rawQuery('UPDATE Cards SET boundary=$value   WHERE id = $id');
+          .rawQuery('UPDATE Cards SET boundary="$value"  WHERE id = $id');
+
       await insertProcess(type3);
       if (isType4) {
         await insertProcess(type4);
       }
+      await dbClient.rawQuery(
+          'DELETE FROM Process  WHERE card_id = $id AND process_type = 2 OR process_type = 1');
+      print("attemp 2");
     } on Exception catch (e) {
       print(e);
     }
@@ -146,7 +149,7 @@ class DbHelper extends ChangeNotifier {
   Future<List<ProcessData>> getProcessToCollection(var id) async {
     var dbClient = await db;
     var result = await dbClient.rawQuery(
-        'SELECT SUM(CAST(amount AS float)) AS total FROM Process JOIN Cards ON Cards.id=Process.card_id WHERE card_id=$id AND CAST(date_time AS DATE)<=CAST(cut_of_date AS DATE)');
+        'SELECT SUM(CAST(REPLACE(amount,",","") AS float)) AS total FROM Process JOIN Cards ON Cards.id=Process.card_id WHERE card_id=$id AND CAST(date_time AS DATE)<=CAST(cut_of_date AS DATE)');
     return result.map((data) => ProcessData.fromMap(data)).toList();
   }
 

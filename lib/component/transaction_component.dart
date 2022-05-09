@@ -53,7 +53,11 @@ class WATransactionComponentState extends State<WATransactionComponent> {
                 backgroundColor: colorGenerator().withOpacity(0.1)),
             child: Icon(widget.transactionModel.processType == 1
                 ? Icons.shopping_cart
-                : Icons.price_change)),
+                : widget.transactionModel.processType == 3
+                    ? Icons.published_with_changes
+                    : widget.transactionModel.processType == 4
+                        ? Icons.payment
+                        : Icons.price_change)),
         title: FittedBox(
           child: SizedBox(
             width: size.width * 0.50,
@@ -62,7 +66,11 @@ class WATransactionComponentState extends State<WATransactionComponent> {
                 Text(
                   widget.transactionModel.processType == 1
                       ? '${widget.transactionModel.companyName}'
-                      : "dialogs.cash_advance".translate(),
+                      : widget.transactionModel.processType == 3
+                          ? "Devir İşlemi"
+                          : widget.transactionModel.processType == 4
+                              ? "Ödeme İşlemi"
+                              : "dialogs.cash_advance".translate(),
                   style: TextStyle(
                       color: Colors.black54,
                       fontSize: 14,
@@ -90,7 +98,10 @@ class WATransactionComponentState extends State<WATransactionComponent> {
               backgroundColor: colorGenerator().withOpacity(0.1)),
           child: Text(
             widget.transactionModel.amount != null
-                ? '-${widget.transactionModel.amount}' + " "
+                ? widget.transactionModel.processType != 3 &&
+                        widget.transactionModel.processType != 4
+                    ? '-${widget.transactionModel.amount}'
+                    : '${widget.transactionModel.amount}' + " "
                 : "0",
             maxLines: 1,
             style: TextStyle(color: Colors.black54, fontSize: 12),

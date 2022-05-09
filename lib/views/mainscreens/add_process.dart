@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:card_application/controllers/add_process_controllers.dart';
 import 'package:card_application/database/db_helper.dart';
 import 'package:card_application/database/db_models/process_model.dart';
@@ -17,7 +15,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class AddProcessPage extends StatefulWidget {
@@ -81,6 +78,12 @@ class _AddProcessPageState extends State<AddProcessPage> {
 
     ctprovider.addProcessModel.dateTime =
         ctprovider.formatter.format(DateTime.now());
+
+    if (widget.processType == 1) {
+      ctprovider.addProcessModel.processType == 1;
+    } else {
+      ctprovider.addProcessModel.processType == 2;
+    }
     return Consumer<CardTransactionsProvider>(
         builder: (context, value, child) => Scaffold(
             appBar: getAppBar(widget.processType == 1
