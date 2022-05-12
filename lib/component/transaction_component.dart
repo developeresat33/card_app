@@ -77,12 +77,19 @@ class WATransactionComponentState extends State<WATransactionComponent> {
                       fontWeight: FontWeight.w600),
                 ),
                 SizedBox(
-                  width: size.width * 0.15,
+                  width: size.width * 0.13,
                 ),
                 /*        Text(
                   widget.transactionModel.dateTime,
                   style: TextStyle(color: Colors.black54, fontSize: 11),
                 ) */
+                if (widget.transactionModel.installment > 0)
+                  Text(
+                    widget.transactionModel.installment.toString() +
+                        "/1 " +
+                        "Taksit",
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 12),
+                  )
               ],
             ),
           ),

@@ -27,6 +27,7 @@ class ProcessDetail extends StatefulWidget {
 class _ProcessDetailState extends State<ProcessDetail> {
   DbHelper _dbHelper = DbHelper();
   RegExp exp = RegExp(r"[.,]");
+  RegExp regExp = RegExp(".");
   final oCcy = new NumberFormat("#,##0.00", "tr_TR");
   File img;
   var advanceResult, pointsResult;
@@ -48,128 +49,182 @@ class _ProcessDetailState extends State<ProcessDetail> {
       img = File(widget.processDetail.picture);
     return Consumer<CardTransactionsProvider>(
         builder: (context, value, child) => Scaffold(
-              floatingActionButton: FloatingActionButton.extended(
-                onPressed: () async {
-                  await value.initDetail(widget.processData.id);
-                  var result;
-                  if (widget.processDetail.pointsEarned == null) {
-                    widget.processDetail.pointsEarned = 0;
-                  }
-                  if (widget.processDetail.pointsSpent == null) {
-                    widget.processDetail.pointsSpent = 0;
-                  }
-                  if (widget.processDetail.processType == 1 &&
-                      widget.processData.point != null &&
-                      widget.processData.point != "null") {
-                    pointsResult = int.parse(widget.processData.point) -
-                        widget.processDetail.pointsEarned +
-                        widget.processDetail.pointsSpent;
-                  }
+              floatingActionButton: widget.processData.processType != 3 &&
+                      widget.processData.processType != 4
+                  ? FloatingActionButton.extended(
+                      onPressed: () async {
+                        await value.initDetail(widget.processData.id);
+                        var result;
+                        if (widget.processDetail.pointsEarned == null) {
+                          widget.processDetail.pointsEarned = 0;
+                        }
+                        if (widget.processDetail.pointsSpent == null) {
+                          widget.processDetail.pointsSpent = 0;
+                        }
+                        if (widget.processDetail.processType == 1 &&
+                            widget.processData.point != null &&
+                            widget.processData.point != "null") {
+                          pointsResult = int.parse(widget.processData.point) -
+                              widget.processDetail.pointsEarned +
+                              widget.processDetail.pointsSpent;
+                        }
 
-                  if (widget.processData.cardAmount.contains(",") &&
-                      !widget.processData.amount.contains(",")) {
-                    result = oCcy.format(double.parse(widget
-                            .processData.cardAmount
-                            .replaceAll(exp, "")
-                            .substring(
-                                0,
-                                widget.processData.cardAmount
-                                        .replaceAll(exp, "")
-                                        .length -
-                                    2)) +
-                        double.parse(widget.processDetail.amount));
-                    if (widget.processDetail.processType == 2) {
-                      advanceResult = oCcy.format(double.parse(widget
-                              .processData.cashAdvanceLimit
-                              .replaceAll(exp, "")
-                              .substring(
-                                  0,
-                                  widget.processData.cashAdvanceLimit
-                                          .replaceAll(exp, "")
-                                          .length -
-                                      2)) +
-                          double.parse(widget.processData.amount));
-                    }
-                  } else if (!widget.processData.cardAmount.contains(",") &&
-                      widget.processData.amount.contains(",")) {
-                    result = oCcy.format(double.parse(widget.processData.amount
-                            .replaceAll(exp, "")
-                            .substring(
-                                0,
-                                widget.processDetail.amount
-                                        .replaceAll(exp, "")
-                                        .length -
-                                    2)) +
-                        double.parse(widget.processData.cardAmount));
-                    if (widget.processDetail.processType == 2) {
-                      advanceResult = oCcy.format(double.parse(widget
-                              .processData.cashAdvanceLimit
-                              .replaceAll(exp, "")
-                              .substring(
-                                  0,
-                                  widget.processData.cashAdvanceLimit
-                                          .replaceAll(exp, "")
-                                          .length -
-                                      2)) +
-                          double.parse(widget.processData.amount));
-                    }
-                  } else {
-                    result = oCcy.format(double.parse(widget
-                            .processData.cardAmount
-                            .replaceAll(exp, "")
-                            .substring(
-                                0,
-                                widget.processData.cardAmount
-                                        .replaceAll(exp, "")
-                                        .length -
-                                    2)) +
-                        double.parse(widget.processDetail.amount
-                            .replaceAll(exp, "")
-                            .substring(
-                                0,
-                                widget.processDetail.amount
-                                        .replaceAll(exp, "")
-                                        .length -
-                                    2)));
+                        if (widget.processData.cardAmount.contains(",") &&
+                            !widget.processData.amount.contains(",")) {
+                          result = oCcy.format(double.parse(widget
+                                  .processData.cardAmount
+                                  .replaceAll(exp, "")
+                                  .substring(
+                                      0,
+                                      widget.processData.cardAmount
+                                              .replaceAll(exp, "")
+                                              .length -
+                                          2)) +
+                              double.parse(widget.processDetail.amount));
+                          if (widget.processDetail.processType == 2) {
+                            advanceResult = oCcy.format(double.parse(widget
+                                    .processData.cashAdvanceLimit
+                                    .replaceAll(exp, "")
+                                    .substring(
+                                        0,
+                                        widget.processData.cashAdvanceLimit
+                                                .replaceAll(exp, "")
+                                                .length -
+                                            2)) +
+                                double.parse(widget.processData.amount));
+                          }
+                        } else if (!widget.processData.cardAmount
+                                .contains(",") &&
+                            widget.processData.amount.contains(",")) {
+                          result = oCcy.format(double.parse(widget
+                                  .processData.amount
+                                  .replaceAll(exp, "")
+                                  .substring(
+                                      0,
+                                      widget.processDetail.amount
+                                              .replaceAll(exp, "")
+                                              .length -
+                                          2)) +
+                              double.parse(widget.processData.cardAmount));
+                          if (widget.processDetail.processType == 2) {
+                            advanceResult = oCcy.format(double.parse(widget
+                                    .processData.cashAdvanceLimit
+                                    .replaceAll(exp, "")
+                                    .substring(
+                                        0,
+                                        widget.processData.cashAdvanceLimit
+                                                .replaceAll(exp, "")
+                                                .length -
+                                            2)) +
+                                double.parse(widget.processData.amount));
+                          }
+                        } else {
+                          result = oCcy.format(double.parse(widget
+                                  .processData.cardAmount
+                                  .replaceAll(exp, "")
+                                  .substring(
+                                      0,
+                                      widget.processData.cardAmount
+                                              .replaceAll(exp, "")
+                                              .length -
+                                          2)) +
+                              double.parse(widget.processDetail.amount
+                                  .replaceAll(exp, "")
+                                  .substring(
+                                      0,
+                                      widget.processDetail.amount
+                                              .replaceAll(exp, "")
+                                              .length -
+                                          2)));
 
-                    if (widget.processDetail.processType == 2) {
-                      advanceResult = oCcy.format(double.parse(widget
-                              .processData.cashAdvanceLimit
-                              .replaceAll(exp, "")
-                              .substring(
-                                  0,
-                                  widget.processData.cashAdvanceLimit
-                                          .replaceAll(exp, "")
-                                          .length -
-                                      2)) +
-                          double.parse(widget.processData.amount
-                              .replaceAll(exp, "")
-                              .substring(
-                                  0,
-                                  widget.processData.amount
-                                          .replaceAll(exp, "")
-                                          .length -
-                                      2)));
-                    }
-                  }
+                          if (widget.processDetail.processType == 2) {
+                            advanceResult = oCcy.format(double.parse(widget
+                                    .processData.cashAdvanceLimit
+                                    .replaceAll(exp, "")
+                                    .substring(
+                                        0,
+                                        widget.processData.cashAdvanceLimit
+                                                .replaceAll(exp, "")
+                                                .length -
+                                            2)) +
+                                double.parse(widget.processData.amount
+                                    .replaceAll(exp, "")
+                                    .substring(
+                                        0,
+                                        widget.processData.amount
+                                                .replaceAll(exp, "")
+                                                .length -
+                                            2)));
+                          }
+                        }
+                        if (widget.processData.installment > 1) {
+                          List<ProcessData> dataList = [];
 
-                  _dbHelper.removeProcess(widget.processData.id,
-                      widget.processDetail.cardID, result,
-                      value2: advanceResult, value3: pointsResult);
+                          dataList = await _dbHelper.getSameProcessToCollection(
+                              widget.processDetail.cardID,
+                              widget.processData.installment_uniq);
+                          var filteredresult;
+                          print("TOTAL " + dataList[0].total.toString());
 
-                  await Get.back();
-                  await value.refresh(isProcessAdd: true);
-                  try {
-                    value.removeProcessState(widget.processDetail.cardID);
-                    value.initDetail(widget.processDetail.cardID);
-                  } catch (e) {
-                    print(e);
-                  }
-                },
-                label: Text('process_detail.delete'.translate()),
-                backgroundColor: WAPrimaryColor,
-                icon: Icon(Icons.remove),
-              ),
+                          if (regExp
+                                      .allMatches(dataList[0].total.toString())
+                                      .length ==
+                                  5 ||
+                              regExp
+                                      .allMatches(dataList[0].total.toString())
+                                      .length ==
+                                  6) {
+                            print("COME ON DUDE");
+                            filteredresult = oCcy
+                                .format(double.parse(dataList[0]
+                                    .total
+                                    .toString()
+                                    .replaceAll(",", ".")))
+                                .replaceAll(",", ".");
+                            result -= oCcy.format(double.parse(filteredresult));
+                          }
+                          if (regExp
+                                  .allMatches(dataList[0].total.toString())
+                                  .length >
+                              6) {
+                            filteredresult = oCcy.format(double.parse(
+                                dataList[0]
+                                    .total
+                                    .toString()
+                                    .replaceAll(exp, "")
+                                    .substring(
+                                        0,
+                                        dataList[0]
+                                                .total
+                                                .toString()
+                                                .replaceAll(exp, "")
+                                                .length -
+                                            2)));
+
+                            result = oCcy
+                                .format(double.parse(filteredresult - result));
+                          }
+                          print(result);
+                        }
+/* 
+                        _dbHelper.removeProcess(widget.processData.id,
+                            widget.processDetail.cardID, result,
+                            value2: advanceResult, value3: pointsResult);
+
+                        await Get.back();
+                        await value.refresh(isProcessAdd: true);
+                        try {
+                          value.removeProcessState(widget.processDetail.cardID);
+                          value.initDetail(widget.processDetail.cardID);
+                        } catch (e) {
+                          print(e);
+                        } */
+                      },
+                      label: Text('process_detail.delete'.translate()),
+                      backgroundColor: WAPrimaryColor,
+                      icon: Icon(Icons.remove),
+                    )
+                  : null,
               appBar: getAppBar('process_detail.default'.translate()),
               body: Column(
                 children: [
@@ -226,10 +281,12 @@ class _ProcessDetailState extends State<ProcessDetail> {
                   if (widget.processDetail.installments != null)
                     buildDataHolder('process_detail.installment'.translate(),
                         widget.processDetail.installments),
-                  if (widget.processDetail.pointsEarned != null)
+                  if (widget.processDetail.pointsEarned != null &&
+                      widget.processDetail.pointsEarned != 0)
                     buildDataHolder('process_detail.earned'.translate(),
                         widget.processDetail.pointsEarned),
-                  if (widget.processDetail.pointsSpent != null)
+                  if (widget.processDetail.pointsSpent != null &&
+                      widget.processDetail.pointsSpent != 0)
                     buildDataHolder('process_detail.spent'.translate(),
                         widget.processDetail.pointsSpent)
                 ],

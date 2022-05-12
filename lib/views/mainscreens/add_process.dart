@@ -35,7 +35,7 @@ class _AddProcessPageState extends State<AddProcessPage> {
   WACardModel cardData = WACardModel();
   List<String> installments;
   List<WACardModel> firstModel = [];
-
+  RegExp regExp = RegExp(".");
   var selectedDropDownValue = "Taksit Seçiniz";
   var _formkey = GlobalKey<FormState>();
 
@@ -560,7 +560,73 @@ class _AddProcessPageState extends State<AddProcessPage> {
                             widget.processType == 2) {
                           value.warningofLimit(limitOfAdvance: true);
                         } else {
-                          await _dbHelper.insertProcess(value.addProcessModel);
+                          if (value.addProcessModel.installments > 0) {
+                            var installmentresult, filteredresult;
+                            installmentresult = oCcy.format(double.parse(value
+                                    .addProcessModel.amount
+                                    .replaceAll(exp, "")
+                                    .substring(
+                                        0,
+                                        value.addProcessModel.amount
+                                                .replaceAll(exp, "")
+                                                .length -
+                                            2)) /
+                                value.addProcessModel.installments);
+                            print("LENGTH" +
+                                regExp
+                                    .allMatches(installmentresult)
+                                    .length
+                                    .toString());
+                            if (regExp.allMatches(installmentresult).length ==
+                                    5 ||
+                                regExp.allMatches(installmentresult).length ==
+                                    6) {
+                              print("COME ON DUDE");
+                              filteredresult = oCcy
+                                  .format(double.parse(installmentresult
+                                      .toString()
+                                      .replaceAll(",", ".")))
+                                  .replaceAll(",", ".");
+                            }
+                            if (regExp.allMatches(installmentresult).length >
+                                6) {
+                              filteredresult = oCcy.format(double.parse(
+                                  installmentresult
+                                      .toString()
+                                      .replaceAll(exp, "")
+                                      .substring(
+                                          0,
+                                          installmentresult
+                                                  .replaceAll(exp, "")
+                                                  .length -
+                                              2)));
+                            }
+
+                            value.addProcessModel.amount = filteredresult;
+
+                            final notificationId = UniqueKey().hashCode;
+
+                            value.addProcessModel.installment_uniq =
+                                notificationId.toString();
+                            for (var i = 0;
+                                i < value.addProcessModel.installments;
+                                i++) {
+                              DateTime dt = value.formatter
+                                  .parse(value.addProcessModel.dateTime);
+                              var addDate = dt;
+                              if (i >= 1) {
+                                addDate = dt.add(Duration(days: 31));
+                              }
+                              value.addProcessModel.dateTime =
+                                  value.formatter.format(addDate);
+                              await _dbHelper
+                                  .insertProcess(value.addProcessModel);
+                            }
+                          } else {
+                            await _dbHelper
+                                .insertProcess(value.addProcessModel);
+                          }
+
                           if (widget.processType == 1) {
                             await _dbHelper.updateCard(
                                 value.addProcessModel.cardID, value.result,

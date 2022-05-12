@@ -29,7 +29,7 @@ class DbHelper extends ChangeNotifier {
     await db.execute(
         'CREATE TABLE Cards (id INTEGER PRIMARY KEY,image TEXT,boundary TEXT,select_type INTEGER,card_name TEXT,color TEXT,payment_date TEXT,cut_of_date TEXT,cash_advance_limit TEXT,point TEXT,last_numbers TEXT)');
     await db.execute(
-        'CREATE TABLE Process (id INTEGER ,card_id INTEGER,process_type INTEGER,date_time TEXT,company_name TEXT,comment TEXT,amount TEXT,installments INTEGER,points_earned INTEGER,points_spent INTEGER,picture TEXT,  FOREIGN KEY("card_id") REFERENCES "Cards"("id"), PRIMARY KEY("id")) ');
+        'CREATE TABLE Process (id INTEGER ,card_id INTEGER,process_type INTEGER,date_time TEXT,company_name TEXT,comment TEXT,amount TEXT,installments INTEGER,installment_uniq TEXT,points_earned INTEGER,points_spent INTEGER,picture TEXT,  FOREIGN KEY("card_id") REFERENCES "Cards"("id"), PRIMARY KEY("id")) ');
 
     await db.execute('CREATE TABLE Picture (pic TEXT)');
   }
@@ -98,12 +98,12 @@ class DbHelper extends ChangeNotifier {
     notifyListeners();
   }
 
-  void calculateProcess(var id, var value, ProcessModel type3,
+  void calculateProcess(var id, var value, var dateTime, ProcessModel type3,
       {bool isType4 = false, type4}) async {
     var dbClient = await db;
     try {
-      await dbClient
-          .rawQuery('UPDATE Cards SET boundary="$value"  WHERE id = $id');
+      await dbClient.rawQuery(
+          'UPDATE Cards SET boundary="$value",cut_of_date="$dateTime"   WHERE id = $id');
 
       await insertProcess(type3);
       if (isType4) {
@@ -142,7 +142,7 @@ class DbHelper extends ChangeNotifier {
   Future<List<ProcessData>> getProcess() async {
     var dbClient = await db;
     var result = await dbClient.rawQuery(
-        'SELECT point,cash_advance_limit,boundary,Process.id,date_time,process_type,company_name,comment,amount,card_name FROM Process JOIN Cards ON Cards.id=Process.card_id');
+        'SELECT  installments,installment_uniq,point,cash_advance_limit,boundary,Process.id,date_time,process_type,company_name,comment,amount,card_name FROM Process JOIN Cards ON Cards.id=Process.card_id  GROUP BY installment_uniq');
     return result.map((data) => ProcessData.fromMap(data)).toList();
   }
 
@@ -150,6 +150,13 @@ class DbHelper extends ChangeNotifier {
     var dbClient = await db;
     var result = await dbClient.rawQuery(
         'SELECT SUM(CAST(REPLACE(amount,",","") AS float)) AS total FROM Process JOIN Cards ON Cards.id=Process.card_id WHERE card_id=$id AND CAST(date_time AS DATE)<=CAST(cut_of_date AS DATE)');
+    return result.map((data) => ProcessData.fromMap(data)).toList();
+  }
+
+  Future<List<ProcessData>> getSameProcessToCollection(var id, var iuiq) async {
+    var dbClient = await db;
+    var result = await dbClient.rawQuery(
+        'SELECT SUM(CAST(REPLACE(amount,",","") AS float)) AS total FROM Process JOIN Cards ON Cards.id=Process.card_id WHERE card_id=$id  AND installment_uniq=$iuiq ');
     return result.map((data) => ProcessData.fromMap(data)).toList();
   }
 
@@ -163,7 +170,7 @@ class DbHelper extends ChangeNotifier {
   Future<List<ProcessData>> getProcesstoCard(int id) async {
     var dbClient = await db;
     var result = await dbClient.rawQuery(
-        'SELECT point,cash_advance_limit,boundary,Process.id,date_time,process_type,company_name,comment,amount,card_name FROM Process JOIN Cards ON Cards.id=Process.card_id WHERE card_id=$id');
+        'SELECT installments,installment_uniq,point,cash_advance_limit,boundary,Process.id,date_time,process_type,company_name,comment,amount,card_name FROM Process JOIN Cards ON Cards.id=Process.card_id WHERE card_id=$id GROUP BY installment_uniq');
     return result.map((data) => ProcessData.fromMap(data)).toList();
   }
 

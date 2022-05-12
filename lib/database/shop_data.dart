@@ -1,4 +1,6 @@
 class ProcessData {
+  int installment;
+  String installment_uniq;
   int id;
   String dateTime;
   int processType;
@@ -22,10 +24,14 @@ class ProcessData {
       this.cardAmount,
       this.cashAdvanceLimit,
       this.point,
-      this.total});
+      this.total,
+      this.installment,
+      this.installment_uniq});
 
   Map<String, dynamic> toMap() {
     var map = Map<String, dynamic>();
+    map['installments'] = installment;
+    map['installment_uniq'] = installment_uniq;
     map['id'] = id;
     map['date_time'] = dateTime;
     map['process_type'] = processType;
@@ -42,6 +48,8 @@ class ProcessData {
   }
 
   ProcessData.fromMap(Map<String, dynamic> map) {
+    installment = map['installments'];
+    installment_uniq = map['installment_uniq'];
     id = map['id'];
     dateTime = map['date_time'];
     processType = map['process_type'];

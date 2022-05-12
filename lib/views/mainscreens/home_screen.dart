@@ -60,7 +60,7 @@ class HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    /*  var ct = Provider.of<CardTransactionsProvider>(Get.context, listen: false); */
+    var dshprovider = Provider.of<DashProvider>(Get.context, listen: false);
 
     return Consumer<DashProvider>(
         builder: (context, value, child) => SafeArea(
@@ -271,8 +271,11 @@ class HomeScreenState extends State<HomeScreen> {
                                                                 (BuildContext
                                                                     context) {
                                                               return InkWell(
-                                                                onTap: () {
-                                                                  Get.to(() =>
+                                                                onTap:
+                                                                    () async {
+                                                                  await dshprovider
+                                                                      .calculateDate();
+                                                                  await Get.to(() =>
                                                                       CardDetail(
                                                                         cardModel:
                                                                             card,
@@ -290,8 +293,10 @@ class HomeScreenState extends State<HomeScreen> {
                                                           );
                                                         }).toList())
                                                     : InkWell(
-                                                        onTap: () {
-                                                          Get.to(
+                                                        onTap: () async {
+                                                          await dshprovider
+                                                              .calculateDate();
+                                                          await Get.to(
                                                               () => CardDetail(
                                                                     cardModel:
                                                                         snapshot

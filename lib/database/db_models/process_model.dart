@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 class ProcessModel {
   int cardID;
   int processType;
@@ -8,6 +6,7 @@ class ProcessModel {
   String comment;
   String amount;
   int installments;
+  String installment_uniq;
   int pointsEarned;
   int pointsSpent;
   String picture;
@@ -16,6 +15,7 @@ class ProcessModel {
       {this.cardID,
       this.dateTime,
       this.companyName,
+      this.installment_uniq,
       this.comment,
       this.amount,
       this.installments,
@@ -30,7 +30,7 @@ class ProcessModel {
     map['card_id'] = cardID;
     map['process_type'] = processType;
     map['date_time'] = dateTime;
-
+    map['installment_uniq'] = installment_uniq;
     map['company_name'] = companyName;
     map['comment'] = comment;
     map['amount'] = amount;
@@ -46,7 +46,7 @@ class ProcessModel {
     cardID = map['card_id'];
     processType = map['process_type'];
     dateTime = map['date_time'];
-
+    installment_uniq = map['installment_uniq'];
     companyName = map['company_name'];
     comment = map['comment'];
     amount = map['amount'];

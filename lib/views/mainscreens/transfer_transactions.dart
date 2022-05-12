@@ -5,6 +5,7 @@ import 'package:card_application/database/db_models/process_model.dart';
 import 'package:card_application/database/shop_data.dart';
 import 'package:card_application/model/wa_card_model.dart';
 import 'package:card_application/states/card_transactions.dart';
+import 'package:card_application/states/provider_header.dart';
 import 'package:card_application/utils/colors.dart';
 import 'package:card_application/utils/functions.dart';
 import 'package:card_application/widgets/app_bar.dart';
@@ -33,6 +34,7 @@ class _TransferTransactionsState extends State<TransferTransactions> {
   final oCcy = new NumberFormat("#,##0.00", "tr_TR");
   RegExp exp = RegExp(r"[.,]");
   RegExp regExp = RegExp(".");
+  final DateFormat formatter = DateFormat('dd.MM.yyyy');
   var result;
   @override
   void initState() {
@@ -76,6 +78,12 @@ class _TransferTransactionsState extends State<TransferTransactions> {
                         ? () async {
                             var collection;
                             isType4 = false;
+
+                            DateTime dt =
+                                formatter.parse(widget.cardModel.cutOfDate);
+
+                            var addDate = dt.add(Duration(days: 31));
+
                             ProcessModel type4;
                             ProcessModel type3 = ProcessModel(
                                 cardID: widget.cardId,
@@ -129,7 +137,7 @@ class _TransferTransactionsState extends State<TransferTransactions> {
                                     double.parse(_amountCtrl.text) +
                                         widget.processData.total);
                               }
-                              var cnvcollection;
+                              String cnvcollection = "";
                               if (regExp.allMatches(collection).length == 5) {
                                 cnvcollection = oCcy
                                     .format(collection)
@@ -141,12 +149,19 @@ class _TransferTransactionsState extends State<TransferTransactions> {
                               print(cnvcollection);
                             }
 
-/* 
                             await _db.calculateProcess(
-                                widget.cardId, widget.cardModel.boundary, type3,
-                                isType4: isType4, type4: type4);
+                                widget.cardId,
+                                widget.cardModel.boundary,
+                                value.formatter.format(addDate),
+                                type3,
+                                isType4: isType4,
+                                type4: type4);
                             await value.refresh();
-                            await Get.back(); */
+                            value.cardDetailModel =
+                                await _db.getCardSingle(widget.cardId);
+                            await ProviderHeader.dshprovider.calculateDate();
+                            await value.initDetail(widget.cardId);
+                            await Get.back();
                           }
                         : null,
                     label: Text("Devret"),

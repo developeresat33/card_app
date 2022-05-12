@@ -5,6 +5,7 @@ import 'package:card_application/database/shop_data.dart';
 import 'package:card_application/extensions/int_extensions.dart';
 import 'package:card_application/model/wa_card_model.dart';
 import 'package:card_application/states/card_transactions.dart';
+import 'package:card_application/states/dashboard_provider.dart';
 import 'package:card_application/states/provider_header.dart';
 
 import 'package:card_application/utils/colors.dart';
@@ -31,9 +32,11 @@ class _CardDetailState extends State<CardDetail> {
 
   var cshprovider =
       Provider.of<CardTransactionsProvider>(Get.context, listen: false);
+  var dshprovider = Provider.of<DashProvider>(Get.context, listen: false);
   @override
   void initState() {
     cshprovider.cardDetailModel = widget.cardModel;
+
     cshprovider.initDetail(widget.cardModel.id);
     super.initState();
   }
