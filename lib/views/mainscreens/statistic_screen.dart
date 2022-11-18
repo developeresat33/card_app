@@ -90,7 +90,7 @@ class StatisticScreenState extends State<StatisticScreen> {
                     ),
                   ],
                 ).paddingOnly(left: 16, right: 16, top: 16),
-                WAStatisticsChartComponent(),
+             /*    WAStatisticsChartComponent(), */
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

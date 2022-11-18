@@ -20,10 +20,9 @@ import 'package:card_application/widgets/dialogs/toasy_msg.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_boom_menu/flutter_boom_menu.dart';
+import 'package:flutter_boom_menu/flutter_boom_menu.dart' as bm;
 import 'package:get/route_manager.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/date_symbol_data_local.dart';
 
 class HomeScreen extends StatefulWidget {
   static String tag = '/HomeScreen';
@@ -67,7 +66,7 @@ class HomeScreenState extends State<HomeScreen> {
               child: Scaffold(
                 floatingActionButton: Stack(
                   children: [
-                    BoomMenu(
+                    bm.BoomMenu(
                         animatedIcon: AnimatedIcons.add_event,
                         backgroundColor: WAPrimaryColor,
                         animatedIconTheme: IconThemeData(size: 22.0),
@@ -78,7 +77,7 @@ class HomeScreenState extends State<HomeScreen> {
                         overlayColor: Colors.black,
                         overlayOpacity: 0.7,
                         children: [
-                          MenuItem(
+                          bm.MenuItem(
                             child: Icon(Icons.add, color: Colors.white),
                             title: "boom.add".tr(),
                             titleColor: Colors.white,
@@ -87,7 +86,7 @@ class HomeScreenState extends State<HomeScreen> {
                             backgroundColor: Colors.greenAccent,
                             onTap: () => Get.to(AddCardPage()),
                           ),
-                          MenuItem(
+                          bm.MenuItem(
                               child: Icon(Icons.adjust, color: Colors.white),
                               title: "boom.process".tr(),
                               titleColor: Colors.white,
