@@ -1,16 +1,20 @@
-# card_application
+💳 Card Application
 
-A new Flutter project.
+Card Application, Flutter tabanlı bir cüzdan ve kart yönetimi uygulamasıdır.
+Proje, SQLite yerel veritabanı desteği ve çoklu dil (multilanguage) yapısı sayesinde offline çalışma imkânı sunar.
 
-## Getting Started
+Tam olarak bitmemiş olsa da, kart ekleme, limit görüntüleme, ödeme takip sistemi gibi temel işlevleri sayesinde diğer geliştiricilerin projelerine ilham verebilir.
 
-This project is a starting point for a Flutter application.
+🚀 Özellikler
 
-A few resources to get you started if this is your first Flutter project:
+🗂 Kart ekleme ve düzenleme
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+💰 Kart limiti görüntüleme
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+📊 Ödeme ve işlem kaydı takibi
+
+🌐 Çoklu dil desteği (Multilanguage - kolayca genişletilebilir)
+
+📱 Offline çalışma (SQLite entegrasyonu ile)
+
+🧹 Temiz ve modüler kod yapısı
